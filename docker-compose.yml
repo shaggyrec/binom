@@ -1,0 +1,33 @@
+version: "3.9"
+
+services:
+  pg:
+    build: db
+    command: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db/data:/data/postgres
+      - ./db/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+      - ./db/fixture.sql:/fixture.sql
+      - ./db/dump-fixture.sh:/dump-fixture.sh
+    env_file:
+      - .env
+  golang:
+    build: .
+    command: ["./scripts/wait-for-it.sh", "pg:5432", "--", "gow", "run", "."]
+    ports:
+      - ${APP_PORT}:${APP_PORT}
+    restart: always
+    depends_on:
+      - pg
+    env_file:
+      - .env
+    volumes:
+      - ./db/migrations:/goapp/db/migrations
+      - ./server:/goapp/server
+      - ./main.go:/goapp/main.go
+      - ./go.mod:/goapp/go.mod
+      - ./go.sum:/goapp/go.sum
+      - ./scripts:/goapp/scripts

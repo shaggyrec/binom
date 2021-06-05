@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS auth_code;
+DROP TABLE IF EXISTS sent_email;

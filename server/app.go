@@ -2,6 +2,7 @@ package server
 
 import (
 	"binom/server/controllers"
+	"binom/server/storage"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-pg/pg"
@@ -10,7 +11,7 @@ import (
 
 func Init(db *pg.DB) *chi.Mux {
 	authController := controllers.AuthController{}
-	authController.Init(db)
+	authController.Init(storage.AuthCode(db))
 	pageController := controllers.PageController{}
 
 

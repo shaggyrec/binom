@@ -7,6 +7,7 @@ import (
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
+	"log"
 	"os"
 )
 
@@ -33,8 +34,7 @@ func RunMigrations(user string, host string, dbName string, pwd string) {
 		panic(err)
 	}
 	err = m.Steps(1000)
-	// TODO fix/skip `limit 999 short`
-	if err != nil && !errors.Is(err, os.ErrNotExist) {
-		panic(err)
+	if err != nil && !errors.Is(err, os.ErrNotExist) && !errors.Is(err, migrate.ErrShortLimit{}) {
+		log.Panicln(err)
 	}
 }

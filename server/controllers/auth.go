@@ -1,21 +1,22 @@
 package controllers
 
 import (
+	"binom/server/dataType"
 	"binom/server/functions"
 	"binom/server/mailer"
+	"binom/server/storage"
 	"encoding/json"
 	"github.com/go-chi/render"
-	"github.com/go-pg/pg"
 	"net/http"
 	"strconv"
 )
 
 type AuthController struct {
-	db *pg.DB
+	authCodeStorage *storage.AuthCodeStorage
 }
 
-func (c *AuthController) Init(db *pg.DB) {
-	c.db = db
+func (c *AuthController) Init(authCodeStorage *storage.AuthCodeStorage) {
+	c.authCodeStorage = authCodeStorage
 }
 
 func (c *AuthController) Email(w http.ResponseWriter, r *http.Request) {
@@ -30,10 +31,18 @@ func (c *AuthController) Email(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	lastAuthCode := c.authCodeStorage.GetLastCodeOfRecipient(b.Email)
+	if lastAuthCode != nil {
+		c.authCodeStorage.Invalidate(lastAuthCode)
+	}
+	code := strconv.Itoa(functions.RandomInt(100000, 999999))
+
+	authCode := c.authCodeStorage.Create(&dataType.AuthCode{Code: code, Recipient: b.Email})
+
 	err := mailer.Mail(
 		[]string{ b.Email },
 		"Verification code",
-		strconv.Itoa(functions.RandomInt(100000, 999999)),
+		code,
 		mailer.TypeVerificationCode,
 	)
 
@@ -42,5 +51,5 @@ func (c *AuthController) Email(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	render.JSON(w, r, "Ok")
+	render.JSON(w, r, struct{ Id string `json:"id"` } { Id: authCode.Id })
 }

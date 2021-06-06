@@ -55,9 +55,11 @@ func (c *AuthController) CheckCodeAndAuth(w http.ResponseWriter, r *http.Request
 		exceptions.BadRequestError(w, r, "`code` and `id` is mandatory", exceptions.ErrorFieldIsMandatory)
 		return
 	}
-
-	if err := c.authCodeService.Check(b.Id, b.Code); err != nil {
-		exceptions.BadRequestError(w, r, err.Error(), exceptions.ErrorFieldIsMandatory)
+	recipient, err := c.authCodeService.Check(b.Id, b.Code)
+	if err != nil {
+		exceptions.BadRequestError(w, r, err.Error(), exceptions.ErrorInvalidAuthCode)
 		return
 	}
+
+	render.JSON(w, r, struct{ User string `json:"user"` } { User: recipient })
 }

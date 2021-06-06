@@ -4,9 +4,10 @@ import "github.com/go-pg/pg"
 
 type Storage interface {
 	Init()
-	Create() string
+	Create() interface{}
 	Update()
 	Delete()
+	Get() interface{}
 }
 
 type Factory struct {
@@ -15,6 +16,12 @@ type Factory struct {
 
 func AuthCode(db *pg.DB) *AuthCodeStorage {
 	storage := AuthCodeStorage{}
+	storage.Init(db)
+	return &storage
+}
+
+func User(db *pg.DB) *UserStorage {
+	storage := UserStorage{}
 	storage.Init(db)
 	return &storage
 }

@@ -5,8 +5,6 @@ import (
 	"net/http"
 )
 
-const ErrorFieldIsMandatory = 1000
-
 type ApiError struct {
 	Code int `json:"code"`
 	Message string `json:"message"`

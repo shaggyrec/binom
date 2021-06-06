@@ -16,13 +16,14 @@ func (s *AuthCodeService) Init (storage *storage.AuthCodeStorage)  {
 	s.storage = storage
 }
 
-func (s *AuthCodeService) Check(id string, code string) error {
+func (s *AuthCodeService) Check(id string, code string) (string, error) {
 	authCode := s.storage.Get(id)
-	if authCode.Code != code {
-		return errors.New("code is invalid")
+
+	if authCode.Code != code || !authCode.Valid.Bool {
+		return "", errors.New("code is invalid")
 	}
 	s.storage.Invalidate(authCode)
-	return nil
+	return authCode.Recipient, nil
 }
 
 func (s *AuthCodeService) Generate(recipient string) *dataType.AuthCode {

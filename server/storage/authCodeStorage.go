@@ -52,7 +52,7 @@ func (s *AuthCodeStorage) Get(id string) *dataType.AuthCode {
 
 func (s *AuthCodeStorage) GetLastCodeOfRecipient(r string) *dataType.AuthCode {
 	authCode := &dataType.AuthCode{ Recipient: r }
-	err := s.db.Model(authCode).Where("recipient = ?", r).Select()
+	err := s.db.Model(authCode).Where("recipient = ? AND valid = TRUE", r).Select()
 	switch err {
 	case pg.ErrNoRows:
 		return nil

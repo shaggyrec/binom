@@ -27,6 +27,8 @@ func Init(db *pg.DB, jwtSecret string) *chi.Mux {
 	authController := controllers.AuthController{}
 	authController.Init(authCodeService, authService, tokenService)
 	pageController := controllers.PageController{}
+	userController := controllers.UserController{}
+	userController.Init(userStorage)
 
 
 	r := chi.NewRouter()
@@ -49,6 +51,7 @@ func Init(db *pg.DB, jwtSecret string) *chi.Mux {
 		})
 		r.Group(func(r chi.Router) {
 			r.Use(middlewares.JwtAuth(jwtSecret))
+			r.Get("/me", userController.Me)
 			r.Get("/test", func(w http.ResponseWriter, r *http.Request) {
 				token := r.Context().Value("token").(string)
 				w.Write([]byte("It's your token: " + token))

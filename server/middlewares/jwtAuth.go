@@ -2,7 +2,7 @@ package middlewares
 
 import (
 	"binom/server/exceptions"
-	"fmt"
+	"context"
 	"github.com/dgrijalva/jwt-go"
 	"net/http"
 )
@@ -30,10 +30,7 @@ func JwtAuth(jwtSecret string) func(next http.Handler) http.Handler {
 				exceptions.UnauthorizedError(w, r, "Invalid token", exceptions.ErrorBadToken)
 			}
 
-
-			fmt.Println(tClaims["id"])
-
-			next.ServeHTTP(w, r)
+			next.ServeHTTP(w, r.WithContext(context.WithValue(r.Context(), "userId", tClaims["id"])))
 		})
 	}
 }

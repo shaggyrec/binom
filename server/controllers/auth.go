@@ -4,6 +4,7 @@ import (
 	"binom/server/exceptions"
 	"binom/server/functions"
 	"binom/server/mailer"
+	"binom/server/responses"
 	"binom/server/service"
 	"github.com/go-chi/render"
 	"net/http"
@@ -11,10 +12,14 @@ import (
 
 type AuthController struct {
 	authCodeService *service.AuthCodeService
+	authService     *service.AuthService
+	tokenService    *service.TokenService
 }
 
-func (c *AuthController) Init(authCodeService *service.AuthCodeService) {
+func (c *AuthController) Init(authCodeService *service.AuthCodeService, authService *service.AuthService, tokenService *service.TokenService) {
 	c.authCodeService = authCodeService
+	c.authService = authService
+	c.tokenService = tokenService
 }
 
 func (c *AuthController) Email(w http.ResponseWriter, r *http.Request) {
@@ -52,7 +57,7 @@ func (c *AuthController) CheckCodeAndAuth(w http.ResponseWriter, r *http.Request
 	}
 
 	if b.Code == "" || b.Id == "" {
-		exceptions.BadRequestError(w, r, "`code` and `id` is mandatory", exceptions.ErrorFieldIsMandatory)
+		exceptions.BadRequestError(w, r, "`code` and `id` are mandatory", exceptions.ErrorFieldIsMandatory)
 		return
 	}
 	recipient, err := c.authCodeService.Check(b.Id, b.Code)
@@ -61,5 +66,47 @@ func (c *AuthController) CheckCodeAndAuth(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	render.JSON(w, r, struct{ User string `json:"user"` } { User: recipient })
+	user, tokens, err := c.authService.AuthByEmail(recipient)
+
+	if err != nil {
+		exceptions.ServerError(w, r)
+		return
+	}
+
+	render.JSON(w, r, responses.CheckCodeAndAuthResponse{User: user, Tokens: tokens})
+}
+
+func (c *AuthController) RefreshToken (w http.ResponseWriter, r *http.Request) {
+	var b struct { RefreshToken string `json:"refreshToken"` }
+	if err := functions.ParseRequest(w, r, &b);  err != nil {
+		return
+	}
+
+	accessToken, ok := r.Context().Value("token").(string)
+
+	if !ok {
+		exceptions.UnauthorizedError(w, r, "Access token is missed", exceptions.ErrorBadToken)
+		return
+	}
+
+	if b.RefreshToken == "" {
+		exceptions.BadRequestError(w, r, "`refreshToken` is mandatory", exceptions.ErrorFieldIsMandatory)
+		return
+	}
+
+	userId, err := c.tokenService.CheckToken(b.RefreshToken, accessToken)
+
+	if err != nil {
+		exceptions.UnauthorizedError(w, r, "Something wrong with either refresh or access token", exceptions.ErrorBadToken)
+		return
+	}
+
+	tokens, err := c.tokenService.GenerateTokenPair(userId)
+
+	if err != nil {
+		exceptions.ServerError(w, r)
+		return
+	}
+
+	render.JSON(w, r, tokens)
 }

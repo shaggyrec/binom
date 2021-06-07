@@ -6,10 +6,10 @@ import (
 )
 
 type User struct {
-	Id string
-	Email sql.NullString
-	Name sql.NullString
-	Created pg.NullTime
-	Username sql.NullString
-	Phone sql.NullString
+	Id string `json:"id"`
+	Email sql.NullString `json:"email"`
+	Name sql.NullString `json:"name"`
+	Created pg.NullTime `json:"created"`
+	Username sql.NullString `json:"username"`
+	Phone sql.NullString `json:"-"`
 }

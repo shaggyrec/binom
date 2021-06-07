@@ -34,7 +34,12 @@ func RunMigrations(user string, host string, dbName string, pwd string) {
 		panic(err)
 	}
 	err = m.Steps(1000)
-	if err != nil && !errors.Is(err, os.ErrNotExist) && !errors.Is(err, migrate.ErrShortLimit{}) {
-		log.Panicln(err)
+	if err != nil && !errors.Is(err, os.ErrNotExist) {
+		switch err.(type) {
+			case migrate.ErrShortLimit:
+				return
+			default:
+				log.Panic(err)
+		}
 	}
 }

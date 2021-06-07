@@ -11,17 +11,22 @@ type Storage interface {
 }
 
 type Factory struct {
-	AuthCode AuthCodeStorage
 }
 
-func AuthCode(db *pg.DB) *AuthCodeStorage {
+func (f *Factory) AuthCode(db *pg.DB) *AuthCodeStorage {
 	storage := AuthCodeStorage{}
 	storage.Init(db)
 	return &storage
 }
 
-func User(db *pg.DB) *UserStorage {
+func (f *Factory) User(db *pg.DB) *UserStorage {
 	storage := UserStorage{}
+	storage.Init(db)
+	return &storage
+}
+
+func (f *Factory) Token(db *pg.DB) *TokenStorage {
+	storage := TokenStorage{}
 	storage.Init(db)
 	return &storage
 }

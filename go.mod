@@ -3,6 +3,7 @@ module binom
 go 1.16
 
 require (
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
 	github.com/go-chi/chi v1.5.4
 	github.com/go-chi/render v1.0.1 // indirect
 	github.com/go-pg/pg v8.0.7+incompatible

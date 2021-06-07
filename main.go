@@ -22,7 +22,7 @@ func main() {
 	db := functions.DbConnection(pgUser, pgHost, pgDbName, pgPwd)
 	defer db.Close()
 	log.Print("Starting server on port 4030")
-	err := http.ListenAndServe(":4030", server.Init(db))
+	err := http.ListenAndServe(":4030", server.Init(db, os.Getenv("JWT_SECRET")))
 	if err != nil {
 		log.Panic(err)
 	}

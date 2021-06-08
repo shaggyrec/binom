@@ -36,9 +36,8 @@ func (tokenService *TokenService) GenerateTokenPair(userId string) (map[string]s
 	refreshToken := jwt.New(jwt.SigningMethodHS256)
 	rtClaims := refreshToken.Claims.(jwt.MapClaims)
 	rtClaims["exp"] = time.Now().Add(time.Hour * 24 * 31 * 12).Unix()
-	rtClaims["t"] = functions.MD5(t)
 
-	rt, err := refreshToken.SignedString([]byte(tokenService.jwtSecret))
+	rt, err := refreshToken.SignedString([]byte(tokenService.refreshTokenSign(t)))
 	if err != nil {
 		return nil, err
 	}
@@ -60,16 +59,13 @@ func (tokenService *TokenService) CheckToken(refreshToken string, accessToken st
 	var aTokenClaims jwt.MapClaims
 
 	_, err := jwt.ParseWithClaims(refreshToken, &rtTokenClaims, func(token *jwt.Token) (interface{}, error) {
-		return []byte(tokenService.jwtSecret), nil
+		return []byte(tokenService.refreshTokenSign(accessToken)), nil
 	})
 
 	if err != nil {
 		return "", err
 	}
 
-	if rtTokenClaims["t"] != functions.MD5(accessToken) {
-		return "", errors.New("invalid refresh token")
-	}
 	rt, err := tokenService.storage.Get(refreshToken)
 
 	if err != nil {
@@ -87,4 +83,8 @@ func (tokenService *TokenService) CheckToken(refreshToken string, accessToken st
 	}
 
 	return aTokenClaims["id"].(string), nil
+}
+
+func (tokenService *TokenService) refreshTokenSign(accessToken string) string {
+	return functions.MD5(accessToken + tokenService.jwtSecret)
 }

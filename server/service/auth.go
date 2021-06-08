@@ -3,6 +3,7 @@ package service
 import (
 	"binom/server/dataType"
 	"binom/server/storage"
+	"strings"
 )
 
 type AuthService struct {
@@ -19,7 +20,10 @@ func (a *AuthService) AuthByEmail(email string) (*dataType.User, map[string]stri
 	user, err := a.userStorage.GetByEmail(email)
 
 	if err != nil {
-		user, err = a.userStorage.Create(&dataType.User{Email: dataType.NullString{String: email, Valid: true}})
+		user, err = a.userStorage.Create(&dataType.User{
+			Email: dataType.NullString{String: email, Valid: true},
+			Name: dataType.NullString{String: strings.Split(email, "@")[0], Valid: true},
+		})
 		if err != nil {
 			return user, nil, err
 		}

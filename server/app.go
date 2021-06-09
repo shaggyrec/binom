@@ -52,9 +52,20 @@ func Init(db *pg.DB, jwtSecret string) *chi.Mux {
 		r.Group(func(r chi.Router) {
 			r.Use(middlewares.JwtAuth(jwtSecret))
 			r.Get("/me", userController.Me)
-			r.Get("/test", func(w http.ResponseWriter, r *http.Request) {
-				token := r.Context().Value("token").(string)
-				w.Write([]byte("It's your token: " + token))
+			r.Route("/topic", func(r chi.Router) {
+				// r.Get("/{alias}")
+				// r.Get("/{id}")
+				// r.Post("/")
+				// r.Put("/{id}")
+				// r.Delete("/{id}")
+			})
+
+			r.Route("/lesson", func(r chi.Router) {
+				// r.Get("/{alias}")
+				// r.Get("/{id}")
+				// r.Post("/")
+				// r.Put("/{id}")
+				// r.Delete("/{id}")
 			})
 		})
 	})

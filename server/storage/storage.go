@@ -30,3 +30,9 @@ func (f *Factory) Token(db *pg.DB) *TokenStorage {
 	storage.Init(db)
 	return &storage
 }
+
+func (f Factory) Topic(db *pg.DB) *TopicStorage {
+	storage := TopicStorage{}
+	storage.Init(db)
+	return &storage
+}

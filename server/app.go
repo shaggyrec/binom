@@ -17,6 +17,7 @@ func Init(db *pg.DB, jwtSecret string) *chi.Mux {
 	authCodeStorage := storageFactory.AuthCode(db)
 	tokenStorage := storageFactory.Token(db)
 	userStorage := storageFactory.User(db)
+	topicStorage := storageFactory.Topic(db)
 	// services
 	serviceFactory := service.Factory{}
 	tokenService := serviceFactory.TokenService(jwtSecret, tokenStorage)
@@ -29,6 +30,8 @@ func Init(db *pg.DB, jwtSecret string) *chi.Mux {
 	pageController := controllers.PageController{}
 	userController := controllers.UserController{}
 	userController.Init(userStorage)
+	topicController := controllers.TopicController{}
+	topicController.Init(topicStorage)
 
 
 	r := chi.NewRouter()

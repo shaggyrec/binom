@@ -41,6 +41,30 @@ func (c *TopicController) Create(w http.ResponseWriter, r *http.Request) {
 	render.JSON(w, r, t)
 }
 
+func (c *TopicController) Update(w http.ResponseWriter, r *http.Request) {
+	var topicToUpdate dataType.Topic
+	if err := functions.ParseRequest(w, r, &topicToUpdate);  err != nil {
+		return
+	}
+
+	if topicToUpdate.Id == "" {
+		exceptions.BadRequestError(w, r, "`id` is mandatory", exceptions.ErrorFieldIsMandatory)
+		return
+	}
+
+	// TODO check access
+
+	_, err := c.topicStorage.Update(&topicToUpdate)
+
+	if err != nil {
+		log.Print(err)
+		exceptions.BadRequestError(w, r, err.Error(), exceptions.NothingAffected)
+		return
+	}
+
+	render.JSON(w, r, "ok")
+}
+
 func (c *TopicController) List(w http.ResponseWriter, r *http.Request) {
 	limit := 50
 	offset := 0

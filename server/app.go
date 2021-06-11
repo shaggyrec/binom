@@ -56,9 +56,10 @@ func Init(db *pg.DB, jwtSecret string) *chi.Mux {
 			r.Use(middlewares.JwtAuth(jwtSecret))
 			r.Get("/me", userController.Me)
 			r.Route("/topic", func(r chi.Router) {
-				// r.Get("/{alias}")
+				r.Get("/", topicController.List)
+				//r.Get("/{alias}", topicController.byAlias)
 				// r.Get("/{id}")
-				// r.Post("/")
+				r.Post("/", topicController.Create)
 				// r.Put("/{id}")
 				// r.Delete("/{id}")
 			})

@@ -2,6 +2,7 @@ package storage
 
 import (
 	"binom/server/dataType"
+	"errors"
 	"github.com/go-pg/pg"
 )
 
@@ -20,8 +21,11 @@ func (s *TopicStorage) Create(topic *dataType.Topic) (*dataType.Topic, error) {
 }
 
 func (s *TopicStorage) Update(topic *dataType.Topic) (*dataType.Topic, error) {
-	_, err := s.db.Model(topic).WherePK().Update()
+	r, err := s.db.Model(topic).WherePK().Update()
 
+	if r != nil && r.RowsAffected() == 0 {
+		err = errors.New("nothing affected")
+	}
 	return topic, err
 }
 

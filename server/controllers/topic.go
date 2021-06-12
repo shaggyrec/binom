@@ -5,6 +5,7 @@ import (
 	"binom/server/exceptions"
 	"binom/server/functions"
 	"binom/server/storage"
+	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
 	"log"
 	"net/http"
@@ -47,10 +48,7 @@ func (c *TopicController) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if topicToUpdate.Id == "" {
-		exceptions.BadRequestError(w, r, "`id` is mandatory", exceptions.ErrorFieldIsMandatory)
-		return
-	}
+	topicToUpdate.Id = chi.URLParam(r, "id")
 
 	// TODO check access
 
@@ -62,6 +60,14 @@ func (c *TopicController) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	render.JSON(w, r, "ok")
+}
+
+func (c * TopicController) Delete(w http.ResponseWriter, r *http.Request) {
+	err := c.topicStorage.Delete(chi.URLParam(r, "id"))
+	if err != nil {
+		exceptions.BadRequestError(w, r, err.Error(), exceptions.NothingAffected)
+	}
 	render.JSON(w, r, "ok")
 }
 
@@ -85,4 +91,16 @@ func (c *TopicController) List(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	render.JSON(w, r, topics)
+}
+
+func (c *TopicController) ByAlias(w http.ResponseWriter, r *http.Request)  {
+	alias := chi.URLParam(r, "alias")
+
+	t, err := c.topicStorage.GetByAlias(alias)
+
+	if err != nil {
+		exceptions.NotFoundError(w, r, "Topic not found")
+	}
+
+	render.JSON(w, r, t)
 }

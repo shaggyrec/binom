@@ -1,12 +1,15 @@
 package dataType
 
-import "github.com/go-pg/pg"
+import (
+	"github.com/go-pg/pg"
+	"gopkg.in/guregu/null.v4"
+)
 
 type Topic struct {
 	Id string `json:"id"`
-	Name NullString `json:"name"`
+	Name null.String `json:"name"`
 	Created pg.NullTime `json:"created"`
-	Text NullString `json:"text"`
-	Pos NullInt `json:"pos"`
-	Alias NullString `json:"alias"`
+	Text null.String `json:"text"`
+	Pos null.Int `json:"pos"`
+	Alias null.String `json:"alias"`
 }

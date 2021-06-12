@@ -13,5 +13,6 @@ require (
 	github.com/shaggyrec/sendmail v0.0.0-20210605123532-3f0e8054b9ae // indirect
 	github.com/stretchr/testify v1.7.0 // indirect
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
+	gopkg.in/guregu/null.v4 v4.0.0 // indirect
 	mellium.im/sasl v0.2.1 // indirect
 )

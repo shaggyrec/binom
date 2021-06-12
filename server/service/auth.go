@@ -3,6 +3,8 @@ package service
 import (
 	"binom/server/dataType"
 	"binom/server/storage"
+	"database/sql"
+	"gopkg.in/guregu/null.v4"
 	"strings"
 )
 
@@ -21,8 +23,8 @@ func (a *AuthService) AuthByEmail(email string) (*dataType.User, map[string]stri
 
 	if err != nil {
 		user, err = a.userStorage.Create(&dataType.User{
-			Email: dataType.NullString{String: email, Valid: true},
-			Name: dataType.NullString{String: strings.Split(email, "@")[0], Valid: true},
+			Email: null.String{NullString: sql.NullString{String: email, Valid: true}},
+			Name: null.String{NullString: sql.NullString{ String: strings.Split(email, "@")[0], Valid: true}},
 		})
 		if err != nil {
 			return user, nil, err

@@ -36,3 +36,9 @@ func (f Factory) Topic(db *pg.DB) *TopicStorage {
 	storage.Init(db)
 	return &storage
 }
+
+func (f Factory) Lesson(db *pg.DB) *LessonStorage {
+	storage := LessonStorage{}
+	storage.Init(db)
+	return &storage
+}

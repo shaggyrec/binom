@@ -18,6 +18,7 @@ func Init(db *pg.DB, jwtSecret string) *chi.Mux {
 	tokenStorage := storageFactory.Token(db)
 	userStorage := storageFactory.User(db)
 	topicStorage := storageFactory.Topic(db)
+	lessonStorage := storageFactory.Lesson(db)
 	// services
 	serviceFactory := service.Factory{}
 	tokenService := serviceFactory.TokenService(jwtSecret, tokenStorage)
@@ -32,6 +33,8 @@ func Init(db *pg.DB, jwtSecret string) *chi.Mux {
 	userController.Init(userStorage)
 	topicController := controllers.TopicController{}
 	topicController.Init(topicStorage)
+	lessonController := controllers.LessonController{}
+	lessonController.Init(lessonStorage)
 
 
 	r := chi.NewRouter()
@@ -58,18 +61,18 @@ func Init(db *pg.DB, jwtSecret string) *chi.Mux {
 			r.Route("/topic", func(r chi.Router) {
 				r.Get("/list", topicController.List)
 				r.Get("/{alias}", topicController.ByAlias)
-				// r.Get("/{id}")
 				r.Post("/", topicController.Create)
 				r.Put("/{id}", topicController.Update)
 				r.Delete("/{id}", topicController.Delete)
+				// r.Get("/{id}")
 			})
 
 			r.Route("/lesson", func(r chi.Router) {
-				// r.Get("/{alias}")
-				// r.Get("/{id}")
-				// r.Post("/")
-				// r.Put("/{id}")
-				// r.Delete("/{id}")
+				//r.Get("/{id}", lessonController.ById)
+				r.Get("/{alias}", lessonController.ByAlias)
+				r.Post("/", lessonController.Create)
+				r.Put("/{id}", lessonController.Update)
+				r.Delete("/{id}", lessonController.Delete)
 			})
 		})
 	})

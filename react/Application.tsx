@@ -9,19 +9,22 @@ import { createBrowserHistory } from 'history';
 import { Route, Switch } from 'react-router-dom';
 
 import Home from './containers/Home';
+import Header from './containers/Header';
 
 
 const history = createBrowserHistory();
 const router = connectRouter(history);
 const sagas = createSagaMiddleware();
 
+let store;
 
 function Application ({ state = {} }) {
-    const store = configureStore(rootReducer(router), state, history, sagas)
+    store = configureStore(rootReducer(router), state, history, sagas)
     sagas.run(rootSaga);
 
     return (
         <Provider store={store}>
+            <Header />
             <ConnectedRouter history={history}>
                 <Switch>
                     <Route path="/app" component={Home}/>
@@ -31,4 +34,5 @@ function Application ({ state = {} }) {
     );
 }
 
+export type RootState = ReturnType<typeof store.getState>;
 export default Application;

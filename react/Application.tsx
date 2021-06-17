@@ -2,14 +2,13 @@ import React from 'react';
 import { ConnectedRouter, connectRouter } from 'connected-react-router';
 import { Provider } from 'react-redux';
 import createSagaMiddleware from 'redux-saga';
+import { createBrowserHistory } from 'history';
+
 import rootReducer from './ducks';
 import rootSaga from './sagas';
 import configureStore from './store';
-import { createBrowserHistory } from 'history';
-import { Route, Switch } from 'react-router-dom';
-
-import Home from './containers/Home';
 import Header from './containers/Header';
+import Root from './containers/Root';
 
 
 const history = createBrowserHistory();
@@ -26,9 +25,7 @@ function Application ({ state = {} }) {
         <Provider store={store}>
             <Header />
             <ConnectedRouter history={history}>
-                <Switch>
-                    <Route path="/app" component={Home}/>
-                </Switch>
+                <Root />
             </ConnectedRouter>
         </Provider>
     );

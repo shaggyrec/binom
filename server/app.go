@@ -7,6 +7,7 @@ import (
 	"binom/server/storage"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
+	"github.com/go-chi/cors"
 	"github.com/go-pg/pg"
 	"net/http"
 )
@@ -39,6 +40,13 @@ func Init(db *pg.DB, jwtSecret string) *chi.Mux {
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
+	r.Use(cors.Handler(cors.Options{
+		AllowedOrigins:   []string{"https://*", "http://*"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type"},
+		ExposedHeaders:   []string{"Link"},
+		AllowCredentials: false,
+	}))
 	r.Use(middlewares.ParseAuthHeader)
 
 	r.Get("/monitoring", func(w http.ResponseWriter, r *http.Request) {

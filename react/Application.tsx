@@ -9,6 +9,7 @@ import rootSaga from './sagas';
 import configureStore from './store';
 import Header from './containers/Header';
 import Root from './containers/Root';
+import BottomMenu from './containers/BottomMenu';
 
 
 export const history = createBrowserHistory();
@@ -23,7 +24,6 @@ function Application ({ state = {} }) {
 
     return (
         <Provider store={store}>
-            <Header />
             <ConnectedRouter history={history}>
                 <Root history={history}/>
             </ConnectedRouter>

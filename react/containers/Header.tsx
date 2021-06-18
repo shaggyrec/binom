@@ -1,13 +1,12 @@
 import React, {ReactElement} from 'react';
 import { connect } from 'react-redux';
+import Logo from '../components/Logo';
 
 
 function Header(): ReactElement {
     return (
         <header>
-            <div className="container">
-                binom
-            </div>
+            <Logo />
         </header>
     );
 }

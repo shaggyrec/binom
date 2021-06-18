@@ -10,9 +10,10 @@ import { getTokens } from '../tokens';
 import { requestMe } from '../ducks/users';
 import { setFrom } from '../ducks/auth';
 import { setLoading } from '../ducks/application';
+import BottomMenu from './BottomMenu';
+import Header from './Header';
 
 function Root({ history, me, requestMe, setFrom, loading, setLoading }): ReactElement {
-    console.log(me);
     useEffect(() => {
         setFrom(history.location.state?.from || '/');
         const [t, rt] = getTokens()
@@ -26,11 +27,15 @@ function Root({ history, me, requestMe, setFrom, loading, setLoading }): ReactEl
     }
 
     return (
-        <Switch>
-            <Route path="/auth" component={Auth}/>
-            {/* @ts-ignore */}
-            <ProtectedRoute exact path="/app" component={Home} isAuthorized={!!me} authPath="/auth"/>
-        </Switch>
+        <div className="container root">
+            <Header />
+            <Switch>
+                <Route path="/auth" component={Auth}/>
+                {/* @ts-ignore */}
+                <ProtectedRoute exact path="/app" component={Home} isAuthorized={!!me} authPath="/auth"/>
+            </Switch>
+            <BottomMenu />
+        </div>
     );
 }
 

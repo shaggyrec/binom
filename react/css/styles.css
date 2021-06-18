@@ -2,6 +2,9 @@ html{line-height:1.15;-webkit-text-size-adjust:100%}body{margin:0}main{display:b
 *, *:before, *:after {
     box-sizing: border-box;
 }
+html, body {
+    height: 100%;
+}
 html {
     font-size: 100%;
     -webkit-text-size-adjust: 100%;
@@ -23,6 +26,14 @@ p, h1, h2, h3, h4, h5, h6, .text {
     text-shadow: 1px 1px 1px #FFF;
 }
 
+#binomapp {
+    height: 100%;
+}
+.root {
+    padding-bottom: 80px;
+    height: 100%;
+}
+
 .content {
     color: #5c5e63;
 }
@@ -30,12 +41,17 @@ p, h1, h2, h3, h4, h5, h6, .text {
 .container {
     max-width: 1500px;
     margin: 0 auto;
-    padding: 0 15px;
+    padding-left: 15px;
+    right: 15px;
 }
 
 header {
-    border: 1px solid #ccc;
-    padding: 10px 0;
+    border-bottom: 1px solid #ccc;
+    padding: 10px 0 15px;
+}
+
+footer {
+    border-top: 1px solid #ccc;
 }
 
 button, input {
@@ -131,4 +147,47 @@ button:active {
 
 .mt-0 {
     margin-top: 0;
+}
+
+.transition2 {
+    transition: all .2s;
+}
+
+.transition3 {
+    transition: all .3s;
+}
+
+
+.transition4 {
+    transition: all .4s;
+}
+.logo {
+    width: 400px;
+    height: 100px;
+    background-image: url("/static/binom_green_l_m.png");
+    background-size: 100%;
+    background-repeat: no-repeat;
+}
+.bottom-menu {
+    position: fixed;
+    z-index: 100;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #EBECF0;
+}
+
+.bottom-menu-nav {
+    display: flex;
+    justify-content: space-around;
+}
+
+.bottom-menu-nav-link {
+    width: 100%;
+    text-align: center;
+    padding: 10px 0 0;
+}
+
+.bottom-menu-nav-link:hover {
+    background: rgba(0,0,0,.05);
 }

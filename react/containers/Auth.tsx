@@ -16,7 +16,6 @@ function Auth({ me, from, setEmail, email, code, sendEmail, sendCode, setCode, e
     }
 
     useEffect(() => {
-        console.log(me)
         if (me) {
             history.push(from);
         }

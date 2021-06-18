@@ -15,4 +15,5 @@ type User struct {
 	Created pg.NullTime `json:"created"`
 	Username null.String `json:"username"`
 	Phone null.String `json:"-"`
+	Role null.Int `json:"role"`
 }

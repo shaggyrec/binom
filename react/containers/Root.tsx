@@ -12,6 +12,9 @@ import { setFrom } from '../ducks/auth';
 import { setLoading } from '../ducks/application';
 import BottomMenu from './Footer';
 import Header from './Header';
+import ControlPanel from './ControlPanel';
+import { UserRole } from '../dataTypes/user';
+import CreateTopic from './CreateTopic';
 
 function Root({ history, me, requestMe, setFrom, loading, setLoading }): ReactElement {
     useEffect(() => {
@@ -31,8 +34,9 @@ function Root({ history, me, requestMe, setFrom, loading, setLoading }): ReactEl
             <Header />
             <Switch>
                 <Route path="/auth" component={Auth}/>
-                {/* @ts-ignore */}
                 <ProtectedRoute exact path="/app" component={Home} isAuthorized={!!me} authPath="/auth"/>
+                <ProtectedRoute component={ControlPanel} isAuthorized={me.role === UserRole.admin} path="/cp" exact authPath="/auth" />
+                <ProtectedRoute component={CreateTopic} isAuthorized={me.role === UserRole.admin} path="/topic/create" exact authPath="/auth" />
             </Switch>
             <BottomMenu />
         </div>

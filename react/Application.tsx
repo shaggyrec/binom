@@ -11,7 +11,7 @@ import Header from './containers/Header';
 import Root from './containers/Root';
 
 
-const history = createBrowserHistory();
+export const history = createBrowserHistory();
 const router = connectRouter(history);
 const sagas = createSagaMiddleware();
 
@@ -25,7 +25,7 @@ function Application ({ state = {} }) {
         <Provider store={store}>
             <Header />
             <ConnectedRouter history={history}>
-                <Root />
+                <Root history={history}/>
             </ConnectedRouter>
         </Provider>
     );

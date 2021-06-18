@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { RootState } from '../Application';
 import { Redirect } from 'react-router';
 import Form from '../components/form/Form';
@@ -8,12 +8,19 @@ import Button from '../components/Button';
 import { sendCode, sendEmail, setCode, setEmail } from '../ducks/auth';
 import CodeInput from '../components/form/CodeInput';
 
-function Auth({ me, from, setEmail, email, code, sendEmail, sendCode, setCode, error, codeId }): ReactElement {
+function Auth({ me, from, setEmail, email, code, sendEmail, sendCode, setCode, error, codeId, history }): ReactElement {
     const [formError, setFormError] = useState(error);
 
     if (me) {
         return <Redirect to={from} />
     }
+
+    useEffect(() => {
+        console.log(me)
+        if (me) {
+            history.push(from);
+        }
+    });
 
     const handleSubmit = () => {
         if (codeId) {

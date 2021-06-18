@@ -24,7 +24,7 @@ func (tokenService *TokenService) GenerateTokenPair(userId string) (map[string]s
 
 
 	claims := token.Claims.(jwt.MapClaims)
-	claims["exp"] = time.Now().Add(time.Minute * 15).Unix()
+	claims["exp"] = time.Now().Add(time.Second * 15).Unix()
 	claims["id"] = userId
 
 
@@ -78,7 +78,7 @@ func (tokenService *TokenService) CheckToken(refreshToken string, accessToken st
 		return []byte(tokenService.jwtSecret), nil
 	})
 
-	if err != nil {
+	if err != nil && err.Error() != "Token is expired" {
 		return "", err
 	}
 

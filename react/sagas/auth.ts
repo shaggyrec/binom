@@ -34,7 +34,7 @@ function* sendCodeProcess(): IterableIterator<any> {
     }
 }
 
-function* refreshTokenProcess(): IterableIterator<any> {
+export function* refreshTokenProcess(): IterableIterator<any> {
     const [at, rt] = getTokens();
     if (!at || !rt) {
         yield put(push('/auth'));
@@ -46,7 +46,7 @@ function* refreshTokenProcess(): IterableIterator<any> {
                 accessToken,
                 refreshToken
             }
-        }: AxiosResponse = yield call(serverRequest, '/api/auth/code', 'post', { refreshToken: rt });
+        }: AxiosResponse = yield call(serverRequest, '/api/auth/refresh', 'post', { refreshToken: rt });
         storeTokens(accessToken, refreshToken);
     } catch (e) {
         eraseTokens();

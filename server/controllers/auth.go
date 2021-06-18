@@ -97,7 +97,7 @@ func (c *AuthController) RefreshToken (w http.ResponseWriter, r *http.Request) {
 	userId, err := c.tokenService.CheckToken(b.RefreshToken, accessToken)
 
 	if err != nil {
-		exceptions.UnauthorizedError(w, r, "Something wrong with either refresh or access token", exceptions.ErrorBadToken)
+		exceptions.UnauthorizedError(w, r, err.Error(), exceptions.ErrorBadToken)
 		return
 	}
 

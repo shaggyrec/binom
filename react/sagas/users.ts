@@ -1,15 +1,16 @@
 import { call, ForkEffect, put, takeEvery } from '@redux-saga/core/effects';
 import * as usersActions from '../ducks/users';
-import { AxiosResponse } from 'axios';
-import { serverRequest } from '../functions';
+import * as applicationActions from '../ducks/application';
+import { apiRequest } from './index';
 
 function* requestMeProcess(): IterableIterator<any> {
     try {
-        const { data: user }: AxiosResponse = yield call(serverRequest, '/api/me');
+        const user = yield call(apiRequest,  '/api/me');
         yield put(usersActions.setMe(user));
     } catch (e) {
         yield put(usersActions.error(e.message));
     }
+    yield put(applicationActions.setLoading(false));
 }
 
 export function* users(): IterableIterator<ForkEffect> {

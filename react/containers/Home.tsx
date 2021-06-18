@@ -5,7 +5,7 @@ import { requestList } from '../ducks/topics';
 
 function Home({ topics, requestTopics }): ReactElement {
     useEffect(() => {
-        if (topics.length === 0) {
+        if (!topics || topics.length === 0) {
             requestTopics();
         }
     }, [])

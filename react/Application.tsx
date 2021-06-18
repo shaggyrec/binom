@@ -9,7 +9,7 @@ import rootSaga from './sagas';
 import configureStore from './store';
 import Header from './containers/Header';
 import Root from './containers/Root';
-import BottomMenu from './containers/BottomMenu';
+import BottomMenu from './containers/Footer';
 
 
 export const history = createBrowserHistory();

@@ -1,13 +1,8 @@
 import React, { ReactElement } from 'react';
-import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { RootState } from '../Application';
-import { Learning, Profile } from '../components/Icons';
+import { Gear, Learning, Profile } from './Icons';
 
-function BottomMenu({ me }): ReactElement {
-    if (!me) {
-        return null;
-    }
+function BottomNavigation({ isAdmin }): ReactElement {
     return (
         <div className="bottom-menu">
             <div className="container">
@@ -15,14 +10,13 @@ function BottomMenu({ me }): ReactElement {
                     <nav className="bottom-menu-nav">
                         <Link className="bottom-menu-nav-link transition3" to="/app"><Learning /></Link>
                         <Link className="bottom-menu-nav-link transition3" to="/me"><Profile /></Link>
+                        {// TODO make isAdmin (without ! when roles will implemented)
+                            !isAdmin && <Link className="bottom-menu-nav-link transition3" to="/cp"><Gear/></Link>}
                     </nav>
                 </footer>
             </div>
         </div>
     );
 }
-export default connect(
-    (state: RootState) => ({
-        me: state.users.me,
-    })
-)(BottomMenu);
+
+export default BottomNavigation;

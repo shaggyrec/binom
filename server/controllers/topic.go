@@ -92,7 +92,6 @@ func (c *TopicController) List(w http.ResponseWriter, r *http.Request) {
 	}
 
 	functions.RenderJSON(w, r, *topics)
-
 }
 
 func (c *TopicController) ByAlias(w http.ResponseWriter, r *http.Request)  {

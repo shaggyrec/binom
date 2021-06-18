@@ -10,7 +10,7 @@ import { getTokens } from '../tokens';
 import { requestMe } from '../ducks/users';
 import { setFrom } from '../ducks/auth';
 import { setLoading } from '../ducks/application';
-import BottomMenu from './BottomMenu';
+import BottomMenu from './Footer';
 import Header from './Header';
 
 function Root({ history, me, requestMe, setFrom, loading, setLoading }): ReactElement {

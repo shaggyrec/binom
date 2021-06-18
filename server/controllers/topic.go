@@ -90,7 +90,9 @@ func (c *TopicController) List(w http.ResponseWriter, r *http.Request) {
 		exceptions.ServerError(w, r)
 		return
 	}
-	render.JSON(w, r, topics)
+
+	functions.RenderJSON(w, r, *topics)
+
 }
 
 func (c *TopicController) ByAlias(w http.ResponseWriter, r *http.Request)  {

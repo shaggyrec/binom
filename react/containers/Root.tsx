@@ -17,6 +17,7 @@ import { UserRole } from '../dataTypes/user';
 import CreateTopic from './CreateTopic';
 import Modal from '../components/Modal';
 import { ApplicationMessageType } from '../dataTypes/applicationMessage';
+import TopicOverview from './TopicOverview';
 
 function Root({ history, me, requestMe, setFrom, loading, setLoading, hideModal, message }): ReactElement {
     useEffect(() => {
@@ -39,6 +40,7 @@ function Root({ history, me, requestMe, setFrom, loading, setLoading, hideModal,
                 <ProtectedRoute exact path="/app" component={Home} isAuthorized={!!me} authPath="/auth"/>
                 <ProtectedRoute component={ControlPanel} isAuthorized={me?.role === UserRole.admin} path="/cp" exact authPath="/auth" />
                 <ProtectedRoute component={CreateTopic} isAuthorized={me?.role === UserRole.admin} path="/topic/create" exact authPath="/auth" />
+                <ProtectedRoute component={TopicOverview} isAuthorized={me?.role === UserRole.admin} path="/topic/:alias" exact authPath="/auth" />
             </Switch>
             <BottomMenu />
             {message && <Modal type={message.type || ApplicationMessageType.info} onClickOk={hideModal}>{message.text}</Modal>}

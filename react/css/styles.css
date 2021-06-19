@@ -2,9 +2,7 @@ html{line-height:1.15;-webkit-text-size-adjust:100%}body{margin:0}main{display:b
 *, *:before, *:after {
     box-sizing: border-box;
 }
-html, body {
-    height: 100%;
-}
+
 html {
     font-size: 100%;
     -webkit-text-size-adjust: 100%;
@@ -26,9 +24,6 @@ p, h1, h2, h3, h4, h5, h6, .text {
     text-shadow: 1px 1px 1px #FFF;
 }
 
-#binomapp {
-    height: 100%;
-}
 .root {
     padding-bottom: 80px;
     height: 100%;
@@ -40,9 +35,15 @@ p, h1, h2, h3, h4, h5, h6, .text {
 
 .container {
     max-width: 1500px;
-    margin: 0 auto;
+    margin-left: auto;
+    margin-right: auto;
     padding-left: 15px;
-    right: 15px;
+    padding-right: 15px;
+}
+
+.centered {
+    margin-left: auto;
+    margin-right: auto;
 }
 
 header {
@@ -122,6 +123,12 @@ button:active {
     box-shadow: inset 1px 1px 2px #BABECC, inset -1px -1px 2px #FFF;
 }
 
+.button-green {
+    background: #039151;
+    color: #deefe7;
+    text-shadow: none;
+}
+
 .w-600 {
     max-width: 600px;
 }
@@ -170,7 +177,7 @@ button:active {
 }
 .bottom-menu {
     position: fixed;
-    z-index: 100;
+    z-index: 10;
     bottom: 0;
     left: 0;
     right: 0;
@@ -190,4 +197,17 @@ button:active {
 
 .bottom-menu-nav-link:hover {
     background: rgba(0,0,0,.05);
+}
+
+.overlay {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0,0,0,.2);
 }

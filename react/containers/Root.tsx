@@ -15,6 +15,7 @@ import Header from './Header';
 import ControlPanel from './ControlPanel';
 import { UserRole } from '../dataTypes/user';
 import CreateTopic from './CreateTopic';
+import Modal from '../components/Modal';
 
 function Root({ history, me, requestMe, setFrom, loading, setLoading }): ReactElement {
     useEffect(() => {
@@ -39,6 +40,7 @@ function Root({ history, me, requestMe, setFrom, loading, setLoading }): ReactEl
                 <ProtectedRoute component={CreateTopic} isAuthorized={me.role === UserRole.admin} path="/topic/create" exact authPath="/auth" />
             </Switch>
             <BottomMenu />
+            <Modal type="error">Ошибка</Modal>
         </div>
     );
 }

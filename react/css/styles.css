@@ -55,7 +55,7 @@ footer {
     border-top: 1px solid #ccc;
 }
 
-button, input {
+button, input, textarea {
     border: 0;
     outline: 0;
     font-size: 16px;
@@ -65,7 +65,7 @@ button, input {
     text-shadow: 1px 1px 0 #FFF;
 }
 
-input {
+input, textarea {
     margin-right: 8px;
     box-shadow: inset 2px 2px 5px #BABECC, inset -5px -5px 10px #FFF;
     width: 100%;
@@ -73,6 +73,9 @@ input {
     transition: all 0.2s ease-in-out;
     appearance: none;
     -webkit-appearance: none;
+}
+textarea {
+    resize: vertical;
 }
 input.invalid {
     border: 1px solid #AE1100;

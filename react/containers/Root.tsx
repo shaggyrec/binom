@@ -3,7 +3,7 @@ import React, { ReactElement, useEffect } from 'react';
 import { Route, Switch } from 'react-router';
 import { connect } from 'react-redux';
 
-import { history, RootState } from '../Application';
+import { RootState } from '../Application';
 import Home from './Home';
 import Auth from './Auth';
 import { getTokens } from '../tokens';
@@ -14,10 +14,11 @@ import BottomMenu from './Footer';
 import Header from './Header';
 import ControlPanel from './ControlPanel';
 import { UserRole } from '../dataTypes/user';
-import CreateTopic from './CreateTopic';
+import TopicCreate from './TopicCreate';
 import Modal from '../components/Modal';
 import { ApplicationMessageType } from '../dataTypes/applicationMessage';
 import TopicOverview from './TopicOverview';
+import Loader from '../components/Loader';
 
 function Root({ history, me, requestMe, setFrom, loading, setLoading, hideModal, message }): ReactElement {
     useEffect(() => {
@@ -29,7 +30,7 @@ function Root({ history, me, requestMe, setFrom, loading, setLoading, hideModal,
     }, []);
 
     if (loading) {
-        return <div>Loading</div>;
+        return <Loader />;
     }
 
     return (
@@ -39,7 +40,7 @@ function Root({ history, me, requestMe, setFrom, loading, setLoading, hideModal,
                 <Route path="/auth" component={Auth}/>
                 <ProtectedRoute exact path="/app" component={Home} isAuthorized={!!me} authPath="/auth"/>
                 <ProtectedRoute component={ControlPanel} isAuthorized={me?.role === UserRole.admin} path="/cp" exact authPath="/auth" />
-                <ProtectedRoute component={CreateTopic} isAuthorized={me?.role === UserRole.admin} path="/topic/create" exact authPath="/auth" />
+                <ProtectedRoute component={TopicCreate} isAuthorized={me?.role === UserRole.admin} path="/topic/create" exact authPath="/auth" />
                 <ProtectedRoute component={TopicOverview} isAuthorized={me?.role === UserRole.admin} path="/topic/:alias" exact authPath="/auth" />
             </Switch>
             <BottomMenu />

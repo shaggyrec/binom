@@ -35,6 +35,9 @@ export const topic = createAction(TOPIC, topic => topic);
 export const error = createAction(ERROR, error => error);
 export const create = createAction(CREATE, (name: string, alias: string) => ({ name, alias }));
 export const request = createAction(REQUEST, alias => alias);
-export const update = createAction(UPDATE, topic => topic);
-export const remove = createAction(DELETE,alias => alias);
+export const update = createAction(UPDATE, (id, topic) => ({ id, topic }));
+export const remove = createAction(DELETE, id => id);
 export const success = createAction(SUCCESS, () => {});
+
+
+export const currentTopic = state => state.topics.current

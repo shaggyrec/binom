@@ -1,4 +1,4 @@
-import { ForkEffect, takeEvery, call, put } from '@redux-saga/core/effects';
+import { ForkEffect, takeEvery, call, put, select } from '@redux-saga/core/effects';
 
 import * as topicsActions from '../ducks/topics';
 import * as applicationActions from '../ducks/application';
@@ -30,26 +30,29 @@ function* createProcess({ payload: { name, alias } }): IterableIterator<any> {
         yield put(topicsActions.topic(topic));
         yield put(push('/topic/' + topic.alias));
     } catch (e) {
-        yield put(applicationActions.message(e.message));
+        yield put(applicationActions.error(e.message));
         yield put(topicsActions.error(e.message));
     }
 }
 
-function* updateProcess({ payload }): IterableIterator<any> {
+function* updateProcess({ payload: { id, topic } }): IterableIterator<any> {
     try {
-        yield call(apiRequest, '/api/topic', 'put', { id: payload });
-        yield call(topicsActions.requestList());
+        yield call(apiRequest, '/api/topic/' + id, 'put', topic);
+        yield put(topicsActions.requestList());
+        const currentTopic: {} = yield select(topicsActions.currentTopic);
+        yield put(topicsActions.topic({ ...currentTopic, ...topic }));
     } catch (e) {
-        yield put(applicationActions.message(e.message));
+        console.log(e);
+        yield put(applicationActions.error(e.message));
         yield put(topicsActions.error(e.message));
     }
 }
 function* removeProcess({ payload }): IterableIterator<any> {
     try {
-        yield call(apiRequest, '/api/topic', 'delete', { id: payload });
-        yield call(topicsActions.requestList());
+        yield call(apiRequest, '/api/topic/' + payload, 'delete');
+        yield put(topicsActions.requestList());
     } catch (e) {
-        yield put(applicationActions.message(e.message));
+        yield put(applicationActions.error(e.message));
         yield put(topicsActions.error(e.message));
     }
 }

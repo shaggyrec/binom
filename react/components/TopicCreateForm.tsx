@@ -5,7 +5,7 @@ import Input from './form/Input';
 import Button from './Button';
 import Form from './form/Form';
 
-function CreateTopicForm({ onSubmit }): ReactElement {
+function TopicCreateForm({ onSubmit }): ReactElement {
     const [topicName, setTopicName] = useState('');
     const [topicAlias, setTopicAlias] = useState('');
 
@@ -26,4 +26,4 @@ function CreateTopicForm({ onSubmit }): ReactElement {
     );
 }
 
-export default CreateTopicForm;
+export default TopicCreateForm;

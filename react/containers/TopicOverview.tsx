@@ -3,17 +3,26 @@ import { connect } from 'react-redux';
 import { RootState } from '../Application';
 import * as topicsActions from '../ducks/topics';
 import Loader from '../components/Loader';
+import TopicEditForm from '../components/TopicEditForm';
 
-function TopicOverview({ requestTopic, topic, loading, match: { params } }): ReactElement {
+function TopicOverview({ requestTopic, topic, loading, match: { params }, updateTopic }): ReactElement {
     useEffect(() => {
         if (!topic) {
             requestTopic(params.alias);
         }
     }, [])
-    if (!topic || loading) {
+    if (!topic) {
         return <Loader />;
     }
-    return <h1>{topic.name}</h1>;
+    function handleSubmit(updated) {
+        updateTopic(topic.id, updated)
+    }
+    return (
+        <>
+            <TopicEditForm {...topic} onSubmit={handleSubmit}/>
+            <Loader show={loading}/>
+        </>
+    );
 }
 
 export default connect(
@@ -23,5 +32,6 @@ export default connect(
     }),
     dispatch => ({
         requestTopic: alias => dispatch(topicsActions.request(alias)),
+        updateTopic: (id, updated) => dispatch(topicsActions.update(id, updated)),
     })
 )(TopicOverview);

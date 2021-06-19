@@ -9,15 +9,16 @@ import Auth from './Auth';
 import { getTokens } from '../tokens';
 import { requestMe } from '../ducks/users';
 import { setFrom } from '../ducks/auth';
-import { setLoading } from '../ducks/application';
+import { removeMessage, setLoading } from '../ducks/application';
 import BottomMenu from './Footer';
 import Header from './Header';
 import ControlPanel from './ControlPanel';
 import { UserRole } from '../dataTypes/user';
 import CreateTopic from './CreateTopic';
 import Modal from '../components/Modal';
+import { ApplicationMessageType } from '../dataTypes/applicationMessage';
 
-function Root({ history, me, requestMe, setFrom, loading, setLoading }): ReactElement {
+function Root({ history, me, requestMe, setFrom, loading, setLoading, hideModal, message }): ReactElement {
     useEffect(() => {
         setFrom(history.location.state?.from || '/');
         const [t, rt] = getTokens()
@@ -36,11 +37,11 @@ function Root({ history, me, requestMe, setFrom, loading, setLoading }): ReactEl
             <Switch>
                 <Route path="/auth" component={Auth}/>
                 <ProtectedRoute exact path="/app" component={Home} isAuthorized={!!me} authPath="/auth"/>
-                <ProtectedRoute component={ControlPanel} isAuthorized={me.role === UserRole.admin} path="/cp" exact authPath="/auth" />
-                <ProtectedRoute component={CreateTopic} isAuthorized={me.role === UserRole.admin} path="/topic/create" exact authPath="/auth" />
+                <ProtectedRoute component={ControlPanel} isAuthorized={me?.role === UserRole.admin} path="/cp" exact authPath="/auth" />
+                <ProtectedRoute component={CreateTopic} isAuthorized={me?.role === UserRole.admin} path="/topic/create" exact authPath="/auth" />
             </Switch>
             <BottomMenu />
-            <Modal type="error">Ошибка</Modal>
+            {message && <Modal type={message.type || ApplicationMessageType.info} onClickOk={hideModal}>{message.text}</Modal>}
         </div>
     );
 }
@@ -48,11 +49,13 @@ function Root({ history, me, requestMe, setFrom, loading, setLoading }): ReactEl
 export default connect(
     (state: RootState) => ({
         me: state.users.me,
-        loading: state.application.loading
+        loading: state.application.loading,
+        message: state.application.message,
     }),
     dispatch => ({
         requestMe: () => dispatch(requestMe()),
         setFrom: from => dispatch(setFrom(from)),
         setLoading: l => dispatch(setLoading(l)),
+        hideModal: () => dispatch(removeMessage())
     })
 )(Root);

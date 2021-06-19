@@ -8,7 +8,9 @@ function Button(props): ReactElement {
     ].filter(c => c).join(' ')
     return (
         <button
-            className={className}>
+            className={className}
+            onClick={props.onClick || (() => {})}
+        >
             {props.children}
         </button>
     );

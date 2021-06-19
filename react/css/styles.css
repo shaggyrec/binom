@@ -206,8 +206,59 @@ button:active {
     right: 0;
     top: 0;
     z-index: 20;
+    background: rgba(255,255,255,.7);
+    padding: 0 20px;
+    display: flex;
+}
+
+.overlay-content {
+    width: 100%;
+    position: relative;
+    max-width: 1500px;
+    margin: 0 auto;
+}
+
+.modal {
+    width: 100%;
+    max-width: 1500px;
+    left: 50%;
+    margin-left: -50%;
+    background-color: #EBECF0;
+    position: absolute;
+    bottom: 0;
+    top: 20%;
+    border-radius: 8px 8px 0;
+    padding: 20px;
+    animation: slideFromBottom both .3s;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: rgba(0,0,0,.2);
+    box-shadow: -5px -5px 20px #FFF, 5px 5px 20px #BABECC;
+}
+
+.error .modal-icon *{
+    fill: #AE1100;
+}
+
+.modal-content {
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+}
+
+.modal-text {
+    font-weight: bold;
+}
+
+.error .modal-text {
+    color: #AE1100;
+}
+
+.loader {
+
+}
+
+@keyframes slideFromBottom {
+    0% { transform: translateY(200%); }
+    100% { transform: translateY(0); }
 }

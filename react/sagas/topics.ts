@@ -1,6 +1,7 @@
 import { ForkEffect, takeEvery, call, put } from '@redux-saga/core/effects';
 
 import * as topicsActions from '../ducks/topics';
+import * as applicationActions from '../ducks/application';
 import { apiRequest } from './index';
 import { push } from 'connected-react-router';
 import { Topic } from '../dataTypes/topic';
@@ -29,6 +30,7 @@ function* createProcess({ payload: { name, alias } }): IterableIterator<any> {
         yield put(topicsActions.topic(topic));
         yield put(push('/topic/' + topic.alias));
     } catch (e) {
+        yield put(applicationActions.message(e.message));
         yield put(topicsActions.error(e.message));
     }
 }
@@ -38,6 +40,7 @@ function* updateProcess({ payload }): IterableIterator<any> {
         yield call(apiRequest, '/api/topic', 'put', { id: payload });
         yield call(topicsActions.requestList());
     } catch (e) {
+        yield put(applicationActions.message(e.message));
         yield put(topicsActions.error(e.message));
     }
 }
@@ -46,6 +49,7 @@ function* removeProcess({ payload }): IterableIterator<any> {
         yield call(apiRequest, '/api/topic', 'delete', { id: payload });
         yield call(topicsActions.requestList());
     } catch (e) {
+        yield put(applicationActions.message(e.message));
         yield put(topicsActions.error(e.message));
     }
 }

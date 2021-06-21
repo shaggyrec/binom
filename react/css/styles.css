@@ -261,6 +261,46 @@ button:active {
 
 }
 
+.list {
+    border-radius: 8px;
+    box-shadow: -5px -5px 20px #FFF, 5px 5px 20px #BABECC;
+    padding: 10px;
+}
+
+.list-item {
+    padding: 20px 15px;
+    border-bottom: thin solid rgba(0,0,0,.1);
+}
+
+.list-item-title {
+    font-size: 20px;
+    font-weight: 900;
+    line-height: 1.5;
+}
+
+.list-item:nth-last-child(1) {
+    border-bottom: none;
+}
+
+.list-item-info {
+    color: #818490;
+    font-size: 14px;
+    font-weight: 600;
+}
+.list-item-row {
+    display: flex;
+}
+.list-item-icon {
+    border: 1px solid;
+    border-radius: 50%;
+    font-size: 25px;
+    font-weight: bold;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    line-height: 1;
+}
+
 @keyframes slideFromBottom {
     0% { transform: translateY(200%); }
     100% { transform: translateY(0); }

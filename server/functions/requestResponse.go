@@ -22,7 +22,7 @@ func RenderJSON(w http.ResponseWriter, r *http.Request, response interface{}) {
 		case reflect.Slice:
 			arr := reflect.ValueOf(response)
 			if arr.Len() > 0 {
-				render.JSON(w, r, arr)
+				render.JSON(w, r, response)
 			} else {
 				render.JSON(w, r, make([]string, 0))
 			}

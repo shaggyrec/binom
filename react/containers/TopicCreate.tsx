@@ -1,7 +1,7 @@
 import React  from 'react';
 import { connect } from 'react-redux';
 
-import TopicCreateForm from '../components/TopicCreateForm';
+import CreateForm from '../components/CreateForm';
 import * as topicActions from '../ducks/topics'
 import { RootState } from '../Application';
 import Loader from '../components/Loader';
@@ -11,7 +11,7 @@ function TopicCreate ({ submitForm, loading }) {
         <>
             <div className="w-600 centered">
                 <h1>Новая тема</h1>
-                <TopicCreateForm onSubmit={submitForm}/>
+                <CreateForm onSubmit={submitForm}/>
             </div>
             <Loader show={loading} />
         </>

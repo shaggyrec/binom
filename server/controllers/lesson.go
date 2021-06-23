@@ -7,6 +7,7 @@ import (
 	"binom/server/storage"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
+	"github.com/go-pg/pg"
 	"log"
 	"net/http"
 	"strconv"
@@ -35,7 +36,12 @@ func (c *LessonController) Create(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		log.Print(err)
-		exceptions.ServerError(w, r)
+		pgErr, ok := err.(pg.Error)
+		if ok && pgErr.IntegrityViolation() {
+			exceptions.BadRequestError(w, r, "Lessson with alias \"" + l.Alias.String + "\" already exists", exceptions.AlreadyExists)
+		} else {
+			exceptions.ServerError(w, r)
+		}
 		return
 	}
 

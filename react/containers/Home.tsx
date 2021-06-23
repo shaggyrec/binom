@@ -16,7 +16,7 @@ function Home({ topics, requestTopics }): ReactElement {
     return topics
         ? (
             <Paddingable padding={[20, 0]}>
-                <TopicsList topics={[...topics, ...topics]} />
+                <TopicsList topics={topics} />
             </Paddingable>
         )
         : <Loader />;
@@ -27,6 +27,6 @@ export default connect(
         topics: state.topics.list
     }),
     dispatch => ({
-        requestTopics: () => dispatch(requestList())
+        requestTopics: () => dispatch(requestList()),
     })
 )(Home);

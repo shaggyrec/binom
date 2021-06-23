@@ -55,7 +55,7 @@ footer {
     border-top: 1px solid #ccc;
 }
 
-button, input, textarea {
+button, input, textarea, select {
     border: 0;
     outline: 0;
     font-size: 16px;
@@ -110,13 +110,19 @@ input:focus {
     font-weight: 600;
 }
 
-button {
+button, select {
     color: #61677C;
     font-weight: bold;
     box-shadow: -5px -5px 20px #FFF, 5px 5px 20px #BABECC;
     transition: all 0.2s ease-in-out;
     cursor: pointer;
     font-weight: 600;
+}
+
+select {
+    margin-top: 5px;
+    box-shadow: -2px -2px 5px #FFF, 2px 2px 5px #BABECC;
+    width: 100%;
 }
 
 button:hover {
@@ -261,21 +267,58 @@ button:active {
 
 }
 
+.list, .sub-list {
+    padding: 10px;
+}
 .list {
     border-radius: 8px;
     box-shadow: -5px -5px 20px #FFF, 5px 5px 20px #BABECC;
-    padding: 10px;
 }
 
-.list-item {
+.list-item .sub-list {
+    display: none;
+}
+
+.list-item.open .sub-list {
+    display: block;
+    animation: showFromTop .2s both;
+}
+
+.sub-list {
+    margin-top: 20px;
+    padding-left: 40px;
+    border-top: thin solid rgba(0,0,0,.1);
+}
+
+.sub-list-item, .list-item {
     padding: 20px 15px;
+    transition: all .3s;
+    cursor: pointer;
+}
+.list-item {
     border-bottom: thin solid rgba(0,0,0,.1);
+    overflow: hidden;
 }
 
-.list-item-title {
-    font-size: 20px;
+.list-item:not(.open):hover {
+    background: #e4e3e3;
+}
+.sub-list-item-title, .list-item-title {
     font-weight: 900;
     line-height: 1.5;
+}
+.list-item-title {
+    font-size: 20px;
+}
+
+.sub-list-item-title {
+    font-size: 18px;
+    color: #5f6169;
+    transition: all .3s;
+}
+
+.sub-list-item-title:hover {
+    color: #393a3e;
 }
 
 .list-item:nth-last-child(1) {
@@ -290,13 +333,20 @@ button:active {
 .list-item-row {
     display: flex;
 }
+.open .list-item-row {
+    background: #EBECF0;
+}
 .list-item-icon {
+    margin-right: 20px;
+    margin-top: 5px;
+    width: 30px;
+    height: 30px;
+}
+.list-item-icon-paragraph {
     border: 1px solid;
     border-radius: 50%;
     font-size: 25px;
     font-weight: bold;
-    width: 30px;
-    height: 30px;
     text-align: center;
     line-height: 1;
 }
@@ -304,4 +354,9 @@ button:active {
 @keyframes slideFromBottom {
     0% { transform: translateY(200%); }
     100% { transform: translateY(0); }
+}
+
+@keyframes showFromTop {
+    0% { transform: translateY(-100%); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
 }

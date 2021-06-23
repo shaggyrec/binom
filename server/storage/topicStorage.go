@@ -31,9 +31,14 @@ func (s *TopicStorage) Update(topic *dataType.Topic) (*dataType.Topic, error) {
 	return topic, err
 }
 
-func (s *TopicStorage) List(limit int, offset int) (*[]dataType.Topic, error) {
+func (s *TopicStorage) List(limit int, offset int, withLessons bool) (*[]dataType.Topic, error) {
 	var topics []dataType.Topic
-	err := s.db.Model(&topics).Limit(limit).Offset(offset).OrderExpr("pos ASC, created DESC").Select()
+	err := s.db.Model(&topics).
+		Relation("Lessons").
+		Limit(limit).
+		Offset(offset).
+		OrderExpr("pos ASC, created DESC").
+		Select()
 
 	return &topics, err
 }

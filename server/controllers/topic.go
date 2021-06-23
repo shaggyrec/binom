@@ -74,8 +74,10 @@ func (c * TopicController) Delete(w http.ResponseWriter, r *http.Request) {
 func (c *TopicController) List(w http.ResponseWriter, r *http.Request) {
 	limit := 50
 	offset := 0
+	withLessons := false
 	limitFromRequest := r.URL.Query().Get("limit")
 	offsetFromRequest := r.URL.Query().Get("offset")
+	withLessonsFromRequest := r.URL.Query().Get("withLessons")
 
 	if limitFromRequest != "" {
 		limit, _ = strconv.Atoi(limitFromRequest)
@@ -84,7 +86,12 @@ func (c *TopicController) List(w http.ResponseWriter, r *http.Request) {
 	if offsetFromRequest != "" {
 		offset, _ = strconv.Atoi(offsetFromRequest)
 	}
-	topics, err := c.topicStorage.List(limit, offset)
+
+	if withLessonsFromRequest != "" {
+		withLessons, _ = strconv.ParseBool(withLessonsFromRequest)
+	}
+
+	topics, err := c.topicStorage.List(limit, offset, withLessons)
 	if err != nil {
 		log.Print(err)
 		exceptions.ServerError(w, r)

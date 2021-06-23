@@ -7,6 +7,7 @@ import { auth } from './auth';
 import { serverRequest } from '../functions';
 import { ApiErrors } from '../ApiErrors';
 import { refreshTokenProcess } from '../sagas/auth';
+import { lessons } from './lessons';
 
 export function* apiRequest(url: string, method: Method  = 'GET', body: any = {}, options: any = {}): IterableIterator<any> {
     try {
@@ -21,10 +22,12 @@ export function* apiRequest(url: string, method: Method  = 'GET', body: any = {}
             } catch (e) {
                 console.log('apiRequest Error ' + e.message);
             }
+        } else {
+            throw e;
         }
     }
 }
 
 export default function* rootSaga(): any {
-    yield all([topics(), users(), auth()]);
+    yield all([topics(), users(), auth(), lessons()]);
 }

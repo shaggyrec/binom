@@ -12,4 +12,5 @@ type Topic struct {
 	Text null.String `json:"text"`
 	Pos null.Int `json:"pos"`
 	Alias null.String `json:"alias"`
+	Lessons []Lesson `pg:"rel:has-many" json:"lessons"`
 }

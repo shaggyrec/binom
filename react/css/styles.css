@@ -58,7 +58,7 @@ footer {
     border-top: 1px solid #ccc;
 }
 
-button, input, textarea, select {
+button, input, textarea, select, .file-input {
     border: 0;
     outline: 0;
     font-size: 16px;
@@ -113,7 +113,7 @@ input:focus {
     font-weight: 600;
 }
 
-button, select {
+button, select, .file-input {
     color: #61677C;
     font-weight: bold;
     box-shadow: -5px -5px 20px #FFF, 5px 5px 20px #BABECC;
@@ -122,10 +122,36 @@ button, select {
     font-weight: 600;
 }
 
-select {
+select, .file-input {
     margin-top: 5px;
     box-shadow: -2px -2px 5px #FFF, 2px 2px 5px #BABECC;
     width: 100%;
+    cursor: pointer;
+}
+.file-input-label {
+    display: block;
+    cursor: pointer;
+}
+
+.file-input-label span {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 16px;
+    display: flex;
+    align-items: center;
+    pointer-events: none;
+}
+
+.file-input-input {
+    opacity: 0;
+    padding: 16px;
+    cursor: pointer;
+}
+
+.file-input {
+    padding: 0;
+    position: relative;
 }
 
 button:hover {

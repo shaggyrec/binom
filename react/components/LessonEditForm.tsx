@@ -6,6 +6,7 @@ import Button from './Button';
 import Form from './form/Form';
 import Textarea from './form/Textarea';
 import Select from './form/Select';
+import FileUpload from './form/FileUpload';
 
 function LessonEditForm({ onSubmit, name, alias, text, video, topics, topicId }): ReactElement {
     const [lessonName, setLessonName] = useState(name);
@@ -32,6 +33,7 @@ function LessonEditForm({ onSubmit, name, alias, text, video, topics, topicId })
         <Form onSubmit={handleSubmit}>
             <Input required onChange={setLessonName} label="Название" value={lessonName}/>
             <Select options={topics} label="Категория" onChange={setLessonCategory} value={lessonCategory} />
+            <FileUpload onChange={() => {}} label="Видео"/>
             <Textarea onChange={setLessonDescription} label="Описание" value={lessonDescription}/>
             <Input required onChange={setLessonAlias} label="Alias" value={lessonAlias}/>
             <Button block green>Сохранить</Button>

@@ -26,7 +26,7 @@ function TopicEditForm({ onSubmit, name, alias, text }): ReactElement {
     return (
         <Form onSubmit={handleSubmit}>
             <Input required onChange={setTopicName} label="Название" value={topicName}/>
-            <Textarea onChange={setTopicDescription} label="Описание" value={topicDescription}/>
+            <Textarea onChange={setTopicDescription} label="Описание" value={topicDescription || ''}/>
             <Input required onChange={setTopicAlias} label="Alias" value={topicAlias}/>
             <Button block green>Сохранить</Button>
         </Form>

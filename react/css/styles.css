@@ -24,6 +24,9 @@ p, h1, h2, h3, h4, h5, h6, .text {
     text-shadow: 1px 1px 1px #FFF;
 }
 
+a {
+    color: #4d4d98;
+}
 .root {
     padding-bottom: 80px;
     height: 100%;
@@ -136,6 +139,10 @@ button:active {
     background: #039151;
     color: #deefe7;
     text-shadow: none;
+}
+
+.button-small {
+    padding: 8px;
 }
 
 .w-600 {
@@ -267,19 +274,31 @@ button:active {
 
 }
 
+.pointer {
+    cursor: pointer;
+}
+
 .list, .sub-list {
     padding: 10px;
 }
-.list {
+
+.card {
+    transition: all .3s;
+    padding: 20px 10px;
+}
+.card:hover {
+    box-shadow: -2px -2px 5px #FFF, 2px 2px 5px #BABECC;
+}
+.list, .card {
     border-radius: 8px;
     box-shadow: -5px -5px 20px #FFF, 5px 5px 20px #BABECC;
 }
 
-.list-item .sub-list {
+.list-item .sub-list, .sub-list.closed {
     display: none;
 }
 
-.list-item.open .sub-list {
+.list-item.open .sub-list, .sub-list.opened {
     display: block;
     animation: showFromTop .2s both;
 }
@@ -295,19 +314,22 @@ button:active {
     transition: all .3s;
     cursor: pointer;
 }
+.sub-list-item {
+    padding: 15px;
+}
 .list-item {
     border-bottom: thin solid rgba(0,0,0,.1);
     overflow: hidden;
 }
 
 .list-item:not(.open):hover {
-    background: #e4e3e3;
+    background: #dfe0e4;
 }
-.sub-list-item-title, .list-item-title {
+.sub-list-item-title, .list-item-title, .card-title {
     font-weight: 900;
     line-height: 1.5;
 }
-.list-item-title {
+.list-item-title, .card-title {
     font-size: 20px;
 }
 
@@ -325,7 +347,7 @@ button:active {
     border-bottom: none;
 }
 
-.list-item-info {
+.list-item-info, .card-info {
     color: #818490;
     font-size: 14px;
     font-weight: 600;
@@ -336,19 +358,23 @@ button:active {
 .open .list-item-row {
     background: #EBECF0;
 }
-.list-item-icon {
+.list-item-icon, .card-icon {
     margin-right: 20px;
     margin-top: 5px;
     width: 30px;
     height: 30px;
 }
-.list-item-icon-paragraph {
-    border: 1px solid;
-    border-radius: 50%;
+.list-item-icon-paragraph, .card-icon-paragraph {
     font-size: 25px;
     font-weight: bold;
     text-align: center;
     line-height: 1;
+}
+
+.admin-bar {
+    padding: 10px 0;
+    min-height: 56px;
+    border-bottom: thin solid rgba(0,0,0,.1);
 }
 
 @keyframes slideFromBottom {

@@ -8,6 +8,7 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
 	"github.com/go-pg/pg"
+	"github.com/imdario/mergo"
 	"log"
 	"net/http"
 	"strconv"
@@ -56,9 +57,14 @@ func (c *LessonController) Update(w http.ResponseWriter, r *http.Request) {
 
 	lessonToUpdate.Id = chi.URLParam(r, "id")
 
-	// TODO check access
+	l, err := c.lessonStorage.GetById(lessonToUpdate.Id)
 
-	_, err := c.lessonStorage.Update(&lessonToUpdate)
+	if err != nil {
+		exceptions.NotFoundError(w, r, "Lesson not found")
+		return
+	}
+	mergo.Merge(&lessonToUpdate, l)
+	_, err = c.lessonStorage.Update(&lessonToUpdate)
 
 	if err != nil {
 		log.Print(err)

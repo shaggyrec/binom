@@ -1,11 +1,16 @@
 import { ForkEffect, takeEvery, call, put, select } from '@redux-saga/core/effects';
 
 import * as lessonsActions from '../ducks/lessons';
+import * as topicsActions from '../ducks/topics';
 import * as applicationActions from '../ducks/application';
 import { apiRequest } from './index';
 import { push } from 'connected-react-router';
-import { Lesson } from '../dataTypes/Lesson';
-import { lesson } from '../ducks/lessons';
+import { Lesson } from '../dataTypes/lesson';
+
+function* afterwards() {
+    yield put(topicsActions.requestList());
+    yield put(lessonsActions.error(null));
+}
 
 
 function* requestListProcess(): IterableIterator<any> {
@@ -30,6 +35,7 @@ function* createProcess({ payload: { name, alias, topic } }): IterableIterator<a
         const lesson: Lesson = yield call(apiRequest, '/api/lesson', 'post', { name, alias, topicId: topic });
         yield put(lessonsActions.lesson(lesson));
         yield put(push('/lesson/' + lesson.alias));
+        yield afterwards();
     } catch ({ response, message }) {
         const { data } = response;
         yield put(applicationActions.error(data.message || message));
@@ -42,6 +48,7 @@ function* updateProcess({ payload: { id, lesson } }): IterableIterator<any> {
         yield call(apiRequest, '/api/lesson/' + id, 'put', lesson);
         const currentLesson: {} = yield select(lessonsActions.currentLesson);
         yield put(lessonsActions.lesson({ ...currentLesson, ...lesson }));
+        yield afterwards();
     } catch (e) {
         console.log(e);
         yield put(applicationActions.error(e.message));
@@ -52,6 +59,7 @@ function* removeProcess({ payload }): IterableIterator<any> {
     try {
         yield call(apiRequest, '/api/lesson/' + payload, 'delete');
         yield put(lessonsActions.success());
+        yield afterwards();
     } catch (e) {
         yield put(applicationActions.error(e.message));
         yield put(lessonsActions.error(e.message));

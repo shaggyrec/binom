@@ -5,6 +5,7 @@ function Button(props): ReactElement {
         props.className,
         props.green && "button-green",
         props.block && "block",
+        props.small && "button-small"
     ].filter(c => c).join(' ')
     return (
         <button

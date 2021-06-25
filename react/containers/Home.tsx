@@ -5,8 +5,9 @@ import { requestList } from '../ducks/topics';
 import TopicsList from '../components/TopicsList';
 import Loader from '../components/Loader';
 import Paddingable from '../components/Paddingable';
+import { UserRole } from '../dataTypes/user';
 
-function Home({ topics, requestTopics }): ReactElement {
+function Home({ topics, requestTopics, isAdmin }): ReactElement {
     useEffect(() => {
         if (!topics || topics.length === 0) {
             requestTopics();
@@ -16,7 +17,7 @@ function Home({ topics, requestTopics }): ReactElement {
     return topics
         ? (
             <Paddingable padding={[20, 0]}>
-                <TopicsList topics={topics} />
+                <TopicsList topics={topics} isAdmin={isAdmin}/>
             </Paddingable>
         )
         : <Loader />;
@@ -24,7 +25,8 @@ function Home({ topics, requestTopics }): ReactElement {
 
 export default connect(
     (state: RootState) => ({
-        topics: state.topics.list
+        topics: state.topics.list,
+        isAdmin: state.users.me?.role === UserRole.admin
     }),
     dispatch => ({
         requestTopics: () => dispatch(requestList()),

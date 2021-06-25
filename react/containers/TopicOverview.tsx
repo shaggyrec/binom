@@ -4,12 +4,14 @@ import { RootState } from '../Application';
 import * as topicsActions from '../ducks/topics';
 import Loader from '../components/Loader';
 import TopicEditForm from '../components/TopicEditForm';
+import { Back } from '../components/Icons';
+import AdminBar from '../components/AdminBar';
+import { Link } from 'react-router-dom';
 
-function TopicOverview({ requestTopic, topic, loading, match: { params }, updateTopic }): ReactElement {
+function TopicOverview({ requestTopic, topic, loading, match: { params }, updateTopic, resetTopic }): ReactElement {
     useEffect(() => {
-        if (!topic) {
-            requestTopic(params.alias);
-        }
+        requestTopic(params.alias);
+        return resetTopic();
     }, [])
     if (!topic) {
         return <Loader />;
@@ -19,6 +21,11 @@ function TopicOverview({ requestTopic, topic, loading, match: { params }, update
     }
     return (
         <>
+            <AdminBar>
+                <Link to="/app">
+                    <Back size={25}/>
+                </Link>
+            </AdminBar>
             <TopicEditForm {...topic} onSubmit={handleSubmit}/>
             <Loader show={loading}/>
         </>
@@ -33,5 +40,6 @@ export default connect(
     dispatch => ({
         requestTopic: alias => dispatch(topicsActions.request(alias)),
         updateTopic: (id, updated) => dispatch(topicsActions.update(id, updated)),
+        resetTopic: () => dispatch(topicsActions.topic(null))
     })
 )(TopicOverview);

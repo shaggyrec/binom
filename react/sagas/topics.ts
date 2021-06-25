@@ -6,6 +6,10 @@ import { apiRequest } from './index';
 import { push } from 'connected-react-router';
 import { Topic } from '../dataTypes/topic';
 
+function* afterwards() {
+    yield put(topicsActions.requestList());
+    yield put(topicsActions.error(null));
+}
 
 function* requestListProcess(): IterableIterator<any> {
     try {
@@ -18,7 +22,7 @@ function* requestListProcess(): IterableIterator<any> {
 
 function* requestProcess({ payload: alias }): IterableIterator<any> {
     try {
-        yield put(topicsActions.topics(yield put(topicsActions.topic(yield call(apiRequest, '/api/topic/' + alias)))));
+        yield put(topicsActions.topic(yield call(apiRequest, '/api/topic/' + alias)));
     } catch (e) {
         yield put(topicsActions.error(e.message));
     }
@@ -33,6 +37,7 @@ function* createProcess({ payload: { name, alias } }): IterableIterator<any> {
         yield put(applicationActions.error(e.message));
         yield put(topicsActions.error(e.message));
     }
+    yield afterwards();
 }
 
 function* updateProcess({ payload: { id, topic } }): IterableIterator<any> {
@@ -46,6 +51,7 @@ function* updateProcess({ payload: { id, topic } }): IterableIterator<any> {
         yield put(applicationActions.error(e.message));
         yield put(topicsActions.error(e.message));
     }
+    yield afterwards();
 }
 function* removeProcess({ payload }): IterableIterator<any> {
     try {
@@ -55,6 +61,7 @@ function* removeProcess({ payload }): IterableIterator<any> {
         yield put(applicationActions.error(e.message));
         yield put(topicsActions.error(e.message));
     }
+    yield afterwards();
 }
 
 export function* topics(): IterableIterator<ForkEffect> {

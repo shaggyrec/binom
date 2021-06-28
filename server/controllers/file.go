@@ -83,7 +83,7 @@ func (c *FileController) Upload(w http.ResponseWriter, r *http.Request) {
 	render.JSON(w, r, f)
 }
 
-func (c *FileController) Get(w http.ResponseWriter, r *http.Request) {
+func (c *FileController) GetInfo(w http.ResponseWriter, r *http.Request) {
 	file, err := c.storage.Get(chi.URLParam(r, "id"))
 
 	if err != nil {
@@ -91,4 +91,16 @@ func (c *FileController) Get(w http.ResponseWriter, r *http.Request) {
 	}
 
 	render.JSON(w, r, file)
+}
+
+func (c *FileController) Serve(w http.ResponseWriter, r *http.Request)  {
+	f, err := c.storage.Get(chi.URLParam(r, "id"))
+
+	if err != nil {
+		exceptions.NotFoundError(w, r, err.Error())
+	}
+
+	pathToFile := filepath.Join(c.uploadPath, f.Id + f.Extension)
+
+	http.ServeFile(w, r, pathToFile)
 }

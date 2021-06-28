@@ -60,6 +60,11 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 		w.Write([]byte("hello from binom"))
 	})
 	r.Get("/", pageController.Main)
+	r.Group(func(r chi.Router) {
+		r.Use(middlewares.ParseAuthTokenFromQueryString)
+		r.Use(middlewares.JwtAuth(jwtSecret))
+		r.Get("/file/{id}", fileController.Serve)
+	})
 	r.Route("/api" , func(r chi.Router) {
 		r.Route("/auth", func(r chi.Router) {
 			r.Post("/email", authController.Email)
@@ -75,11 +80,11 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 				r.Post("/", topicController.Create)
 				r.Put("/{id}", topicController.Update)
 				r.Delete("/{id}", topicController.Delete)
-				// r.Get("/{id}")
+				// r.GetInfo("/{id}")
 			})
 
 			r.Route("/lesson", func(r chi.Router) {
-				//r.Get("/{id}", lessonController.ById)
+				//r.GetInfo("/{id}", lessonController.ById)
 				r.Get("/{alias}", lessonController.ByAlias)
 				r.Post("/", lessonController.Create)
 				r.Put("/{id}", lessonController.Update)
@@ -87,7 +92,7 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 			})
 			r.Route("/file", func(r chi.Router) {
 				r.Post("/", fileController.Upload)
-				r.Get("/{id}", fileController.Get)
+				r.Get("/{id}", fileController.GetInfo)
 			})
 		})
 	})

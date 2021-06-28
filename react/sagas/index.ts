@@ -8,6 +8,7 @@ import { serverRequest } from '../functions';
 import { ApiErrors } from '../ApiErrors';
 import { refreshTokenProcess } from '../sagas/auth';
 import { lessons } from './lessons';
+import { files } from './files';
 
 export function* apiRequest(url: string, method: Method  = 'GET', body: any = {}, options: any = {}): IterableIterator<any> {
     try {
@@ -29,5 +30,11 @@ export function* apiRequest(url: string, method: Method  = 'GET', body: any = {}
 }
 
 export default function* rootSaga(): any {
-    yield all([topics(), users(), auth(), lessons()]);
+    yield all([
+        topics(),
+        users(),
+        auth(),
+        lessons(),
+        files(),
+    ]);
 }

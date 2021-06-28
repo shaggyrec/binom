@@ -8,11 +8,11 @@ import Textarea from './form/Textarea';
 import Select from './form/Select';
 import FileUpload from './form/FileUpload';
 
-function LessonEditForm({ onSubmit, name, alias, text, video, topics, topicId }): ReactElement {
+function LessonEditForm({ onSubmit, name, alias, text, video, topics, topicId, onFileUpload, loading = false }): ReactElement {
     const [lessonName, setLessonName] = useState(name);
     const [lessonAlias, setLessonAlias] = useState(alias);
     const [lessonDescription, setLessonDescription] = useState(text || '');
-    const [lessonVideo, setLessonVideo] = useState(video || '');
+    const [lessonVideo, setLessonVideo] = useState(video);
     const [lessonCategory, setLessonCategory] = useState(topicId);
 
     useEffect(() => {
@@ -29,14 +29,15 @@ function LessonEditForm({ onSubmit, name, alias, text, video, topics, topicId })
         });
     }
 
+
     return (
         <Form onSubmit={handleSubmit}>
             <Input required onChange={setLessonName} label="Название" value={lessonName}/>
             <Select options={topics} label="Категория" onChange={setLessonCategory} value={lessonCategory} />
-            <FileUpload onChange={() => {}} label="Видео"/>
+            {lessonVideo ? lessonVideo : <FileUpload name="file" onChange={onFileUpload} label="Видео" accept="video/*"/>}
             <Textarea onChange={setLessonDescription} label="Описание" value={lessonDescription}/>
             <Input required onChange={setLessonAlias} label="Alias" value={lessonAlias}/>
-            <Button block green>Сохранить</Button>
+            <Button block green disabled={loading}>Сохранить</Button>
         </Form>
     );
 }

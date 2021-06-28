@@ -11,6 +11,7 @@ function Button(props): ReactElement {
         <button
             className={className}
             onClick={props.onClick || (() => {})}
+            disabled={props.disabled}
         >
             {props.children}
         </button>

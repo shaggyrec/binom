@@ -31,3 +31,4 @@ services:
       - ./go.mod:/goapp/go.mod
       - ./go.sum:/goapp/go.sum
       - ./scripts:/goapp/scripts
+      - ./upload:/goapp/upload

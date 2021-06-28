@@ -12,7 +12,7 @@ import (
 	"net/http"
 )
 
-func Init(db *pg.DB, jwtSecret string) *chi.Mux {
+func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 	// storages
 	storageFactory := &storage.Factory{}
 	authCodeStorage := storageFactory.AuthCode(db)
@@ -20,6 +20,7 @@ func Init(db *pg.DB, jwtSecret string) *chi.Mux {
 	userStorage := storageFactory.User(db)
 	topicStorage := storageFactory.Topic(db)
 	lessonStorage := storageFactory.Lesson(db)
+	fileStorage := storageFactory.File(db)
 	// services
 	serviceFactory := service.Factory{}
 	tokenService := serviceFactory.TokenService(jwtSecret, tokenStorage)
@@ -36,6 +37,8 @@ func Init(db *pg.DB, jwtSecret string) *chi.Mux {
 	topicController.Init(topicStorage)
 	lessonController := controllers.LessonController{}
 	lessonController.Init(lessonStorage)
+	fileController := controllers.FileController{}
+	fileController.Init(uploadPath, fileStorage)
 
 
 	r := chi.NewRouter()
@@ -81,6 +84,10 @@ func Init(db *pg.DB, jwtSecret string) *chi.Mux {
 				r.Post("/", lessonController.Create)
 				r.Put("/{id}", lessonController.Update)
 				r.Delete("/{id}", lessonController.Delete)
+			})
+			r.Route("/file", func(r chi.Router) {
+				r.Post("/", fileController.Upload)
+				r.Get("/{id}", fileController.Get)
 			})
 		})
 	})

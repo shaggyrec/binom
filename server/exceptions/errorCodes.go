@@ -6,3 +6,4 @@ const ErrorUnexpectedServer = 1002
 const ErrorBadToken = 1003
 const NothingAffected = 1005
 const AlreadyExists = 1006
+const CantParseFile = 1007

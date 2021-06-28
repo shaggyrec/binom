@@ -1,5 +1,8 @@
 import axios, { AxiosResponse, Method } from 'axios';
 import { authToken } from './tokens';
+import { put } from '@redux-saga/core/effects';
+import * as applicationActions from './ducks/application';
+import * as lessonsActions from './ducks/lessons';
 
 const apiClient = axios.create({
     baseURL: location.hostname === 'localhost' ? 'http://localhost:4030' : ''
@@ -12,16 +15,19 @@ export const currentScript = (): Node => (
     })()
 );
 
-export const serverRequest = (url: string, method: Method = 'get', body: any = {}, options: any = {}): Promise<AxiosResponse> => {
+export const serverRequest = (url: string, method: Method = 'get', body: any = {}, headers: any = {}): Promise<AxiosResponse> => {
     const token = authToken();
     return apiClient.request({
         url,
         method,
         data: body,
         headers: {
-            ...(options.headers || {}),
+            ...(headers || {}),
             ...(token ? { 'Authorization': 'Bearer ' + token } : {}),
-        },
-        ...options
+        }
     });
+}
+
+export const getApiErrorMessage = (error): string => {
+    return error.response?.data?.message || error.message
 }

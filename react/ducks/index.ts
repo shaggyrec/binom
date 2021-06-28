@@ -4,6 +4,7 @@ import users, { initialState as usersState } from './users';
 import auth, { initialState as authState } from './auth';
 import application, { initialState as applicationState } from './application';
 import lessons, { initialState as lessonsState } from './lessons';
+import files, { initialState as filesState } from './files';
 
 export const initialState = {
     topics: topicsState,
@@ -11,6 +12,7 @@ export const initialState = {
     auth: authState,
     application: applicationState,
     lessons: lessonsState,
+    files: filesState,
 };
 
 export default (router: any = null): Reducer => combineReducers({
@@ -20,4 +22,5 @@ export default (router: any = null): Reducer => combineReducers({
     auth,
     application,
     lessons,
+    files,
 });

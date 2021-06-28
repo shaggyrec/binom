@@ -42,3 +42,9 @@ func (f Factory) Lesson(db *pg.DB) *LessonStorage {
 	storage.Init(db)
 	return &storage
 }
+
+func (f Factory) File(db *pg.DB) *FileStorage {
+	storage := FileStorage{}
+	storage.Init(db)
+	return &storage
+}

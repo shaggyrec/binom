@@ -7,3 +7,4 @@ const ErrorBadToken = 1003
 const NothingAffected = 1005
 const AlreadyExists = 1006
 const CantParseFile = 1007
+const ErrorBadParam = 1008

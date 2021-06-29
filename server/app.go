@@ -26,6 +26,7 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 	tokenService := serviceFactory.TokenService(jwtSecret, tokenStorage)
 	authCodeService := serviceFactory.AuthCodeService(authCodeStorage)
 	authService := serviceFactory.AuthService(userStorage, tokenService)
+	moveAtPositionService := serviceFactory.MoveAtPosition(db)
 
 	// controllers
 	authController := controllers.AuthController{}
@@ -34,7 +35,7 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 	userController := controllers.UserController{}
 	userController.Init(userStorage)
 	topicController := controllers.TopicController{}
-	topicController.Init(topicStorage)
+	topicController.Init(topicStorage, moveAtPositionService)
 	lessonController := controllers.LessonController{}
 	lessonController.Init(lessonStorage)
 	fileController := controllers.FileController{}
@@ -80,7 +81,7 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 				r.Post("/", topicController.Create)
 				r.Put("/{id}", topicController.Update)
 				r.Delete("/{id}", topicController.Delete)
-				// r.GetInfo("/{id}")
+				r.Patch("/{id}/at/{pos:[0-9]+}", topicController.MoveAtPosition)
 			})
 
 			r.Route("/lesson", func(r chi.Router) {

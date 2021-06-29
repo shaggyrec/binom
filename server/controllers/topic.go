@@ -4,6 +4,7 @@ import (
 	"binom/server/dataType"
 	"binom/server/exceptions"
 	"binom/server/functions"
+	"binom/server/service"
 	"binom/server/storage"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
@@ -14,10 +15,12 @@ import (
 
 type TopicController struct {
 	topicStorage *storage.TopicStorage
+	moveAtPositionService *service.MoveAtPositionService
 }
 
-func (c *TopicController) Init(topicStorage *storage.TopicStorage) {
+func (c *TopicController) Init(topicStorage *storage.TopicStorage, moveAtPositionService *service.MoveAtPositionService) {
 	c.topicStorage = topicStorage
+	c.moveAtPositionService = moveAtPositionService
 }
 
 func (c *TopicController) Create(w http.ResponseWriter, r *http.Request) {
@@ -111,4 +114,26 @@ func (c *TopicController) ByAlias(w http.ResponseWriter, r *http.Request)  {
 	}
 
 	render.JSON(w, r, t)
+}
+
+func (c *TopicController) MoveAtPosition(w http.ResponseWriter, r *http.Request)  {
+	id := chi.URLParam(r, "id")
+	posFromRequest := chi.URLParam(r, "pos")
+
+	pos, err := strconv.Atoi(posFromRequest)
+
+	if err != nil {
+		exceptions.BadRequestError(w, r, "Bad param \"pos\"", exceptions.ErrorBadParam)
+		return
+	}
+
+	err = c.moveAtPositionService.Move("topics", id, pos, "", "")
+
+	if err != nil {
+		log.Print(err)
+		exceptions.ServerError(w, r)
+		return
+	}
+
+	render.Status(r, http.StatusOK)
 }

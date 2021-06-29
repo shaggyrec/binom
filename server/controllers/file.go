@@ -7,6 +7,7 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
 	"io/ioutil"
+	"log"
 	"mime"
 	"net/http"
 	"os"
@@ -103,4 +104,27 @@ func (c *FileController) Serve(w http.ResponseWriter, r *http.Request)  {
 	pathToFile := filepath.Join(c.uploadPath, f.Id + f.Extension)
 
 	http.ServeFile(w, r, pathToFile)
+}
+
+func (c *FileController) Delete(w http.ResponseWriter, r *http.Request)  {
+	f, err := c.storage.Get(chi.URLParam(r, "id"))
+	if err != nil {
+		exceptions.NotFoundError(w, r, err.Error())
+		return
+	}
+	err = os.Remove(filepath.Join(c.uploadPath, f.Id + f.Extension))
+
+	if err != nil {
+		log.Print(err)
+		exceptions.ServerError(w, r)
+		return
+	}
+
+	if err = c.storage.Delete(f.Id); err != nil {
+		log.Print(err)
+		exceptions.ServerError(w, r)
+		return
+	}
+
+	render.Status(r, http.StatusOK)
 }

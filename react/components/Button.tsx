@@ -5,10 +5,12 @@ function Button(props): ReactElement {
         props.className,
         props.green && "button-green",
         props.block && "block",
-        props.small && "button-small"
+        props.small && "button-small",
+        props.red && 'button-red'
     ].filter(c => c).join(' ')
     return (
         <button
+            type={props.type || 'submit'}
             className={className}
             onClick={props.onClick || (() => {})}
             disabled={props.disabled}

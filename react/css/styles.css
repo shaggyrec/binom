@@ -94,6 +94,10 @@ input:focus {
     padding: 10px 0;
 }
 
+video {
+    width: 100%;
+}
+
 .input-raw label {
     flex: 1;
     display: block;
@@ -165,6 +169,12 @@ button:active {
     background: #039151;
     color: #deefe7;
     text-shadow: none;
+}
+.button-red {
+    background: #ff382d;
+    color: #fff;
+    text-shadow: none;
+    line-height: 1.5;
 }
 
 .button-small {

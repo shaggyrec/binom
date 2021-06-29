@@ -55,8 +55,14 @@ export function* refreshTokenProcess(): IterableIterator<any> {
     }
 }
 
+function* logoutProcess(): IterableIterator<any> {
+    eraseTokens();
+    location.href = '/auth';
+}
+
 export function* auth(): IterableIterator<ForkEffect> {
     yield takeEvery(authActions.sendEmail, sendEmailProcess);
     yield takeEvery(authActions.sendCode, sendCodeProcess);
     yield takeEvery(authActions.refreshTokens, refreshTokenProcess);
+    yield takeEvery(authActions.logout, logoutProcess);
 }

@@ -23,7 +23,7 @@ function Sublist({ items, open }) {
     );
 }
 // <div className="list-item-icon"><Checked fill="#039151" /></div>
-function TopicsList({ topics, isAdmin }: { topics: Topic[], isAdmin?: boolean }): ReactElement[] {
+function TopicsList({ topics, isAdmin }: { topics: Topic[], isAdmin?: boolean }): ReactElement {
     const [openTopics, setOpenTopics] = useState([]);
 
     function handleClickTopic(id) {
@@ -37,33 +37,36 @@ function TopicsList({ topics, isAdmin }: { topics: Topic[], isAdmin?: boolean })
         }
     }
 
-    return topics.map(t => (
-            <Paddingable key={t.id} padding={[0,0,20]}>
-                <div className={`card${openTopics.indexOf(t.id) === -1 ? ' pointer' : ''}`} onClick={() => handleClickTopic(t.id)}>
-                    <div className="flex">
-                        <div>
-                            <div className="card-icon card-icon-paragraph">§</div>
-                        </div>
-                        <div>
-                            <div className="card-title">{t.name}</div>
-                            <div className="card-info">
-                                {t.lessons && <span>{t.lessons.length} уроков</span>}
+    return (
+        <>
+            {topics.map(t => (
+                <Paddingable key={t.id} padding={[0,0,20]}>
+                    <div className={`card${openTopics.indexOf(t.id) === -1 ? ' pointer' : ''}`} onClick={() => handleClickTopic(t.id)}>
+                        <div className="flex">
+                            <div>
+                                <div className="card-icon card-icon-paragraph">§</div>
                             </div>
-                        </div>
-                        {isAdmin &&
-                            <div style={{ flexGrow: 1, textAlign: 'right' }}>
-                                <Link to={`/topic/${t.alias}`}>
-                                    <Button small>
-                                        <Edit  size={20}/>
-                                    </Button>
-                               </Link>
+                            <div>
+                                <div className="card-title">{t.name}</div>
+                                <div className="card-info">
+                                    {t.lessons && <span>{t.lessons.length} уроков</span>}
+                                </div>
                             </div>
-                        }
+                            {isAdmin &&
+                                <div style={{ flexGrow: 1, textAlign: 'right' }}>
+                                    <Link to={`/topic/${t.alias}`}>
+                                        <Button small>
+                                            <Edit  size={20}/>
+                                        </Button>
+                                   </Link>
+                                </div>
+                            }
+                        </div>
+                        {t.lessons && t.lessons.length > 0 && <Sublist items={t.lessons} open={openTopics.indexOf(t.id) !== -1}/>}
                     </div>
-                    {t.lessons && t.lessons.length > 0 && <Sublist items={t.lessons} open={openTopics.indexOf(t.id) !== -1}/>}
-                </div>
-            </Paddingable>
-    ));
+                </Paddingable>
+        ))}
+    </>);
 }
 
 export default TopicsList;

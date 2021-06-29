@@ -34,7 +34,19 @@ function* requestProcess({ payload }): IterableIterator<any> {
     }
 }
 
+function* removeProcess({ payload }): IterableIterator<any> {
+    try {
+        yield call(apiRequest, '/api/file/' + payload, 'DELETE');
+        yield put(filesActions.success());
+        yield put(filesActions.lastRemovedFile(payload));
+    } catch (e) {
+        yield put(filesActions.error(getApiErrorMessage(e)));
+        yield put(applicationActions.error(getApiErrorMessage(e)));
+    }
+}
+
 export function* files(): IterableIterator<ForkEffect> {
     yield takeEvery(filesActions.upload, uploadProcess);
     yield takeEvery(filesActions.request, requestProcess);
+    yield takeEvery(filesActions.remove, removeProcess);
 }

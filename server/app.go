@@ -93,6 +93,7 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 			r.Route("/file", func(r chi.Router) {
 				r.Post("/", fileController.Upload)
 				r.Get("/{id}", fileController.GetInfo)
+				r.Delete("/{id}", fileController.Delete)
 			})
 		})
 	})

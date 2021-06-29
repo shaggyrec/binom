@@ -22,6 +22,7 @@ import Loader from '../components/Loader';
 import LessonCreate from './LessonCreate';
 import LessonOverview from './LessonOverview';
 import LessonEdit from './LessonEdit';
+import Profile from './Profile';
 
 function Root({ history, me, requestMe, setFrom, loading, setLoading, hideModal, message }): ReactElement {
     useEffect(() => {
@@ -42,6 +43,7 @@ function Root({ history, me, requestMe, setFrom, loading, setLoading, hideModal,
             <Switch>
                 <Route path="/auth" component={Auth}/>
                 <ProtectedRoute exact path="/app" component={Home} isAuthorized={!!me} authPath="/auth"/>
+                <ProtectedRoute exact path="/me" component={Profile} isAuthorized={!!me} authPath="/auth"/>
                 <ProtectedRoute component={LessonCreate} isAuthorized={me?.role === UserRole.admin} path="/lesson/create" exact authPath="/auth" />
                 <ProtectedRoute exact path="/lesson/:alias" component={LessonOverview} isAuthorized={!!me} authPath="/auth"/>
                 <ProtectedRoute exact path="/lesson/:alias/edit" component={LessonEdit} isAuthorized={me?.role === UserRole.admin} authPath="/auth"/>

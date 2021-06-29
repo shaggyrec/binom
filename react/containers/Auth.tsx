@@ -11,15 +11,15 @@ import CodeInput from '../components/form/CodeInput';
 function Auth({ me, from, setEmail, email, code, sendEmail, sendCode, setCode, error, codeId, history }): ReactElement {
     const [formError, setFormError] = useState(error);
 
-    if (me) {
-        return <Redirect to={from} />
-    }
-
     useEffect(() => {
         if (me) {
             history.push(from);
         }
-    });
+    }, [me]);
+
+    if (me) {
+        return <Redirect to={from} />
+    }
 
     const handleSubmit = () => {
         if (codeId) {

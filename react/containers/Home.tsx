@@ -16,9 +16,11 @@ function Home({ topics, requestTopics, isAdmin }): ReactElement {
 
     return topics
         ? (
-            <Paddingable padding={[20, 0]}>
-                <TopicsList topics={topics} isAdmin={isAdmin}/>
-            </Paddingable>
+            <div className="container">
+                <Paddingable padding={[20, 0]}>
+                    <TopicsList topics={topics} isAdmin={isAdmin}/>
+                </Paddingable>
+            </div>
         )
         : <Loader />;
 }

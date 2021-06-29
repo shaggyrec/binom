@@ -8,7 +8,7 @@ import Paddingable from '../components/Paddingable';
 
 function ControlPanel() {
     return (
-        <div className="py-20">
+        <div className="container py-20">
             <Paddingable padding={[10, 0]}>
                 <Link to="/topic/create">
                     <Button>Создать тему</Button>

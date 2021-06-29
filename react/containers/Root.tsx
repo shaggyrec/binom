@@ -38,7 +38,7 @@ function Root({ history, me, requestMe, setFrom, loading, setLoading, hideModal,
     }
 
     return (
-        <div className="container root">
+        <div className="root">
             <Header />
             <Switch>
                 <Route path="/auth" component={Auth}/>

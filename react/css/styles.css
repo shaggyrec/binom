@@ -425,7 +425,21 @@ button:active {
     display: block;
 }
 
-
+.outline-background {
+    position: relative;
+    background-color: #EBECEA;
+    z-index: 1;
+}
+.outline-background:after {
+    content: '';
+    background-color: #EBECEA;
+    position: absolute;
+    left: 0;
+    top: -20px;
+    right: 0;
+    bottom: -20px;
+    z-index: -1;
+}
 @keyframes slideFromBottom {
     0% { transform: translateY(200%); }
     100% { transform: translateY(0); }

@@ -42,7 +42,7 @@ function TopicsList({ topics, isAdmin }: { topics: Topic[], isAdmin?: boolean })
             {topics.map(t => (
                 <Paddingable key={t.id} padding={[0,0,20]}>
                     <div className={`card${openTopics.indexOf(t.id) === -1 ? ' pointer' : ''}`} onClick={() => handleClickTopic(t.id)}>
-                        <div className="flex">
+                        <div className="flex outline-background">
                             <div>
                                 <div className="card-icon card-icon-paragraph">§</div>
                             </div>

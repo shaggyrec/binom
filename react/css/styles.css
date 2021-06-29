@@ -427,12 +427,12 @@ button:active {
 
 .outline-background {
     position: relative;
-    background-color: #EBECEA;
+    background-color: #ebecf0;
     z-index: 1;
 }
 .outline-background:after {
     content: '';
-    background-color: #EBECEA;
+    background-color: #ebecf0;
     position: absolute;
     left: 0;
     top: -20px;

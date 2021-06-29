@@ -5,9 +5,11 @@ import Logo from '../components/Logo';
 
 function Header(): ReactElement {
     return (
-        <header>
-            <Logo />
-        </header>
+        <div className="container">
+            <header>
+                <Logo />
+            </header>
+        </div>
     );
 }
 

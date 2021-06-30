@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"github.com/go-pg/pg"
+	"github.com/go-pg/pg/orm"
 	"gopkg.in/guregu/null.v4"
 )
 
@@ -34,7 +35,9 @@ func (s *TopicStorage) Update(topic *dataType.Topic) (*dataType.Topic, error) {
 func (s *TopicStorage) List(limit int, offset int, withLessons bool) (*[]dataType.Topic, error) {
 	var topics []dataType.Topic
 	err := s.db.Model(&topics).
-		Relation("Lessons").
+		Relation("Lessons", func (q *orm.Query) (*orm.Query, error) {
+			return q.Order("lesson.pos ASC"), nil
+		}).
 		Limit(limit).
 		Offset(offset).
 		OrderExpr("pos ASC, created DESC").

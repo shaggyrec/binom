@@ -6,6 +6,7 @@ import * as applicationActions from '../ducks/application';
 import { apiRequest } from './index';
 import { push } from 'connected-react-router';
 import { Lesson } from '../dataTypes/lesson';
+import { getApiErrorMessage } from '../functions';
 
 function* afterwards() {
     yield put(topicsActions.requestList());
@@ -66,10 +67,22 @@ function* removeProcess({ payload }): IterableIterator<any> {
     }
 }
 
+function* moveAtPositionProcess({ payload }): IterableIterator<any> {
+    try {
+        yield call(apiRequest, '/api/lesson/' + payload.id + '/at/' + payload.pos, 'patch');
+        yield put(lessonsActions.success());
+    } catch (e) {
+        yield put(applicationActions.error(getApiErrorMessage(e)));
+        yield put(lessonsActions.error(getApiErrorMessage(e)));
+    }
+    yield afterwards();
+}
+
 export function* lessons(): IterableIterator<ForkEffect> {
     yield takeEvery(lessonsActions.requestList, requestListProcess);
     yield takeEvery(lessonsActions.request, requestProcess);
     yield takeEvery(lessonsActions.create, createProcess);
     yield takeEvery(lessonsActions.update, updateProcess);
     yield takeEvery(lessonsActions.remove, removeProcess);
+    yield takeEvery(lessonsActions.moveAtPosition, moveAtPositionProcess);
 }

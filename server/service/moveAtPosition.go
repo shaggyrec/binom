@@ -15,11 +15,11 @@ func (s *MoveAtPositionService) Init(db *pg.DB)  {
 
 func constraintCondition(prefix string, parentName string, parentId string) string {
 	if parentName != "" {
-		parentIdPart := "= " + parentId
+		parentIdPart := "= '" + parentId + "'"
 		if parentId == "" {
 			parentIdPart = "IS NULL"
 		}
-		return fmt.Sprintf("WHERE %s.%s '%s'", prefix, parentName, parentIdPart)
+		return fmt.Sprintf("WHERE %s.%s %s", prefix, parentName, parentIdPart)
 	}
 	return ""
 }
@@ -36,7 +36,7 @@ func (s *MoveAtPositionService) Move(itemName string, itemId string, pos int, pa
                 UPDATE %s
                     SET pos = CASE
                         WHEN %s.id = ?id THEN ?position
-                        WHEN (SELECT pos FROM positions p WHERE %s.id = p.id) >= :position AND (SELECT pos FROM positions p WHERE %s.id = p.id) < (SELECT pos FROM positions p WHERE p.id = ?id)
+                        WHEN (SELECT pos FROM positions p WHERE %s.id = p.id) >= ?position AND (SELECT pos FROM positions p WHERE %s.id = p.id) < (SELECT pos FROM positions p WHERE p.id = ?id)
                             THEN (SELECT pos FROM positions p WHERE %s.id = p.id) + 1
                         WHEN (SELECT pos FROM positions p WHERE %s.id = p.id) > (SELECT pos FROM positions p WHERE p.id = ?id) AND (SELECT pos FROM positions p WHERE %s.id = p.id) <= ?position
                             THEN (SELECT pos FROM positions p WHERE %s.id = p.id) - 1

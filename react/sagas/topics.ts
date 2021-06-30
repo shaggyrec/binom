@@ -5,6 +5,7 @@ import * as applicationActions from '../ducks/application';
 import { apiRequest } from './index';
 import { push } from 'connected-react-router';
 import { Topic } from '../dataTypes/topic';
+import { getApiErrorMessage } from '../functions';
 
 function* afterwards() {
     yield put(topicsActions.requestList());
@@ -34,8 +35,8 @@ function* createProcess({ payload: { name, alias } }): IterableIterator<any> {
         yield put(topicsActions.topic(topic));
         yield put(push('/topic/' + topic.alias));
     } catch (e) {
-        yield put(applicationActions.error(e.message));
-        yield put(topicsActions.error(e.message));
+        yield put(applicationActions.error(getApiErrorMessage(e)));
+        yield put(topicsActions.error(getApiErrorMessage(e)));
     }
     yield afterwards();
 }
@@ -48,8 +49,8 @@ function* updateProcess({ payload: { id, topic } }): IterableIterator<any> {
         yield put(topicsActions.topic({ ...currentTopic, ...topic }));
     } catch (e) {
         console.log(e);
-        yield put(applicationActions.error(e.message));
-        yield put(topicsActions.error(e.message));
+        yield put(applicationActions.error(getApiErrorMessage(e)));
+        yield put(topicsActions.error(getApiErrorMessage(e)));
     }
     yield afterwards();
 }
@@ -58,8 +59,19 @@ function* removeProcess({ payload }): IterableIterator<any> {
         yield call(apiRequest, '/api/topic/' + payload, 'delete');
         yield put(topicsActions.requestList());
     } catch (e) {
-        yield put(applicationActions.error(e.message));
-        yield put(topicsActions.error(e.message));
+        yield put(applicationActions.error(getApiErrorMessage(e)));
+        yield put(topicsActions.error(getApiErrorMessage(e)));
+    }
+    yield afterwards();
+}
+
+function* moveAtPositionProcess({ payload }): IterableIterator<any> {
+    try {
+        yield call(apiRequest, '/api/topic/' + payload.id + '/at/' + payload.pos, 'patch');
+        yield put(topicsActions.success());
+    } catch (e) {
+        yield put(applicationActions.error(getApiErrorMessage(e)));
+        yield put(topicsActions.error(getApiErrorMessage(e)));
     }
     yield afterwards();
 }
@@ -70,4 +82,5 @@ export function* topics(): IterableIterator<ForkEffect> {
     yield takeEvery(topicsActions.create, createProcess);
     yield takeEvery(topicsActions.update, updateProcess);
     yield takeEvery(topicsActions.remove, removeProcess);
+    yield takeEvery(topicsActions.moveAtPosition, moveAtPositionProcess);
 }

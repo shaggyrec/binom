@@ -37,7 +37,7 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 	topicController := controllers.TopicController{}
 	topicController.Init(topicStorage, moveAtPositionService)
 	lessonController := controllers.LessonController{}
-	lessonController.Init(lessonStorage)
+	lessonController.Init(lessonStorage, moveAtPositionService)
 	fileController := controllers.FileController{}
 	fileController.Init(uploadPath, fileStorage)
 
@@ -46,7 +46,7 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 	r.Use(middleware.Logger)
 	r.Use(cors.Handler(cors.Options{
 		AllowedOrigins:   []string{"https://*", "http://*"},
-		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type"},
 		ExposedHeaders:   []string{"Link"},
 		AllowCredentials: false,
@@ -90,6 +90,7 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 				r.Post("/", lessonController.Create)
 				r.Put("/{id}", lessonController.Update)
 				r.Delete("/{id}", lessonController.Delete)
+				r.Patch("/{id}/at/{pos:[0-9]+}", lessonController.MoveAtPosition)
 			})
 			r.Route("/file", func(r chi.Router) {
 				r.Post("/", fileController.Upload)

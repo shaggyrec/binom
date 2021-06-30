@@ -5,25 +5,37 @@ import { Topic } from '../dataTypes/topic';
 import { Checked, Edit } from './Icons';
 import Button from './Button';
 import Paddingable from './Paddingable';
+import SortableList from './SortableList';
 
+function listContainer (items, onMove, isAdmin) {
+    return isAdmin ?  <SortableList onMove={onMove} items={items}/> : <>{items}</>;
+}
 
-function Sublist({ items, open }) {
+function Sublist({ items, open, onMove, isAdmin }) {
     return (
         <div className={`sub-list ${open ? 'opened' : 'closed'}`}>
-            {items.map((item, i) => (
-                <div key={`sub-list${item.id}${i}`} className="sub-list-item">
-                    <div className="sub-list-item-title">
-                        <Link to={`/lesson/${item.alias}`}>
-                            {item.name}
-                        </Link>
-                    </div>
-                </div>
-            ))}
+            {
+                listContainer(
+                    items.map((item, i) => (
+                        <div key={`sub-list${item.id}${i}`} className="sub-list-item">
+                            <div className="sub-list-item-title">
+                                <Link to={`/lesson/${item.alias}`}>
+                                    {item.name}
+                                </Link>
+                            </div>
+                        </div>
+                    )),
+                    (i, at) => onMove(items[i].id, at),
+                    isAdmin
+                )
+            }
         </div>
     );
 }
 // <div className="list-item-icon"><Checked fill="#039151" /></div>
-function TopicsList({ topics, isAdmin }: { topics: Topic[], isAdmin?: boolean }): ReactElement {
+function TopicsList(
+    { topics, isAdmin, onMoveTopic, onMoveLesson }: { topics: Topic[], isAdmin?: boolean, onMoveTopic: (id: string, moveAt: number) => any, onMoveLesson: (id: string, moveAt: number) => any }
+): ReactElement {
     const [openTopics, setOpenTopics] = useState([]);
 
     function handleClickTopic(id) {
@@ -37,36 +49,36 @@ function TopicsList({ topics, isAdmin }: { topics: Topic[], isAdmin?: boolean })
         }
     }
 
-    return (
-        <>
-            {topics.map(t => (
-                <Paddingable key={t.id} padding={[0,0,20]}>
-                    <div className={`card${openTopics.indexOf(t.id) === -1 ? ' pointer' : ''}`} onClick={() => handleClickTopic(t.id)}>
-                        <div className="flex outline-background">
-                            <div>
-                                <div className="card-icon card-icon-paragraph">§</div>
-                            </div>
-                            <div>
-                                <div className="card-title">{t.name}</div>
-                                <div className="card-info">
-                                    {t.lessons && <span>{t.lessons.length} уроков</span>}
-                                </div>
-                            </div>
-                            {isAdmin &&
-                                <div style={{ flexGrow: 1, textAlign: 'right' }}>
-                                    <Link to={`/topic/${t.alias}`}>
-                                        <Button small>
-                                            <Edit  size={20}/>
-                                        </Button>
-                                   </Link>
-                                </div>
-                            }
+    return listContainer(topics.map(t => (
+            <Paddingable key={t.id} padding={[0,0,20]}>
+                <div className={`card${openTopics.indexOf(t.id) === -1 ? ' pointer' : ''}`}>
+                    <div className="flex outline-background" onClick={() => handleClickTopic(t.id)}>
+                        <div>
+                            <div className="card-icon card-icon-paragraph">§</div>
                         </div>
-                        {t.lessons && t.lessons.length > 0 && <Sublist items={t.lessons} open={openTopics.indexOf(t.id) !== -1}/>}
+                        <div>
+                            <div className="card-title">{t.name}</div>
+                            <div className="card-info">
+                                {t.lessons && <span>{t.lessons.length} уроков</span>}
+                            </div>
+                        </div>
+                        {isAdmin &&
+                            <div style={{ flexGrow: 1, textAlign: 'right' }}>
+                                <Link to={`/topic/${t.alias}`}>
+                                    <Button small>
+                                        <Edit  size={20}/>
+                                    </Button>
+                               </Link>
+                            </div>
+                        }
                     </div>
-                </Paddingable>
-        ))}
-    </>);
+                    {t.lessons && t.lessons.length > 0 && <Sublist items={t.lessons} open={openTopics.indexOf(t.id) !== -1} onMove={onMoveLesson} isAdmin={isAdmin}/>}
+                </div>
+            </Paddingable>
+        )),
+        (i, at) => onMoveTopic(topics[i].id, at),
+        isAdmin
+    );
 }
 
 export default TopicsList;

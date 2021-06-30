@@ -9,6 +9,7 @@ const UPDATE = 'topics/UPDATE';
 const DELETE = 'topics/DELETE';
 const SUCCESS = 'topics/SUCCESS';
 const ERROR = 'topics/ERROR';
+const MOVE_AT_POSITION = 'topics/MOVE_AT_POSITION';
 
 export const initialState = {
     list: [],
@@ -27,6 +28,7 @@ export default handleActions({
     [TOPIC]: (state, { payload }) => ({ ...state, current: payload, loading: false }),
     [ERROR]: (state, { payload }) => ({ ...state, error: payload , loading: false }),
     [SUCCESS]: state => ({ ...state, loading: false }),
+    [MOVE_AT_POSITION]: state => ({ ...state, loading: true }),
 }, initialState);
 
 export const requestList = createAction(REQUEST_LIST, () => {});
@@ -38,6 +40,6 @@ export const request = createAction(REQUEST, alias => alias);
 export const update = createAction(UPDATE, (id, topic) => ({ id, topic }));
 export const remove = createAction(DELETE, id => id);
 export const success = createAction(SUCCESS, () => {});
-
+export const moveAtPosition = createAction(MOVE_AT_POSITION, (id, pos) => ({ id, pos }));
 
 export const currentTopic = state => state.topics.current

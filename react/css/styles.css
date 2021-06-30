@@ -25,7 +25,7 @@ p, h1, h2, h3, h4, h5, h6, .text {
 }
 
 a {
-    color: #4d4d98;
+    color: #039151;
 }
 .root {
     padding-bottom: 80px;
@@ -223,7 +223,7 @@ button:active {
 .logo {
     width: 400px;
     height: 100px;
-    background-image: url("/static/binom_green_l_m.png");
+    background-image: url("../static/binom_green_l_m.png");
     background-size: 100%;
     background-repeat: no-repeat;
 }
@@ -305,9 +305,19 @@ button:active {
 .error .modal-text {
     color: #AE1100;
 }
-
 .loader {
-
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+.loader-image {
+    background: url("../static/binom_o.png");
+    background-size: contain;
+    width: 80px;
+    height: 80px;
+    animation: loaderAnimation 1.5s infinite;
 }
 
 .pointer {
@@ -415,7 +425,7 @@ button:active {
 
 .video-container {
     background-color: #039453;
-    background-image: url("/static/binom_m_green_filpped.png");
+    background-image: url("../static/binom_m_green_filpped.png");
     background-repeat: repeat;
     background-size: 100px;
 }
@@ -448,4 +458,9 @@ button:active {
 @keyframes showFromTop {
     0% { transform: translateY(-100%); opacity: 0; }
     100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes loaderAnimation {
+    0% {transform: scale(1) rotate(0); opacity: 1;}
+    50% {transform: scale(.6) rotate(380deg); opacity: .1}
 }

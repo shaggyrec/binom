@@ -9,6 +9,7 @@ const UPDATE = 'lessons/UPDATE';
 const DELETE = 'lessons/DELETE';
 const SUCCESS = 'lessons/SUCCESS';
 const ERROR = 'lessons/ERROR';
+const MOVE_AT_POSITION = 'lessons/MOVE_AT_POSITION';
 
 export const initialState = {
     list: [],
@@ -19,6 +20,7 @@ export const initialState = {
 
 export default handleActions({
     [REQUEST_LIST]: state => ({ ...state, loading: true }),
+    [MOVE_AT_POSITION]: state => ({ ...state, loading: true }),
     [REQUEST]: state => ({ ...state, loading: true }),
     [CREATE]: state => ({ ...state, loading: true }),
     [UPDATE]: state => ({ ...state, loading: true }),
@@ -38,6 +40,7 @@ export const request = createAction(REQUEST, alias => alias);
 export const update = createAction(UPDATE, (id, lesson) => ({ id, lesson }));
 export const remove = createAction(DELETE, id => id);
 export const success = createAction(SUCCESS, () => {});
+export const moveAtPosition = createAction(MOVE_AT_POSITION, (id, pos) => ({ id, pos }));
 
 
 export const currentLesson = state => state.lessons.current

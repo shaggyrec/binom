@@ -4,6 +4,7 @@ import (
 	"binom/server/dataType"
 	"binom/server/exceptions"
 	"binom/server/functions"
+	"binom/server/service"
 	"binom/server/storage"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
@@ -16,10 +17,12 @@ import (
 
 type LessonController struct {
 	lessonStorage *storage.LessonStorage
+	moveAtPositionService *service.MoveAtPositionService
 }
 
-func (c *LessonController) Init(lessonStorage *storage.LessonStorage) {
+func (c *LessonController) Init(lessonStorage *storage.LessonStorage, moveAtPositionService *service.MoveAtPositionService) {
 	c.lessonStorage = lessonStorage
+	c.moveAtPositionService = moveAtPositionService
 }
 
 func (c *LessonController) Create(w http.ResponseWriter, r *http.Request) {
@@ -122,4 +125,33 @@ func (c *LessonController) ByAlias(w http.ResponseWriter, r *http.Request) {
 	}
 
 	render.JSON(w, r, t)
+}
+
+func (c *LessonController) MoveAtPosition(w http.ResponseWriter, r *http.Request)  {
+	id := chi.URLParam(r, "id")
+	posFromRequest := chi.URLParam(r, "pos")
+
+	pos, err := strconv.Atoi(posFromRequest)
+
+	if err != nil {
+		exceptions.BadRequestError(w, r, "Bad param \"pos\"", exceptions.ErrorBadParam)
+		return
+	}
+
+	lesson, err := c.lessonStorage.GetById(id)
+
+	if err != nil {
+		exceptions.NotFoundError(w, r, "Lesson #" + id + " not found")
+		return
+	}
+
+	err = c.moveAtPositionService.Move("lessons", id, pos, "topic_id", lesson.TopicId)
+
+	if err != nil {
+		log.Print(err)
+		exceptions.ServerError(w, r)
+		return
+	}
+
+	render.Status(r, http.StatusOK)
 }

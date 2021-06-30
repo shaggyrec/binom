@@ -79,6 +79,7 @@ input, textarea {
 }
 textarea {
     resize: vertical;
+    min-height: 200px;
 }
 input.invalid {
     border: 1px solid #AE1100;
@@ -449,6 +450,13 @@ button:active {
     right: 0;
     bottom: -20px;
     z-index: -1;
+}
+.pre {
+    white-space: pre;
+}
+
+.break-spaces {
+    white-space: break-spaces;
 }
 @keyframes slideFromBottom {
     0% { transform: translateY(200%); }

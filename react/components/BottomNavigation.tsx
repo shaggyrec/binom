@@ -10,7 +10,6 @@ function BottomNavigation({ isAdmin }): ReactElement {
                     <nav className="bottom-menu-nav">
                         <Link className="bottom-menu-nav-link transition3" to="/app"><Learning /></Link>
                         <Link className="bottom-menu-nav-link transition3" to="/me"><Profile /></Link>
-                        {isAdmin && <Link className="bottom-menu-nav-link transition3" to="/cp"><Gear/></Link>}
                     </nav>
                 </footer>
             </div>

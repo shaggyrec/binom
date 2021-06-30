@@ -23,10 +23,11 @@ function videoEdition(videoId, onClickDeleteVideo): ReactElement {
     );
 }
 
-function LessonEditForm({ onSubmit, name, alias, text, video, topics, topicId, onFileUpload, loading = false, onClickDeleteVideo }): ReactElement {
+function LessonEditForm({ onSubmit, name, alias, text, task, video, topics, topicId, onFileUpload, loading = false, onClickDeleteVideo }): ReactElement {
     const [lessonName, setLessonName] = useState(name);
     const [lessonAlias, setLessonAlias] = useState(alias);
-    const [lessonDescription, setLessonDescription] = useState(text || '');
+    const [lessonDescription, setLessonDescription] = useState(text);
+    const [lessonTask, setLessonTask] = useState(task);
     const [lessonCategory, setLessonCategory] = useState(topicId);
 
     useEffect(() => {
@@ -38,7 +39,8 @@ function LessonEditForm({ onSubmit, name, alias, text, video, topics, topicId, o
             name: lessonName,
             alias: lessonAlias,
             text: lessonDescription,
-            topicId: lessonCategory || topics[0]?.value
+            topicId: lessonCategory || topics[0]?.value,
+            task: lessonTask,
         });
     }
 
@@ -47,7 +49,8 @@ function LessonEditForm({ onSubmit, name, alias, text, video, topics, topicId, o
             <Input required onChange={setLessonName} label="Название" value={lessonName}/>
             <Select options={topics} label="Категория" onChange={setLessonCategory} value={lessonCategory} />
             {video ? videoEdition(video, onClickDeleteVideo) : <FileUpload name="file" onChange={onFileUpload} label="Видео" accept="video/*"/>}
-            <Textarea onChange={setLessonDescription} label="Описание" value={lessonDescription}/>
+            <Textarea onChange={setLessonDescription} label="Описание" value={lessonDescription || ''}/>
+            <Textarea onChange={setLessonTask} label="Задание" value={lessonTask || ''}/>
             <Input required onChange={setLessonAlias} label="Alias" value={lessonAlias}/>
             <Button block green disabled={loading}>Сохранить</Button>
         </Form>

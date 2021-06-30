@@ -7,6 +7,10 @@ import TopicsList from '../components/TopicsList';
 import Loader from '../components/Loader';
 import Paddingable from '../components/Paddingable';
 import { UserRole } from '../dataTypes/user';
+import { Back } from '../components/Icons';
+import AdminBar from '../components/AdminBar';
+import { Link } from 'react-router-dom';
+import Button from '../components/Button';
 
 function Home({ topics, requestTopics, isAdmin, moveTopicAtPosition, moveLessonAtPosition, loading }): ReactElement {
     useEffect(() => {
@@ -26,6 +30,22 @@ function Home({ topics, requestTopics, isAdmin, moveTopicAtPosition, moveLessonA
     return topics
         ? (
             <>
+                {isAdmin &&
+                    <AdminBar>
+                        <div className="flex">
+                            <Paddingable padding={[0, 10, 0, 0]}>
+                                <Link to="/topic/create">
+                                    <Button small>Создать тему</Button>
+                                </Link>
+                            </Paddingable>
+                            <Paddingable padding={[0, 10, 0, 0]}>
+                                <Link to="/lesson/create">
+                                    <Button small>Создать урок</Button>
+                                </Link>
+                            </Paddingable>
+                        </div>
+                    </AdminBar>
+                }
                 <div className="container">
                     <Paddingable padding={[20, 0]}>
                         <TopicsList topics={topics} isAdmin={isAdmin} onMoveTopic={handleMoveTopic} onMoveLesson={handleMoveLesson}/>

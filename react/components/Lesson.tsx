@@ -2,6 +2,7 @@ import React, { ReactElement } from 'react';
 import { Lesson } from '../dataTypes/lesson';
 import Video from './Video';
 import { SERVER_REQUESTS_BASE } from '../functions';
+import Paddingable from './Paddingable';
 
 function Lesson(props: Lesson): ReactElement {
     return (
@@ -17,7 +18,16 @@ function Lesson(props: Lesson): ReactElement {
                 </div>
             )}
             <div className="container">
-                <p>{props.text}</p>
+                <p className="text break-spaces">{props.text}</p>
+
+                {props.task && (
+                    <>
+                        <h2>Задание</h2>
+                        <Paddingable padding={[10, 0]}>
+                            <div className="text break-spaces" dangerouslySetInnerHTML={{__html: props.task}}/>
+                        </Paddingable>
+                    </>
+                )}
             </div>
         </div>
     );

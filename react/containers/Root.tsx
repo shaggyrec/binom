@@ -12,7 +12,6 @@ import { setFrom } from '../ducks/auth';
 import { removeMessage, setLoading } from '../ducks/application';
 import BottomMenu from './Footer';
 import Header from './Header';
-import ControlPanel from './ControlPanel';
 import { UserRole } from '../dataTypes/user';
 import TopicCreate from './TopicCreate';
 import Modal from '../components/Modal';
@@ -47,7 +46,6 @@ function Root({ history, me, requestMe, setFrom, loading, setLoading, hideModal,
                 <ProtectedRoute component={LessonCreate} isAuthorized={me?.role === UserRole.admin} path="/lesson/create" exact authPath="/auth" />
                 <ProtectedRoute exact path="/lesson/:alias" component={LessonOverview} isAuthorized={!!me} authPath="/auth"/>
                 <ProtectedRoute exact path="/lesson/:alias/edit" component={LessonEdit} isAuthorized={me?.role === UserRole.admin} authPath="/auth"/>
-                <ProtectedRoute component={ControlPanel} isAuthorized={me?.role === UserRole.admin} path="/cp" exact authPath="/auth" />
                 <ProtectedRoute component={TopicCreate} isAuthorized={me?.role === UserRole.admin} path="/topic/create" exact authPath="/auth" />
                 <ProtectedRoute component={TopicOverview} isAuthorized={me?.role === UserRole.admin} path="/topic/:alias" exact authPath="/auth" />
             </Switch>

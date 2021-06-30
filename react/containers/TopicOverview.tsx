@@ -26,7 +26,9 @@ function TopicOverview({ requestTopic, topic, loading, match: { params }, update
                     <Back size={25}/>
                 </Link>
             </AdminBar>
-            <TopicEditForm {...topic} onSubmit={handleSubmit}/>
+            <div className="container w-600">
+                <TopicEditForm {...topic} onSubmit={handleSubmit}/>
+            </div>
             <Loader show={loading}/>
         </>
     );

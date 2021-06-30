@@ -51,7 +51,7 @@ function TopicsList(
 
     return listContainer(topics.map(t => (
             <Paddingable key={t.id} padding={[0,0,20]}>
-                <div className={`card${openTopics.indexOf(t.id) === -1 ? ' pointer' : ''}`}>
+                <div className={`card transition3 ${openTopics.indexOf(t.id) === -1 ? ' pointer' : ''}`}>
                     <div className="flex outline-background" onClick={() => handleClickTopic(t.id)}>
                         <div>
                             <div className="card-icon card-icon-paragraph">§</div>

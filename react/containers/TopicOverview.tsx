@@ -5,7 +5,7 @@ import * as topicsActions from '../ducks/topics';
 import Loader from '../components/Loader';
 import TopicEditForm from '../components/TopicEditForm';
 import { Back } from '../components/Icons';
-import AdminBar from '../components/AdminBar';
+import TopBar from '../components/TopBar';
 import { Link } from 'react-router-dom';
 
 function TopicOverview({ requestTopic, topic, loading, match: { params }, updateTopic, resetTopic }): ReactElement {
@@ -21,11 +21,11 @@ function TopicOverview({ requestTopic, topic, loading, match: { params }, update
     }
     return (
         <>
-            <AdminBar>
+            <TopBar>
                 <Link to="/app">
                     <Back size={25}/>
                 </Link>
-            </AdminBar>
+            </TopBar>
             <div className="container w-600">
                 <TopicEditForm {...topic} onSubmit={handleSubmit}/>
             </div>

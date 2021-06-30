@@ -1,11 +1,16 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useState } from 'react';
 import { connect } from 'react-redux';
 import * as authAction from '../ducks/auth'
 import Button from '../components/Button';
 import Paddingable from '../components/Paddingable';
 import { RootState } from '../Application';
+import { BackLink } from '../dataTypes/backLink';
+import * as applicationActions from '../ducks/application';
 
-function Profile ({ logout, me }): ReactElement {
+function Profile ({ logout, me, resetBackLink }): ReactElement {
+    useState(() => {
+        resetBackLink();
+    }, [])
     return (
         <div className="container">
             <Paddingable padding={[20, 0]}>
@@ -21,6 +26,7 @@ export default connect(
         me: state.users.me
     }),
     dispatch => ({
-        logout: () => dispatch(authAction.logout())
+        logout: () => dispatch(authAction.logout()),
+        resetBackLink: () => dispatch(applicationActions.backLink(null)),
     })
 )(Profile)

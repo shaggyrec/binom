@@ -1,16 +1,46 @@
 import React, {ReactElement} from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+
 import Logo from '../components/Logo';
+import { RootState } from '../Application';
+import Button from '../components/Button';
+import { Back } from '../components/Icons';
+import { BackLink } from '../dataTypes/backLink';
+import { backLink } from '../ducks/application';
+
+function renderBackLink(backLink: BackLink|null, reset) {
+    const handleClick = (e) => {
+        backLink.onClick(e);
+        reset();
+    }
+    if (!backLink) {
+        return null;
+    }
+    return (
+        <Link className="back-link" to={backLink.url} onClick={handleClick}>
+            <Back size={15}/>
+        </Link>
+    );
+}
 
 
-function Header(): ReactElement {
+function Header({ backLink, resetBackLink }): ReactElement {
     return (
         <div className="container">
             <header>
+                {renderBackLink(backLink, resetBackLink)}
                 <Logo />
             </header>
         </div>
     );
 }
 
-export default connect()(Header);
+export default connect(
+    (state: RootState) => ({
+        backLink: state.application.backLink,
+    }),
+    dispatch => ({
+        resetBackLink: () => dispatch(backLink(null)),
+    })
+)(Header);

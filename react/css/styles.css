@@ -52,6 +52,7 @@ a {
 header {
     border-bottom: 1px solid #ccc;
     padding: 10px 0 15px;
+    display: flex;
 }
 
 footer {
@@ -418,10 +419,13 @@ button:active {
     line-height: 1;
 }
 
-.admin-bar {
+.top-bar {
     padding: 10px 0;
     min-height: 56px;
     border-bottom: thin solid rgba(0,0,0,.1);
+}
+.top-bar > a {
+    margin-right: 10px;
 }
 
 .video-container {
@@ -461,6 +465,17 @@ button:active {
 code {
     color: #000;
 }
+.back-link {
+    display: block;
+    padding: 7px 15px 7px 7px;
+    line-height: 1;
+    animation: backLinkShow .3s both;
+}
+
+.back-link > svg {
+    vertical-align: middle;
+}
+
 @keyframes slideFromBottom {
     0% { transform: translateY(200%); }
     100% { transform: translateY(0); }
@@ -474,4 +489,9 @@ code {
 @keyframes loaderAnimation {
     0% {transform: scale(1) rotate(0); opacity: 1;}
     50% {transform: scale(.6) rotate(380deg); opacity: .1}
+}
+
+@keyframes backLinkShow {
+    0% {margin-left: -20px; opacity: 0}
+    1000% {margin-left: 0; opacity: 1}
 }

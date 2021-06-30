@@ -1,13 +1,13 @@
 import React, { ReactElement } from 'react';
 
-function AdminBar(props): ReactElement {
+function TopBar(props): ReactElement {
     return (
         <div className="container">
-            <div className="admin-bar">
+            <div className="top-bar">
                     {props.children}
             </div>
         </div>
     );
 }
 
-export default AdminBar;
+export default TopBar;

@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import Loader from '../components/Loader';
 import LessonEditForm from '../components/LessonEditForm';
 import { Back } from '../components/Icons';
-import AdminBar from '../components/AdminBar';
+import TopBar from '../components/TopBar';
 import Modal from '../components/Modal';
 
 function LessonEdit({ requestLesson, lesson, loading, match: { params }, updateLesson, requestTopics, topics, uploadFile,
@@ -50,11 +50,11 @@ function LessonEdit({ requestLesson, lesson, loading, match: { params }, updateL
     }
     return (
         <>
-            <AdminBar>
+            <TopBar>
                 <Link to={`/lesson/${params.alias}`}>
                     <Back size={25}/>
                 </Link>
-            </AdminBar>
+            </TopBar>
             <div className="w-600 centered">
                 <LessonEditForm
                     {...lesson}

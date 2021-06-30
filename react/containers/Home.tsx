@@ -8,16 +8,21 @@ import Loader from '../components/Loader';
 import Paddingable from '../components/Paddingable';
 import { UserRole } from '../dataTypes/user';
 import { Back } from '../components/Icons';
-import AdminBar from '../components/AdminBar';
+import TopBar from '../components/TopBar';
 import { Link } from 'react-router-dom';
 import Button from '../components/Button';
+import { Redirect } from 'react-router';
 
-function Home({ topics, requestTopics, isAdmin, moveTopicAtPosition, moveLessonAtPosition, loading }): ReactElement {
+function Home({ topics, requestTopics, isAdmin, moveTopicAtPosition, moveLessonAtPosition, loading, currentLesson }): ReactElement {
     useEffect(() => {
         if (!topics || topics.length === 0) {
             requestTopics();
         }
     }, []);
+
+    if (currentLesson) {
+        return <Redirect to={`/lesson/${currentLesson.alias}`} />;
+    }
 
     function handleMoveTopic(id: string, moveToIndex: number) {
         moveTopicAtPosition(id, moveToIndex + 1);
@@ -31,7 +36,7 @@ function Home({ topics, requestTopics, isAdmin, moveTopicAtPosition, moveLessonA
         ? (
             <>
                 {isAdmin &&
-                    <AdminBar>
+                    <TopBar>
                         <div className="flex">
                             <Paddingable padding={[0, 10, 0, 0]}>
                                 <Link to="/topic/create">
@@ -44,7 +49,7 @@ function Home({ topics, requestTopics, isAdmin, moveTopicAtPosition, moveLessonA
                                 </Link>
                             </Paddingable>
                         </div>
-                    </AdminBar>
+                    </TopBar>
                 }
                 <div className="container">
                     <Paddingable padding={[20, 0]}>

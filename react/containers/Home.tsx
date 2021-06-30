@@ -60,6 +60,7 @@ function Home({ topics, requestTopics, isAdmin, moveTopicAtPosition, moveLessonA
 export default connect(
     (state: RootState) => ({
         topics: state.topics.list,
+        currentLesson: state.lessons.current,
         loading: state.topics.loading || state.lessons.loading,
         isAdmin: state.users.me?.role === UserRole.admin
     }),

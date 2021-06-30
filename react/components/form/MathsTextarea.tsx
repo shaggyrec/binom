@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import MDEditor, { commands } from '@uiw/react-md-editor';
 import '@uiw/react-md-editor/dist/markdown-editor.css'
 import katex from 'katex';
 import 'katex/dist/katex.css';
 import '../../css/math-editor.css';
+
+// TODO code splitting https://parceljs.org/code_splitting.html
 
 export const previewOptions: any = {
     components: {

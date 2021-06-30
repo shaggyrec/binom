@@ -22,12 +22,10 @@ function Lesson(props: Lesson): ReactElement {
                 <p className="text break-spaces">{props.text}</p>
 
                 {props.task && (
-                    <>
+                    <Paddingable padding={[10, 0]}>
                         <h2>Задание</h2>
-                        <Paddingable padding={[10, 0]}>
-                            <MathsText>{props.task}</MathsText>
-                        </Paddingable>
-                    </>
+                        <MathsText>{props.task}</MathsText>
+                    </Paddingable>
                 )}
             </div>
         </div>

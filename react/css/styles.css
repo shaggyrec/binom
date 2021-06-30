@@ -458,6 +458,9 @@ button:active {
 .break-spaces {
     white-space: break-spaces;
 }
+code {
+    color: #000;
+}
 @keyframes slideFromBottom {
     0% { transform: translateY(200%); }
     100% { transform: translateY(0); }

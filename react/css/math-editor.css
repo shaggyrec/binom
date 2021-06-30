@@ -1,0 +1,14 @@
+.w-md-editor {
+    background: transparent;
+}
+.w-md-editor-text-pre, .w-md-editor-text-input {
+    border-radius: 0;
+    color: black;
+    text-shadow: none;
+}
+
+.w-md-editor-text {
+    font-size: 1rem;
+    line-height: 1.5;
+    padding: 10px 20px;
+}

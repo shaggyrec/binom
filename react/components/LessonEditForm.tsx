@@ -11,6 +11,7 @@ import Video from './Video';
 import { SERVER_REQUESTS_BASE } from '../functions';
 import Paddingable from './Paddingable';
 import { Bin } from './Icons';
+import MathsTextarea from './form/MathsTextarea';
 
 function videoEdition(videoId, onClickDeleteVideo): ReactElement {
     return (
@@ -50,7 +51,7 @@ function LessonEditForm({ onSubmit, name, alias, text, task, video, topics, topi
             <Select options={topics} label="Категория" onChange={setLessonCategory} value={lessonCategory} />
             {video ? videoEdition(video, onClickDeleteVideo) : <FileUpload name="file" onChange={onFileUpload} label="Видео" accept="video/*"/>}
             <Textarea onChange={setLessonDescription} label="Описание" value={lessonDescription || ''}/>
-            <Textarea onChange={setLessonTask} label="Задание" value={lessonTask || ''}/>
+            <MathsTextarea label="Задание" value={lessonTask || ''}  onChange={setLessonTask}/>
             <Input required onChange={setLessonAlias} label="Alias" value={lessonAlias}/>
             <Button block green disabled={loading}>Сохранить</Button>
         </Form>

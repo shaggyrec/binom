@@ -3,6 +3,7 @@ import { Lesson } from '../dataTypes/lesson';
 import Video from './Video';
 import { SERVER_REQUESTS_BASE } from '../functions';
 import Paddingable from './Paddingable';
+import MathsText from './MathsText';
 
 function Lesson(props: Lesson): ReactElement {
     return (
@@ -24,7 +25,7 @@ function Lesson(props: Lesson): ReactElement {
                     <>
                         <h2>Задание</h2>
                         <Paddingable padding={[10, 0]}>
-                            <div className="text break-spaces" dangerouslySetInnerHTML={{__html: props.task}}/>
+                            <MathsText>{props.task}</MathsText>
                         </Paddingable>
                     </>
                 )}

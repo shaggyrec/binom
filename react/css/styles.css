@@ -225,7 +225,7 @@ button:active {
 .logo {
     width: 400px;
     height: 100px;
-    background-image: url("../static/binom_green_l_m.png");
+    background-image: url("../static/binom_green.svg");
     background-size: 100%;
     background-repeat: no-repeat;
 }
@@ -315,7 +315,7 @@ button:active {
     height: 100%;
 }
 .loader-image {
-    background: url("../static/binom_o.png");
+    background: url("../static/binom_o.svg");
     background-size: contain;
     width: 80px;
     height: 80px;

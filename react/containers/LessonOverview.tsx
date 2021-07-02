@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { RootState } from '../Application';
 import { Link } from 'react-router-dom';
 import * as lessonsActions from '../ducks/lessons';
+import * as lessonCommentsActions from '../ducks/lessonComments';
 import * as applicationActions from '../ducks/application';
 import Loader from '../components/Loader';
 import Lesson from '../components/Lesson';
@@ -12,11 +13,17 @@ import TopBar from '../components/TopBar';
 import { UserRole } from '../dataTypes/user';
 import { BackLink } from '../dataTypes/backLink';
 
-function LessonOverview ({ requestLesson, lesson, loading, match: { params }, me, resetCurrentLesson, setBackLink }): ReactElement {
+function LessonOverview ({ requestLesson, lesson, loading, match: { params }, me, resetCurrentLesson, setBackLink, requestComments }): ReactElement {
     useEffect(() => {
         requestLesson(params.alias);
         setBackLink({ url: '/app', onClick: resetCurrentLesson });
-    }, [])
+    }, []);
+
+    useEffect(() => {
+        if (lesson?.alias === params.alias) {
+            requestComments(lesson.id, me.id);
+        }
+    }, [lesson])
 
     if (!lesson || lesson.alias !== params.alias) {
         return <Loader />;
@@ -47,5 +54,6 @@ export default connect(
         requestLesson: alias => dispatch(lessonsActions.request(alias)),
         resetCurrentLesson: () => dispatch(lessonsActions.lesson(null)),
         setBackLink: (backLink: BackLink) => dispatch(applicationActions.backLink(backLink)),
+        requestComments: (id, userId) => dispatch(lessonCommentsActions.requestList(id, userId)),
     })
 )(LessonOverview);

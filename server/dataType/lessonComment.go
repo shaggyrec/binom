@@ -8,10 +8,10 @@ import (
 type LessonComment struct {
 	Id string `json:"id"`
 	LessonId string `json:"lessonId"`
-	User string `json:"user"`
+	UserId string `json:"user"`
 	Text null.String `json:"text"`
 	Author string `json:"author"`
 	Updated pg.NullTime `json:"updated"`
 	Created pg.NullTime `json:"created"`
-	Files []*LessonCommentFile `pg:"rel:has-many" json:"files"`
+	Files []LessonCommentFile `pg:"rel:has-many" json:"files"`
 }

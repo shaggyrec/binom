@@ -9,6 +9,7 @@ import { ApiErrors } from '../ApiErrors';
 import { refreshTokenProcess } from '../sagas/auth';
 import { lessons } from './lessons';
 import { files } from './files';
+import { lessonComments } from './lessonComments';
 
 export function* apiRequest(url: string, method: Method  = 'GET', body: any = {}, options: any = {}): IterableIterator<any> {
     try {
@@ -36,5 +37,6 @@ export default function* rootSaga(): any {
         auth(),
         lessons(),
         files(),
+        lessonComments(),
     ]);
 }

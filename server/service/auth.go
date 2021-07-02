@@ -31,7 +31,7 @@ func (a *AuthService) AuthByEmail(email string) (*dataType.User, map[string]stri
 		}
 	}
 
-	tokens, err := a.tokenService.GenerateTokenPair(user.Id)
+	tokens, err := a.tokenService.GenerateTokenPair(user)
 
 	return user, tokens, err
 }

@@ -56,3 +56,15 @@ func (s *LessonCommentStorage) DeleteFile(fileId string) error {
 
 	return err
 }
+
+func (s *LessonCommentStorage) List(lessonId string, userId string) (*[]dataType.LessonComment, error) {
+	var commentsList []dataType.LessonComment
+
+	err := s.db.Model(&commentsList).
+		Relation("Files").
+		Where("lesson_id = ? AND user_id = ?", lessonId, userId).
+		OrderExpr("created ASC").
+		Select()
+
+	return &commentsList, err
+}

@@ -21,6 +21,7 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 	topicStorage := storageFactory.Topic(db)
 	lessonStorage := storageFactory.Lesson(db)
 	fileStorage := storageFactory.File(db)
+	lessonCommentStorage := storageFactory.LessonComment(db)
 	// services
 	serviceFactory := service.Factory{}
 	tokenService := serviceFactory.TokenService(jwtSecret, tokenStorage)
@@ -30,7 +31,7 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 
 	// controllers
 	authController := controllers.AuthController{}
-	authController.Init(authCodeService, authService, tokenService)
+	authController.Init(authCodeService, authService, tokenService, userStorage)
 	pageController := controllers.PageController{}
 	userController := controllers.UserController{}
 	userController.Init(userStorage)
@@ -40,7 +41,8 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 	lessonController.Init(lessonStorage, moveAtPositionService)
 	fileController := controllers.FileController{}
 	fileController.Init(uploadPath, fileStorage)
-
+	lessonCommentController := controllers.LessonCommentController{}
+	lessonCommentController.Init(lessonCommentStorage)
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
@@ -91,6 +93,10 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 				r.Put("/{id}", lessonController.Update)
 				r.Delete("/{id}", lessonController.Delete)
 				r.Patch("/{id}/at/{pos:[0-9]+}", lessonController.MoveAtPosition)
+			})
+			r.Route("/lesson/{lesson}/{user}/comment", func(r chi.Router) {
+				r.Get("/", lessonCommentController.List)
+				r.Post("/", lessonCommentController.Add)
 			})
 			r.Route("/file", func(r chi.Router) {
 				r.Post("/", fileController.Upload)

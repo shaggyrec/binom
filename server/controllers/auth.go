@@ -6,6 +6,7 @@ import (
 	"binom/server/mailer"
 	"binom/server/responses"
 	"binom/server/service"
+	"binom/server/storage"
 	"github.com/go-chi/render"
 	"net/http"
 )
@@ -14,12 +15,14 @@ type AuthController struct {
 	authCodeService *service.AuthCodeService
 	authService     *service.AuthService
 	tokenService    *service.TokenService
+	userStorage 	*storage.UserStorage
 }
 
-func (c *AuthController) Init(authCodeService *service.AuthCodeService, authService *service.AuthService, tokenService *service.TokenService) {
+func (c *AuthController) Init(authCodeService *service.AuthCodeService, authService *service.AuthService, tokenService *service.TokenService, userStorage *storage.UserStorage) {
 	c.authCodeService = authCodeService
 	c.authService = authService
 	c.tokenService = tokenService
+	c.userStorage = userStorage
 }
 
 func (c *AuthController) Email(w http.ResponseWriter, r *http.Request) {
@@ -101,7 +104,14 @@ func (c *AuthController) RefreshToken (w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tokens, err := c.tokenService.GenerateTokenPair(userId)
+	user, err := c.userStorage.Get(userId)
+
+	if err != nil {
+		exceptions.ServerError(w, r)
+		return
+	}
+
+	tokens, err := c.tokenService.GenerateTokenPair(user)
 
 	if err != nil {
 		exceptions.ServerError(w, r)

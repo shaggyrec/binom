@@ -18,13 +18,11 @@ import (
 type LessonController struct {
 	lessonStorage *storage.LessonStorage
 	moveAtPositionService *service.MoveAtPositionService
-	lessonCommentStorage *storage.LessonCommentStorage
 }
 
-func (c *LessonController) Init(lessonStorage *storage.LessonStorage, moveAtPositionService *service.MoveAtPositionService, lessonCommentStorage *storage.LessonCommentStorage) {
+func (c *LessonController) Init(lessonStorage *storage.LessonStorage, moveAtPositionService *service.MoveAtPositionService) {
 	c.lessonStorage = lessonStorage
 	c.moveAtPositionService = moveAtPositionService
-	c.lessonCommentStorage = lessonCommentStorage
 }
 
 func (c *LessonController) Create(w http.ResponseWriter, r *http.Request) {
@@ -156,52 +154,4 @@ func (c *LessonController) MoveAtPosition(w http.ResponseWriter, r *http.Request
 	}
 
 	render.Status(r, http.StatusOK)
-}
-
-func (c *LessonController) AddComment(w http.ResponseWriter, r *http.Request)  {
-	id := chi.URLParam(r, "id")
-	var comment dataType.LessonComment
-	if err := functions.ParseRequest(w, r, &comment);  err != nil {
-		return
-	}
-
-	if comment.User == "" {
-		exceptions.BadRequestError(w, r, "`user` is mandatory", exceptions.ErrorFieldIsMandatory)
-		return
-	}
-
-	comment.LessonId = id
-	comment.Author = r.Context().Value("userId").(string)
-
-	// TODO add checking access to adding comment by  r.Context().Value("userId").(string) == comment.Userid || isAdmin
-
-	_, err := c.lessonCommentStorage.Create(&comment)
-
-	if err != nil {
-		log.Print(err)
-		exceptions.ServerError(w, r)
-		return
-	}
-
-	if comment.Files != nil && len(comment.Files) > 0 {
-		for _, file := range comment.Files {
-			file.LessonComment = &comment
-			_, err := c.lessonCommentStorage.AddFile(file)
-			if err != nil {
-				log.Print(err)
-				exceptions.ServerError(w, r)
-				return
-			}
-		}
-	}
-
-	render.JSON(w, r, comment)
-}
-
-func (c *LessonController) DeleteComment(w http.ResponseWriter, r *http.Request)  {
-	commentId := chi.URLParam(r, "id")
-}
-
-func (c *LessonController) UpdateComment(w http.ResponseWriter, r *http.Request)  {
-	commentId := chi.URLParam(r, "id")
 }

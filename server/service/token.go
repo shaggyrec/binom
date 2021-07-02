@@ -1,6 +1,7 @@
 package service
 
 import (
+	"binom/server/dataType"
 	"binom/server/functions"
 	"binom/server/storage"
 	"errors"
@@ -18,14 +19,15 @@ func (tokenService *TokenService) Init (jwtSecret string, storage *storage.Token
 	tokenService.storage = storage
 }
 
-func (tokenService *TokenService) GenerateTokenPair(userId string) (map[string]string, error) {
+func (tokenService *TokenService) GenerateTokenPair(user *dataType.User) (map[string]string, error) {
 	// Create token
 	token := jwt.New(jwt.SigningMethodHS256)
 
 
 	claims := token.Claims.(jwt.MapClaims)
 	claims["exp"] = time.Now().Add(time.Minute * 15).Unix()
-	claims["id"] = userId
+	claims["id"] = user.Id
+	claims["r"] = user.Role
 
 
 	t, err := token.SignedString([]byte(tokenService.jwtSecret))
@@ -42,7 +44,7 @@ func (tokenService *TokenService) GenerateTokenPair(userId string) (map[string]s
 		return nil, err
 	}
 
-	_, err = tokenService.storage.Create(rt, userId)
+	_, err = tokenService.storage.Create(rt, user.Id)
 
 	if err != nil {
 		return nil, err

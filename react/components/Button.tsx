@@ -1,6 +1,18 @@
 import React, { ReactElement } from 'react';
 
-function Button(props): ReactElement {
+interface ButtonProps {
+    className?: string;
+    green?: boolean;
+    block?: boolean;
+    small?: boolean;
+    red?: boolean;
+    disabled?: boolean;
+    onClick?: (any: any) => any;
+    type?: 'button'|'submit'|'reset';
+    children?: any;
+}
+
+function Button(props: ButtonProps): ReactElement {
     const className = [
         props.className,
         props.green && "button-green",

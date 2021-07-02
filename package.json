@@ -16,6 +16,7 @@
     "katex": "^0.13.11",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-dropzone": "^11.3.4",
     "react-onclickoutside": "^6.11.2",
     "react-redux": "^7.2.4",
     "react-route-protected": "^1.0.3",

@@ -12,8 +12,9 @@ import { Edit } from '../components/Icons';
 import TopBar from '../components/TopBar';
 import { UserRole } from '../dataTypes/user';
 import { BackLink } from '../dataTypes/backLink';
+import LessonComments from '../components/LessonsComments';
 
-function LessonOverview ({ requestLesson, lesson, loading, match: { params }, me, resetCurrentLesson, setBackLink, requestComments }): ReactElement {
+function LessonOverview ({ requestLesson, lesson, loading, match: { params }, me, resetCurrentLesson, setBackLink, requestComments, comments }): ReactElement {
     useEffect(() => {
         requestLesson(params.alias);
         setBackLink({ url: '/app', onClick: resetCurrentLesson });
@@ -39,6 +40,9 @@ function LessonOverview ({ requestLesson, lesson, loading, match: { params }, me
                 </TopBar>
             }
             <Lesson {...lesson} />
+            <div className="container">
+                <LessonComments comments={comments}/>
+            </div>
             <Loader show={loading}/>
         </>
     );
@@ -48,7 +52,8 @@ export default connect(
     (state: RootState) => ({
         lesson: state.lessons.current,
         loading: state.lessons.loading,
-        me: state.users.me
+        me: state.users.me,
+        comments: state.lessonComments.list,
     }),
     dispatch => ({
         requestLesson: alias => dispatch(lessonsActions.request(alias)),

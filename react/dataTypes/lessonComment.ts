@@ -1,4 +1,5 @@
 import { User } from './user';
+import { LessonCommentFile } from './lessonCommentFile';
 
 export interface LessonComment {
     id: string
@@ -8,5 +9,5 @@ export interface LessonComment {
     updated: Date;
     author: User;
     userId: string;
-    files: any[];
+    files: LessonCommentFile[];
 }

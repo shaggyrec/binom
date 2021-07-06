@@ -62,10 +62,23 @@ func (s *LessonCommentStorage) List(lessonId string, userId string) (*[]dataType
 
 	err := s.db.Model(&commentsList).
 		Relation("Files").
+		Relation("Files.File").
 		Relation("Author").
 		Where("lesson_id = ? AND user_id = ?", lessonId, userId).
 		OrderExpr("created ASC").
 		Select()
 
 	return &commentsList, err
+}
+
+func (s * LessonCommentStorage) ById(id string) (*dataType.LessonComment, error) {
+	comment := &dataType.LessonComment{Id: id}
+	err := s.db.Model(comment).
+		Relation("Files").
+		Relation("Files.File").
+		Relation("Author").
+		WherePK().
+		Select()
+
+	return comment, err
 }

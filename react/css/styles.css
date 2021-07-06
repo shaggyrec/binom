@@ -585,6 +585,20 @@ code {
 .lesson-comment-author-date {
     font-size: 10px;
 }
+.lesson-comment-files {
+    padding-top: 10px;
+}
+.lesson-comment-file {
+    padding: 0;
+}
+.lesson-comment-image, .lesson-comment-file {
+    border-radius: 8px;
+    display: inline-block;
+}
+.lesson-comment-image {
+    display: block;
+    height: 80px;
+}
 
 @keyframes slideFromBottom {
     0% { transform: translateY(200%); }

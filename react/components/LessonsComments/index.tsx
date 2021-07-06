@@ -10,6 +10,7 @@ function LessonComments({ comments, onLeaveComment }): ReactElement {
     function handleLeaveComment() {
         if (commentText !== '' || files.length > 0) {
             onLeaveComment(commentText, files);
+            setCommentText('');
         }
     }
 

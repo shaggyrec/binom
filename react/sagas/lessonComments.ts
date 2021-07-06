@@ -1,4 +1,4 @@
-import { call, ForkEffect, put, select, takeEvery } from '@redux-saga/core/effects';
+import { call, ForkEffect, put, select, takeEvery, take } from '@redux-saga/core/effects';
 
 import * as lessonCommentsActions from '../ducks/lessonComments';
 import * as lessonsActions from '../ducks/lessons';
@@ -24,9 +24,12 @@ function* addProcess({ payload: { lessonId, userId, text, files } }): IterableIt
         const commentFiles = [];
         for (const file of (files || [])) {
             yield put(filesActions.upload(file));
-            commentFiles.push({ file: yield select(getLastUploadedFile) });
+            yield take(filesActions.success);
+            const uploadedFileId =  yield select(getLastUploadedFile);
+            commentFiles.push({ fileId: uploadedFileId });
             yield put(filesActions.lastUploadedFile(null));
         }
+
         const newComment: LessonComment = yield call(
             apiRequest,
             `/api/lesson/${lessonId}/${userId}/comment`,

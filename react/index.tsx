@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import 'moment/locale/ru';
 
 import Application from './Application';
 import { initialState } from './ducks'
@@ -10,7 +11,7 @@ const state = {
     ...initialState,
 }
 const appContainer = document.createElement('div');
-appContainer.id = 'binomapp';
+appContainer.id = ROOT_APP_CLASSNAME;
 document.body.appendChild(appContainer);
 // @ts-ignore
 ReactDOM.render(<Application state={state} />, appContainer);

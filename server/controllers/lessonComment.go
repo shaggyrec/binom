@@ -41,12 +41,12 @@ func (c *LessonCommentController) Add(w http.ResponseWriter, r *http.Request)  {
 
 	if comment.Text.String == "" && len(comment.Files) == 0 {
 		exceptions.BadRequestError(w, r, "Text or files are required", exceptions.ErrorBadParam);
-		return;
+		return
 	}
 
 	comment.UserId = userId
 	comment.LessonId = lessonId
-	comment.Author.Id = r.Context().Value("userId").(string)
+	comment.AuthorId = r.Context().Value("userId").(string)
 
 	// TODO add checking access to adding comment by  r.Context().Value("userId").(string) == comment.Userid || isAdmin
 
@@ -60,8 +60,10 @@ func (c *LessonCommentController) Add(w http.ResponseWriter, r *http.Request)  {
 
 	if comment.Files != nil && len(comment.Files) > 0 {
 		for _, file := range comment.Files {
-			file.LessonCommentId = comment.Id
-			_, err := c.lessonCommentStorage.AddFile(&file)
+			_, err := c.lessonCommentStorage.AddFile(&dataType.LessonCommentFile{
+				FileId: file.FileId,
+				LessonCommentId: comment.Id,
+			})
 			if err != nil {
 				log.Print(err)
 				exceptions.ServerError(w, r)
@@ -69,8 +71,8 @@ func (c *LessonCommentController) Add(w http.ResponseWriter, r *http.Request)  {
 			}
 		}
 	}
-
-	render.JSON(w, r, comment)
+	newLesson, _ := c.lessonCommentStorage.ById(comment.Id)
+	render.JSON(w, r, newLesson)
 }
 
 func (c *LessonCommentController) Delete(w http.ResponseWriter, r *http.Request)  {

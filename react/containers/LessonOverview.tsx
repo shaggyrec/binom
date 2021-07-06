@@ -59,6 +59,7 @@ export default connect(
         loading: state.lessons.loading,
         me: state.users.me,
         comments: state.lessonComments.list,
+        commentsError: state.lessonComments.error,
     }),
     dispatch => ({
         requestLesson: alias => dispatch(lessonsActions.request(alias)),

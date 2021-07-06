@@ -45,3 +45,4 @@ export const remove = createAction(REMOVE, id => id);
 
 
 export const fileById = (state, id) => state.files.files[id];
+export const getLastUploadedFile = state => state.files.lastUploadedFile;

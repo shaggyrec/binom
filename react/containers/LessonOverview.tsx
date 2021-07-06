@@ -14,7 +14,8 @@ import { UserRole } from '../dataTypes/user';
 import { BackLink } from '../dataTypes/backLink';
 import LessonComments from '../components/LessonsComments';
 
-function LessonOverview ({ requestLesson, lesson, loading, match: { params }, me, resetCurrentLesson, setBackLink, requestComments, comments }): ReactElement {
+function LessonOverview ({ requestLesson, lesson, loading, match: { params }, me, resetCurrentLesson, setBackLink,
+                             requestComments, comments, addComment }): ReactElement {
     useEffect(() => {
         requestLesson(params.alias);
         setBackLink({ url: '/app', onClick: resetCurrentLesson });
@@ -22,12 +23,16 @@ function LessonOverview ({ requestLesson, lesson, loading, match: { params }, me
 
     useEffect(() => {
         if (lesson?.alias === params.alias) {
-            requestComments(lesson.id, me.id);
+            requestComments(lesson.id, params.userId || me.id);
         }
     }, [lesson])
 
     if (!lesson || lesson.alias !== params.alias) {
         return <Loader />;
+    }
+
+    function handleLeaveComment(text, files) {
+        addComment(lesson.id, (params.userId || me.id), text, files);
     }
 
     return (
@@ -41,7 +46,7 @@ function LessonOverview ({ requestLesson, lesson, loading, match: { params }, me
             }
             <Lesson {...lesson} />
             <div className="container">
-                <LessonComments comments={comments}/>
+                <LessonComments comments={comments} onLeaveComment={handleLeaveComment} />
             </div>
             <Loader show={loading}/>
         </>
@@ -60,5 +65,6 @@ export default connect(
         resetCurrentLesson: () => dispatch(lessonsActions.lesson(null)),
         setBackLink: (backLink: BackLink) => dispatch(applicationActions.backLink(backLink)),
         requestComments: (id, userId) => dispatch(lessonCommentsActions.requestList(id, userId)),
+        addComment: (lessonId, userId, text, files) => dispatch(lessonCommentsActions.add(lessonId, userId, text, files)),
     })
 )(LessonOverview);

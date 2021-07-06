@@ -168,6 +168,7 @@ button:hover, button.hover, .neomorphic {
 }
 .neomorphic {
     border-radius: 8px;
+    padding: 20px;
 }
 button:active {
     box-shadow: inset 1px 1px 2px #BABECC, inset -1px -1px 2px #FFF;
@@ -539,6 +540,50 @@ code {
     font-size: 12px;
     font-weight: bold;
     margin-right: 10px;
+}
+.lesson-comments {
+    border-top: 1px solid #ccc;
+    padding: 20px 0;
+}
+.lesson-comment {
+    padding: 20px 0 20px 10px;
+}
+.lesson-comment:last-child {
+    margin-bottom: 10px;
+}
+
+.lesson-comment-block {
+
+}
+
+.lesson-comment-header {
+    display: flex;
+    align-items: baseline;
+    padding-bottom: 10px;
+    margin-top: -30px;
+    margin-left: -30px;
+}
+
+.lesson-comment-avatar {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    background-color: #EBECF0;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 900;
+}
+.lesson-comment-author {
+    padding: 0 15px;
+}
+.lesson-comment-author-name {
+    font-size: 13px;
+    font-weight: 900;
+}
+.lesson-comment-author-date {
+    font-size: 10px;
 }
 
 @keyframes slideFromBottom {

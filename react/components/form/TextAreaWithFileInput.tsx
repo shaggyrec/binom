@@ -8,10 +8,11 @@ import { Attach, Bin } from '../Icons';
 function TextAreaWithFileInput({ label = '', text, onTextChange, onFilesChange }): ReactElement {
     const [files, setFiles] = useState([]);
     const onDrop = useCallback(acceptedFiles => {
-        setFiles([...files, ...acceptedFiles]);
-        onFilesChange(files);
+        const newFiles = [...files, ...acceptedFiles];
+        setFiles(newFiles);
+        onFilesChange(newFiles);
     }, [])
-    const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+    const { getRootProps, getInputProps, isDragActive, open } = useDropzone({ onDrop });
 
     const handleClickDropzone = e => {
         e.stopPropagation();
@@ -33,7 +34,7 @@ function TextAreaWithFileInput({ label = '', text, onTextChange, onFilesChange }
                 <Textarea height={100} label={label} onChange={onTextChange} value={text}/>
                 {isDragActive && <div className="textarea-with-files-tooltip text">Drop file here</div>}
                 <div className="textarea-with-files-controls neomorphic">
-                    <Button small><Attach size={12}/></Button>
+                    <Button small type="button" onClick={open}><Attach size={12}/></Button>
                 </div>
             </div>
             {files.length > 0 &&

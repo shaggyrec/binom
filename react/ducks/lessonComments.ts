@@ -27,7 +27,10 @@ export default handleActions({
 export const requestList = createAction(REQUEST_LIST, (lessonId, userId) => ({ lessonId, userId }));
 export const comments = createAction(COMMENTS, c => c);
 export const error = createAction(ERROR, error => error);
-export const add = createAction(ADD, (lessonId, userId, c) => ({ lessonId, userId, comment: c }));
+export const add = createAction(ADD, (lessonId, userId, text, files) => ({ lessonId, userId, text, files }));
 export const update = createAction(UPDATE, (id, comment) => ({ id, comment }));
 export const remove = createAction(DELETE, id => id);
 export const success = createAction(SUCCESS, () => {});
+
+
+export const currentList = state => state.lessonComments.list;

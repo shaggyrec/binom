@@ -39,9 +39,14 @@ func (c *LessonCommentController) Add(w http.ResponseWriter, r *http.Request)  {
 		return
 	}
 
+	if comment.Text.String == "" && len(comment.Files) == 0 {
+		exceptions.BadRequestError(w, r, "Text or files are required", exceptions.ErrorBadParam);
+		return;
+	}
+
 	comment.UserId = userId
 	comment.LessonId = lessonId
-	comment.Author = r.Context().Value("userId").(string)
+	comment.Author.Id = r.Context().Value("userId").(string)
 
 	// TODO add checking access to adding comment by  r.Context().Value("userId").(string) == comment.Userid || isAdmin
 

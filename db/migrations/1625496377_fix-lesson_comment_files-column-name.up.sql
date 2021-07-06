@@ -1,0 +1,1 @@
+ALTER TABLE lesson_comment_files RENAME COLUMN lesson_comments_id TO lesson_comment_id;

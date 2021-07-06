@@ -1,0 +1,1 @@
+ALTER TABLE lesson_comments RENAME COLUMN author_id TO author;

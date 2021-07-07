@@ -22,6 +22,7 @@ import LessonCreate from './LessonCreate';
 import LessonOverview from './LessonOverview';
 import LessonEdit from './LessonEdit';
 import Profile from './Profile';
+import CompleteProfile from './CompleteProfile';
 
 function Root({ history, me, requestMe, setFrom, loading, setLoading, hideModal, message }): ReactElement {
     useEffect(() => {
@@ -36,20 +37,30 @@ function Root({ history, me, requestMe, setFrom, loading, setLoading, hideModal,
         return <Loader />;
     }
 
+    function app() {
+        if (me && !me.username) {
+            return <CompleteProfile />;
+        }
+        return (
+            <>
+                <Header />
+                <Switch>
+                    <Route path="/auth" component={Auth}/>
+                    <ProtectedRoute exact path="/app" component={Home} isAuthorized={!!me} authPath="/auth"/>
+                    <ProtectedRoute exact path="/me" component={Profile} isAuthorized={!!me} authPath="/auth"/>
+                    <ProtectedRoute component={LessonCreate} isAuthorized={me?.role === UserRole.admin} path="/lesson/create" exact authPath="/auth" />
+                    <ProtectedRoute exact path="/lesson/:alias" component={LessonOverview} isAuthorized={!!me} authPath="/auth"/>
+                    <ProtectedRoute exact path="/lesson/:alias/edit" component={LessonEdit} isAuthorized={me?.role === UserRole.admin} authPath="/auth"/>
+                    <ProtectedRoute component={TopicCreate} isAuthorized={me?.role === UserRole.admin} path="/topic/create" exact authPath="/auth" />
+                    <ProtectedRoute component={TopicOverview} isAuthorized={me?.role === UserRole.admin} path="/topic/:alias" exact authPath="/auth" />
+                </Switch>
+                <BottomMenu /></>
+        );
+    }
+
     return (
         <div className="root">
-            <Header />
-            <Switch>
-                <Route path="/auth" component={Auth}/>
-                <ProtectedRoute exact path="/app" component={Home} isAuthorized={!!me} authPath="/auth"/>
-                <ProtectedRoute exact path="/me" component={Profile} isAuthorized={!!me} authPath="/auth"/>
-                <ProtectedRoute component={LessonCreate} isAuthorized={me?.role === UserRole.admin} path="/lesson/create" exact authPath="/auth" />
-                <ProtectedRoute exact path="/lesson/:alias" component={LessonOverview} isAuthorized={!!me} authPath="/auth"/>
-                <ProtectedRoute exact path="/lesson/:alias/edit" component={LessonEdit} isAuthorized={me?.role === UserRole.admin} authPath="/auth"/>
-                <ProtectedRoute component={TopicCreate} isAuthorized={me?.role === UserRole.admin} path="/topic/create" exact authPath="/auth" />
-                <ProtectedRoute component={TopicOverview} isAuthorized={me?.role === UserRole.admin} path="/topic/:alias" exact authPath="/auth" />
-            </Switch>
-            <BottomMenu />
+            {app()}
             {message && <Modal type={message.type || ApplicationMessageType.info} onClickOk={hideModal}>{message.text}</Modal>}
         </div>
     );

@@ -77,6 +77,9 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 		r.Group(func(r chi.Router) {
 			r.Use(middlewares.JwtAuth(jwtSecret))
 			r.Get("/me", userController.Me)
+			r.Route("/user", func(r chi.Router) {
+				r.Put("/{userId}", userController.Update)
+			})
 			r.Route("/topic", func(r chi.Router) {
 				r.Get("/list", topicController.List)
 				r.Get("/{alias}", topicController.ByAlias)
@@ -94,7 +97,7 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 				r.Delete("/{id}", lessonController.Delete)
 				r.Patch("/{id}/at/{pos:[0-9]+}", lessonController.MoveAtPosition)
 			})
-			r.Route("/lesson/{lesson}/{user}/comment", func(r chi.Router) {
+			r.Route("/lesson/{lesson}/{userId}/comment", func(r chi.Router) {
 				r.Get("/", lessonCommentController.List)
 				r.Post("/", lessonCommentController.Add)
 			})

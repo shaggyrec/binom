@@ -21,7 +21,7 @@ func (c *LessonCommentController) Init(lessonCommentStorage *storage.LessonComme
 
 func (c *LessonCommentController) List(w http.ResponseWriter, r *http.Request) {
 	lessonId := chi.URLParam(r, "lesson")
-	userId := chi.URLParam(r, "user")
+	userId := chi.URLParam(r, "userId")
 	comments, err := c.lessonCommentStorage.List(lessonId, userId)
 	if err != nil {
 		log.Print(err)
@@ -33,7 +33,7 @@ func (c *LessonCommentController) List(w http.ResponseWriter, r *http.Request) {
 
 func (c *LessonCommentController) Add(w http.ResponseWriter, r *http.Request)  {
 	lessonId := chi.URLParam(r, "lesson")
-	userId := chi.URLParam(r, "user")
+	userId := chi.URLParam(r, "userId")
 	var comment dataType.LessonComment
 	if err := functions.ParseRequest(w, r, &comment);  err != nil {
 		return

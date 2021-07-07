@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Input({ type = 'text', onChange, label, value, name = undefined, required = false, autocomplete = true, error = null }) {
+function Input({ type = 'text', onChange, label, value, name = undefined, required = false, autocomplete = true, error = null, placeholder = undefined }) {
     const handleChange = ({ target: { value } }) => onChange(value);
     return (
         <div className="input-raw">
@@ -15,6 +15,7 @@ function Input({ type = 'text', onChange, label, value, name = undefined, requir
                     required={required}
                     // @ts-ignore
                     autoComplete={autocomplete ? 'on' : 'off'}
+                    placeholder={placeholder}
                 />
                 {error && <span className="input-error">{error}</span>}
             </label>

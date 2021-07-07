@@ -36,7 +36,9 @@ function Comment(props: LessonComment): ReactElement {
                     <div className="lesson-comment-author">
                         <div className="lesson-comment-author-name">{authorsName(props.author)}</div>
                         <div className="lesson-comment-author-date">
-                            <Moment fromNow titleFormat="D MMM YYYY HH:mm:ss" withTitle locale="ru">{props.created}</Moment>
+                            <Moment fromNow titleFormat="D MMM YYYY HH:mm:ss" withTitle locale="ru">
+                                {props.created}
+                            </Moment>
                         </div>
                     </div>
                 </div>

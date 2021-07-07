@@ -20,7 +20,7 @@ func (u *UserStorage) Create(user *dataType.User) (*dataType.User, error) {
 }
 
 func (u *UserStorage) Update(user *dataType.User) (*dataType.User, error) {
-	_, err := u.db.Model(user).Update()
+	_, err := u.db.Model(user).WherePK().Update()
 
 	return user, err
 }

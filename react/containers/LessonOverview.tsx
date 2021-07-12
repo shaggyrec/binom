@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import * as lessonsActions from '../ducks/lessons';
 import * as lessonCommentsActions from '../ducks/lessonComments';
 import * as applicationActions from '../ducks/application';
+import * as usersActions from '../ducks/users';
 import Loader from '../components/Loader';
 import Lesson from '../components/Lesson';
 import Button from '../components/Button';
@@ -15,24 +16,33 @@ import { BackLink } from '../dataTypes/backLink';
 import LessonComments from '../components/LessonsComments';
 
 function LessonOverview ({ requestLesson, lesson, loading, match: { params }, me, resetCurrentLesson, setBackLink,
-                             requestComments, comments, addComment }): ReactElement {
+                             requestComments, comments, addComment, requestUser, user }): ReactElement {
     useEffect(() => {
         requestLesson(params.alias);
+        if (params.username) {
+            requestUser(params.username);
+        }
         setBackLink({ url: '/app', onClick: resetCurrentLesson });
     }, []);
 
     useEffect(() => {
         if (lesson?.alias === params.alias) {
-            requestComments(lesson.id, params.userId || me.id);
+            if (params.username) {
+                if (user?.username === params.username) {
+                    requestComments(lesson.id, user.id);
+                }
+            } else  {
+                requestComments(lesson.id, me.id);
+            }
         }
-    }, [lesson])
+    }, [lesson, user])
 
     if (!lesson || lesson.alias !== params.alias) {
         return <Loader />;
     }
 
     function handleLeaveComment(text, files) {
-        addComment(lesson.id, (params.userId || me.id), text, files);
+        addComment(lesson.id, (user?.id || me.id), text, files);
     }
 
     return (
@@ -44,7 +54,7 @@ function LessonOverview ({ requestLesson, lesson, loading, match: { params }, me
                     </Link>
                 </TopBar>
             }
-            <Lesson {...lesson} />
+            <Lesson {...lesson} name={lesson.name + ` (${params.username})`}/>
             <div className="container">
                 <LessonComments comments={comments} onLeaveComment={handleLeaveComment} />
             </div>
@@ -60,6 +70,7 @@ export default connect(
         me: state.users.me,
         comments: state.lessonComments.list,
         commentsError: state.lessonComments.error,
+        user: state.users.current,
     }),
     dispatch => ({
         requestLesson: alias => dispatch(lessonsActions.request(alias)),
@@ -67,5 +78,6 @@ export default connect(
         setBackLink: (backLink: BackLink) => dispatch(applicationActions.backLink(backLink)),
         requestComments: (id, userId) => dispatch(lessonCommentsActions.requestList(id, userId)),
         addComment: (lessonId, userId, text, files) => dispatch(lessonCommentsActions.add(lessonId, userId, text, files)),
+        requestUser: alias => dispatch(usersActions.requestUser(alias)),
     })
 )(LessonOverview);

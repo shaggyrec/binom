@@ -54,6 +54,7 @@ function Root({ history, me, requestMe, setFrom, loading, setLoading, hideModal,
                     <ProtectedRoute exact path="/lesson/:alias/edit" component={LessonEdit} isAuthorized={me?.role === UserRole.admin} authPath="/auth"/>
                     <ProtectedRoute component={TopicCreate} isAuthorized={me?.role === UserRole.admin} path="/topic/create" exact authPath="/auth" />
                     <ProtectedRoute component={TopicOverview} isAuthorized={me?.role === UserRole.admin} path="/topic/:alias" exact authPath="/auth" />
+                    <ProtectedRoute component={LessonOverview} isAuthorized={me?.role === UserRole.admin} path="/@:username/lesson/:alias" exact authPath="/auth" />
                     <Route path="*" component={NotFoundPage} />
                 </Switch>
                 <BottomMenu />

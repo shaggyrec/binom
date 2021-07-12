@@ -5,7 +5,7 @@ import BottomNavigation from '../components/BottomNavigation';
 import { UserRole } from '../dataTypes/user';
 
 function Footer({ me }): ReactElement {
-    return me ? <BottomNavigation /> : null;
+    return me ? <BottomNavigation username={me.username}/> : null;
 }
 export default connect(
     (state: RootState) => ({

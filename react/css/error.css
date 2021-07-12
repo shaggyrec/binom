@@ -1,0 +1,15 @@
+.error-code {
+    display: flex;
+    color: #039151;
+}
+.error-code-number {
+    font-size: 120px;
+    font-weight: 900;
+}
+
+.error-code-0 {
+    height: 130px;
+    width: 130px;
+    background-image: url("../static/binom_o.svg");
+    background-size: auto 100%;
+}

@@ -79,6 +79,7 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 			r.Get("/me", userController.Me)
 			r.Route("/user", func(r chi.Router) {
 				r.Put("/{userId}", userController.Update)
+				r.Get("/{username}", userController.ByUsername)
 			})
 			r.Route("/topic", func(r chi.Router) {
 				r.Get("/list", topicController.List)

@@ -43,3 +43,12 @@ func (u *UserStorage) GetByEmail(email string) (*dataType.User, error) {
 	}
 	return user, nil
 }
+
+func (u *UserStorage) GetByUsername(username string) (*dataType.User, error)  {
+	user := &dataType.User{}
+	err := u.db.Model(user).Where("username = ?", username).Select()
+	if err != nil {
+		return user, err
+	}
+	return user, nil
+}

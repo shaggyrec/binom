@@ -30,6 +30,18 @@ func (u *UserController) Me(w http.ResponseWriter, r *http.Request) {
 	functions.RenderJSON(w, r, user)
 }
 
+func (u *UserController) ByUsername(w http.ResponseWriter, r *http.Request)  {
+	username := chi.URLParam(r, "username")
+	user, err := u.storage.GetByUsername(username)
+
+	if err != nil {
+		exceptions.NotFoundError(w, r, "User not found")
+		return
+	}
+
+	functions.RenderJSON(w, r, user)
+}
+
 func (u *UserController) Update(w http.ResponseWriter, r * http.Request)  {
 	var dataToUpdate requests.UserUpdate
 	userId := chi.URLParam(r, "userId")
@@ -39,7 +51,6 @@ func (u *UserController) Update(w http.ResponseWriter, r * http.Request)  {
 	}
 
 	user, err := u.storage.Get(userId)
-
 
 	if err != nil {
 		exceptions.NotFoundError(w, r, "User #" +userId + "not found")

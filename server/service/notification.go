@@ -47,3 +47,7 @@ func (s *NotificationService) Viewed(id string) (*dataType.UserNotification, err
 func (s *NotificationService) ListForUser(userId string) (*[]dataType.UserNotification, error) {
 	return s.notificationStorage.ListByUserId(userId)
 }
+
+func (s *NotificationService) GetUserNotification(id string, userId string) (*dataType.UserNotification, error) {
+	return s.notificationStorage.UserNotification(id, userId)
+}

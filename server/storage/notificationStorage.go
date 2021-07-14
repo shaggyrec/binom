@@ -56,3 +56,10 @@ func (s *NotificationStorage) ListByUserId(userId string) (*[]dataType.UserNotif
 
 	return &list, err
 }
+
+func (s *NotificationStorage) UserNotification(id string, userId string) (*dataType.UserNotification, error) {
+	var n *dataType.UserNotification
+	err := s.db.Model(n).Where("user_id = ? AND id = ?", userId, id).Select()
+
+	return n, err
+}

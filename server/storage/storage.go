@@ -31,26 +31,32 @@ func (f *Factory) Token(db *pg.DB) *TokenStorage {
 	return &storage
 }
 
-func (f Factory) Topic(db *pg.DB) *TopicStorage {
+func (f *Factory) Topic(db *pg.DB) *TopicStorage {
 	storage := TopicStorage{}
 	storage.Init(db)
 	return &storage
 }
 
-func (f Factory) Lesson(db *pg.DB) *LessonStorage {
+func (f *Factory) Lesson(db *pg.DB) *LessonStorage {
 	storage := LessonStorage{}
 	storage.Init(db)
 	return &storage
 }
 
-func (f Factory) File(db *pg.DB) *FileStorage {
+func (f *Factory) File(db *pg.DB) *FileStorage {
 	storage := FileStorage{}
 	storage.Init(db)
 	return &storage
 }
 
-func (f Factory) LessonComment(db *pg.DB) *LessonCommentStorage {
+func (f *Factory) LessonComment(db *pg.DB) *LessonCommentStorage {
 	storage := LessonCommentStorage{}
+	storage.Init(db)
+	return &storage
+}
+
+func (f *Factory) Notification(db *pg.DB) *NotificationStorage {
+	storage := NotificationStorage{}
 	storage.Init(db)
 	return &storage
 }

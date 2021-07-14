@@ -31,3 +31,9 @@ func (f *Factory) MoveAtPosition(db *pg.DB) *MoveAtPositionService {
 	service.Init(db)
 	return &service
 }
+
+func (f *Factory) Notification(notificationStorage *storage.NotificationStorage, userStorage *storage.UserStorage) *NotificationService {
+	s := NotificationService{}
+	s.Init(notificationStorage, userStorage)
+	return &s
+}

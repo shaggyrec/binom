@@ -52,3 +52,21 @@ func (u *UserStorage) GetByUsername(username string) (*dataType.User, error)  {
 	}
 	return user, nil
 }
+
+func (u *UserStorage) List(where string) (*[]dataType.User, error) {
+	users := &[]dataType.User{}
+	dbQuery := u.db.Model(users)
+	if where != "" {
+		dbQuery.Where(where)
+	}
+	err := dbQuery.Select()
+
+	return users, err
+}
+
+func (u *UserStorage) GetAdminsIds() ([]string, error) {
+	var usersIds []string
+	_, err := u.db.Query(&usersIds, "SELECT id FROM users WHERE role = ?", dataType.UserRoleAdmin)
+
+	return usersIds, err
+}

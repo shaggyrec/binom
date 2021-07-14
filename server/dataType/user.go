@@ -5,8 +5,8 @@ import (
 	"gopkg.in/guregu/null.v4"
 )
 
-const UserRoleAdmin = 1
-const UserRoleUser = 0
+const UserRoleAdmin = 2
+const UserRoleUser = 1
 
 type User struct {
 	Id string `json:"id"`

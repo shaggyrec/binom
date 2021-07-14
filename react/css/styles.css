@@ -254,6 +254,33 @@ button:active {
     width: 100%;
     text-align: center;
     padding: 10px 0 0;
+    position: relative;
+    z-index: 1;
+}
+
+.bottom-menu-nav-link-badge {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.bottom-menu-nav-link-badge-content {
+    display: inline-block;
+    border-radius: 20px;
+    font-weight: 900;
+    font-size: 10px;
+    background-color: #AE1100;
+    color: #fff;
+    text-decoration: none;
+    line-height: 18px;
+    width: 18px;
+    height: 18px;
+    margin-left: 20px;
+}
+
+.bottom-menu-nav-link-badge-content-many {
+    font-size: 8px;
 }
 
 .bottom-menu-nav-link:hover {

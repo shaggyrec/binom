@@ -29,8 +29,11 @@ func JwtAuth(jwtSecret string) func(next http.Handler) http.Handler {
 			if !t.Valid {
 				exceptions.UnauthorizedError(w, r, "Invalid token", exceptions.ErrorBadToken)
 			}
+			ctx := context.WithValue(r.Context(), "userId", tClaims["id"])
+			roleId, _ := tClaims["r"].(float64)
+			ctx = context.WithValue(ctx, "userRole", int(roleId))
 
-			next.ServeHTTP(w, r.WithContext(context.WithValue(r.Context(), "userId", tClaims["id"])))
+			next.ServeHTTP(w, r.WithContext(ctx))
 		})
 	}
 }

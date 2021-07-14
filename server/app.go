@@ -22,12 +22,14 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 	lessonStorage := storageFactory.Lesson(db)
 	fileStorage := storageFactory.File(db)
 	lessonCommentStorage := storageFactory.LessonComment(db)
+	notificationStorage := storageFactory.Notification(db)
 	// services
 	serviceFactory := service.Factory{}
 	tokenService := serviceFactory.TokenService(jwtSecret, tokenStorage)
 	authCodeService := serviceFactory.AuthCodeService(authCodeStorage)
 	authService := serviceFactory.AuthService(userStorage, tokenService)
 	moveAtPositionService := serviceFactory.MoveAtPosition(db)
+	notificationService := serviceFactory.Notification(notificationStorage, userStorage)
 
 	// controllers
 	authController := controllers.AuthController{}
@@ -42,7 +44,9 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 	fileController := controllers.FileController{}
 	fileController.Init(uploadPath, fileStorage)
 	lessonCommentController := controllers.LessonCommentController{}
-	lessonCommentController.Init(lessonCommentStorage)
+	lessonCommentController.Init(lessonCommentStorage, notificationService, userStorage)
+	notificationController := controllers.NotificationController{}
+	notificationController.Init(notificationService)
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
@@ -106,6 +110,9 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 				r.Post("/", fileController.Upload)
 				r.Get("/{id}", fileController.GetInfo)
 				r.Delete("/{id}", fileController.Delete)
+			})
+			r.Route("/notification", func(r chi.Router) {
+				r.Get("/", notificationController.List)
 			})
 		})
 	})

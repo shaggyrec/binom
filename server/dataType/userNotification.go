@@ -7,6 +7,6 @@ type UserNotification struct {
 	NotificationId string `json:"-"`
 	Notification *Notification `pg:"rel:has-one" json:"notification"`
 	UserId string `json:"-"`
-	Viewed null.Bool
+	Viewed null.Bool `json:"viewed"`
 }
 

@@ -20,7 +20,7 @@ func (s *NotificationStorage) Create(notification *dataType.Notification) (*data
 	return notification, err
 }
 
-func (s *NotificationStorage) Update(notification *dataType.Notification) (*dataType.Notification, error) {
+func (s *NotificationStorage) Update(notification *dataType.UserNotification) (*dataType.UserNotification, error) {
 	r, err := s.db.Model(notification).WherePK().Update()
 
 	if r != nil && r.RowsAffected() == 0 {
@@ -45,4 +45,14 @@ func (s *NotificationStorage) UpdateUserNotification(n *dataType.UserNotificatio
 	}
 
 	return n, err
+}
+
+func (s *NotificationStorage) ListByUserId(userId string) (*[]dataType.UserNotification, error) {
+	var list []dataType.UserNotification
+	err := s.db.Model(&list).
+		Relation("Notification").
+		Where("user_id = ?", userId).
+		Select()
+
+	return &list, err
 }

@@ -1,6 +1,7 @@
 import { ForkEffect, takeEvery, select, call, put } from '@redux-saga/core/effects';
 import * as authActions from '../ducks/auth';
 import * as usersActions from '../ducks/users';
+import * as notificationsActions from '../ducks/notifications';
 import { serverRequest } from '../functions';
 import { AxiosResponse } from 'axios';
 import { eraseTokens, getTokens, storeTokens } from '../tokens';
@@ -28,6 +29,7 @@ function* sendCodeProcess(): IterableIterator<any> {
         const { data: { tokens: {accessToken, refreshToken}, user } }: AxiosResponse = yield call(serverRequest, '/api/auth/code', 'post', {id: codeId, code});
         storeTokens(accessToken, refreshToken);
         yield put(usersActions.setMe(user));
+        yield put(notificationsActions.requestList());
         yield put(push(yield select(authActions.from)));
     } catch (e) {
         yield put(authActions.error(e.message));

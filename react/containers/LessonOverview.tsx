@@ -54,7 +54,7 @@ function LessonOverview ({ requestLesson, lesson, loading, match: { params }, me
                     </Link>
                 </TopBar>
             }
-            <Lesson {...lesson} name={lesson.name + ` (${params.username})`}/>
+            <Lesson {...lesson} name={lesson.name + (params.username ? ` (${params.username})` : '')}/>
             <div className="container">
                 <LessonComments comments={comments} onLeaveComment={handleLeaveComment} />
             </div>

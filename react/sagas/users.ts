@@ -1,15 +1,18 @@
 import { call, ForkEffect, put, select, takeEvery } from '@redux-saga/core/effects';
+import { push } from 'connected-react-router';
+
 import * as usersActions from '../ducks/users';
 import * as applicationActions from '../ducks/application';
+import * as notificationsActions from '../ducks/notifications';
 import { apiRequest } from './index';
 import { getApiErrorMessage } from '../functions';
 import { User } from '../dataTypes/user';
-import { push } from 'connected-react-router';
 
 function* requestMeProcess(): IterableIterator<any> {
     try {
         const user = yield call(apiRequest,  '/api/me');
         yield put(usersActions.setMe(user));
+        yield put(notificationsActions.requestList());
     } catch (e) {
         yield put(usersActions.error(getApiErrorMessage(e)));
         yield put(applicationActions.error(getApiErrorMessage(e)));

@@ -90,7 +90,7 @@ func (c *LessonCommentController) Add(w http.ResponseWriter, r *http.Request)  {
 		err := c.notificationService.CreateForAdmins(
 			&dataType.Notification{
 				Type: null.Int{NullInt64: sql.NullInt64{Int64: dataType.NotificationLessonComment}},
-				Message: fmt.Sprintf("%s (%s) оставил комментарий к уроку", user.Username.String, user.Name.String),
+				Message: fmt.Sprintf("@%s (%s) оставил комментарий к уроку", user.Username.String, user.Name.String),
 				Meta: dataType.Meta{ Lesson: lessonId, User: userId },
 			},
 		)

@@ -47,19 +47,22 @@ func (s *NotificationStorage) UpdateUserNotification(n *dataType.UserNotificatio
 	return n, err
 }
 
-func (s *NotificationStorage) ListByUserId(userId string) (*[]dataType.UserNotification, error) {
+func (s *NotificationStorage) ListByUserId(userId string, limit int, offset int) (*[]dataType.UserNotification, error) {
 	var list []dataType.UserNotification
 	err := s.db.Model(&list).
 		Relation("Notification").
+		Relation("Notification.Author").
 		Where("user_id = ?", userId).
+		OrderExpr("Notification.created DESC").
+		Limit(limit).
+		Offset(offset).
 		Select()
 
 	return &list, err
 }
 
 func (s *NotificationStorage) UserNotification(id string, userId string) (*dataType.UserNotification, error) {
-	var n *dataType.UserNotification
-	err := s.db.Model(n).Where("user_id = ? AND id = ?", userId, id).Select()
-
-	return n, err
+	var n dataType.UserNotification
+	err := s.db.Model(&n).Where("user_id = ? AND id = ?", userId, id).Select()
+	return &n, err
 }

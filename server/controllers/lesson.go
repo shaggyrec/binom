@@ -9,6 +9,7 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
 	"github.com/go-pg/pg"
+	"github.com/google/uuid"
 	"github.com/imdario/mergo"
 	"log"
 	"net/http"
@@ -120,16 +121,25 @@ func (c *LessonController) List(w http.ResponseWriter, r *http.Request) {
 	render.JSON(w, r, lessons)
 }
 
-func (c *LessonController) ByAlias(w http.ResponseWriter, r *http.Request) {
+func (c *LessonController) GetOneLesson(w http.ResponseWriter, r *http.Request) {
 	alias := chi.URLParam(r, "alias")
 
-	t, err := c.lessonStorage.GetByAlias(alias)
+	lessonId, err := uuid.Parse(alias)
+
+	var l *dataType.Lesson
 
 	if err != nil {
-		exceptions.NotFoundError(w, r, "Lessong not found")
+		l, err = c.lessonStorage.GetByAlias(alias)
+	} else {
+		l, err = c.lessonStorage.GetById(lessonId.String())
 	}
 
-	render.JSON(w, r, t)
+	if err != nil {
+		exceptions.NotFoundError(w, r, "Lesson not found")
+		return
+	}
+
+	render.JSON(w, r, l)
 }
 
 func (c *LessonController) MoveAtPosition(w http.ResponseWriter, r *http.Request)  {

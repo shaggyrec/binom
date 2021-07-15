@@ -7,7 +7,6 @@ import (
 	"binom/server/service"
 	"binom/server/storage"
 	"database/sql"
-	"fmt"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
 	"gopkg.in/guregu/null.v4"
@@ -85,18 +84,32 @@ func (c *LessonCommentController) Add(w http.ResponseWriter, r *http.Request)  {
 	}
 	newLessonComment, _ := c.lessonCommentStorage.ById(comment.Id)
 
-	if userRole != dataType.UserRoleAdmin {
-		user, _ := c.userStorage.Get(userId)
-		err := c.notificationService.CreateForAdmins(
-			&dataType.Notification{
-				Type: null.Int{NullInt64: sql.NullInt64{Int64: dataType.NotificationLessonComment}},
-				Message: fmt.Sprintf("@%s (%s) оставил комментарий к уроку", user.Username.String, user.Name.String),
-				Meta: dataType.Meta{ Lesson: lessonId, User: userId },
-			},
-		)
-		if err != nil {
-			log.Print(err)
-		}
+	notificationLength := 30
+	notificationText := comment.Text.String
+	if len(comment.Text.String) > notificationLength {
+		notificationText = comment.Text.String[:notificationLength] + "..."
+	}
+	if len(comment.Files) > 0 {
+		notificationText += " + файлы"
+	}
+
+	n := &dataType.Notification{
+		Type: null.Int{NullInt64: sql.NullInt64{Int64: dataType.NotificationLessonComment}},
+		Message: notificationText,
+		Meta: dataType.Meta{ Lesson: lessonId, Comment: newLessonComment.Id },
+		AuthorId: comment.AuthorId,
+	}
+
+	// Если писал сам юзер то нотификацию админам
+	if userId == comment.AuthorId {
+		err = c.notificationService.CreateForAdmins(n)
+	} else {
+	// Если отвечал админ то нотификацию юзеру
+		err = c.notificationService.Create(n, []string{userId})
+	}
+
+	if err != nil {
+		log.Print(err)
 	}
 
 	render.JSON(w, r, newLessonComment)

@@ -8,6 +8,7 @@ import (
 	"github.com/go-chi/render"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 type NotificationController struct {
@@ -19,7 +20,20 @@ func (c *NotificationController) Init(notificationService *service.NotificationS
 }
 
 func (c *NotificationController) List(w http.ResponseWriter, r *http.Request) {
-	l, err := c.notificationService.ListForUser(r.Context().Value("userId").(string))
+	limit := 50
+	offset := 0
+	limitFromRequest := r.URL.Query().Get("limit")
+	offsetFromRequest := r.URL.Query().Get("offset")
+
+	if limitFromRequest != "" {
+		limit, _ = strconv.Atoi(limitFromRequest)
+	}
+
+	if offsetFromRequest != "" {
+		offset, _ = strconv.Atoi(offsetFromRequest)
+	}
+
+	l, err := c.notificationService.ListForUser(r.Context().Value("userId").(string), limit, offset)
 
 	if err != nil {
 		log.Print(err)
@@ -34,23 +48,10 @@ func (c *NotificationController) Viewed(w http.ResponseWriter, r *http.Request) 
 	userId := r.Context().Value("userId").(string)
 	notificationId := chi.URLParam(r, "id")
 
-	n, err := c.notificationService.GetUserNotification(userId, notificationId)
+	_, err := c.notificationService.Viewed(notificationId, userId)
 
 	if err != nil {
-		exceptions.NotFoundError(w, r, err.Error())
-		return
-	}
-
-	if n == nil {
 		exceptions.NotFoundError(w, r, "Notification not found")
-		return
-	}
-
-	_, err = c.notificationService.Viewed(notificationId)
-
-	if err != nil {
-		log.Print(err)
-		exceptions.ServerError(w, r)
 		return
 	}
 

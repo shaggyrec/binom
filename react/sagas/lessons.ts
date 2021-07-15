@@ -27,6 +27,9 @@ function* requestProcess({ payload: alias }): IterableIterator<any> {
     try {
         yield put(lessonsActions.lesson(yield call(apiRequest, '/api/lesson/' + alias)));
     } catch (e) {
+        if (e.response.status === 404) {
+            yield put(push('/404'));
+        }
         yield put(lessonsActions.error(e.message));
     }
 }

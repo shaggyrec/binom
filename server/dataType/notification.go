@@ -11,8 +11,8 @@ const NotificationFeedComment = 3
 
 type Meta struct {
 	Lesson string `json:"lesson"`
-	User string `json:"user"`
 	Post string `json:"post"`
+	Comment string `json:"comment"`
 }
 
 type Notification struct {
@@ -21,4 +21,6 @@ type Notification struct {
 	Type null.Int `json:"type"`
 	Created pg.NullTime `json:"created"`
 	Meta Meta `json:"meta"`
+	AuthorId string `json:"-"`
+	Author *User `pg:"rel:has-one" json:"author"`
 }

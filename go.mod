@@ -9,6 +9,7 @@ require (
 	github.com/go-chi/render v1.0.1 // indirect
 	github.com/go-pg/pg v8.0.7+incompatible
 	github.com/golang-migrate/migrate/v4 v4.14.1
+	github.com/google/uuid v1.3.0 // indirect
 	github.com/imdario/mergo v0.3.12 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/joho/godotenv v1.3.0 // indirect

@@ -4,6 +4,7 @@ import (
 	"binom/server/dataType"
 	"binom/server/storage"
 	"database/sql"
+	"errors"
 	"gopkg.in/guregu/null.v4"
 )
 
@@ -40,12 +41,17 @@ func (s *NotificationService) CreateForAdmins(notification *dataType.Notificatio
 	return s.Create(notification, ids)
 }
 
-func (s *NotificationService) Viewed(id string) (*dataType.UserNotification, error) {
-	return s.notificationStorage.Update(&dataType.UserNotification{Id: id, Viewed: null.Bool{NullBool: sql.NullBool{Bool: true}}})
+func (s *NotificationService) Viewed(id string, userId string) (*dataType.UserNotification, error) {
+	n, err:= s.notificationStorage.UserNotification(id, userId)
+	if err != nil || n == nil {
+		return nil, errors.New("notification not found")
+	}
+	n.Viewed = null.Bool{NullBool: sql.NullBool{Bool: true, Valid: true}}
+	return s.notificationStorage.Update(n)
 }
 
-func (s *NotificationService) ListForUser(userId string) (*[]dataType.UserNotification, error) {
-	return s.notificationStorage.ListByUserId(userId)
+func (s *NotificationService) ListForUser(userId string, limit int, offset int) (*[]dataType.UserNotification, error) {
+	return s.notificationStorage.ListByUserId(userId, limit, offset)
 }
 
 func (s *NotificationService) GetUserNotification(id string, userId string) (*dataType.UserNotification, error) {

@@ -96,7 +96,7 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 
 			r.Route("/lesson", func(r chi.Router) {
 				//r.GetInfo("/{id}", lessonController.ById)
-				r.Get("/{alias}", lessonController.ByAlias)
+				r.Get("/{alias}", lessonController.GetOneLesson)
 				r.Post("/", lessonController.Create)
 				r.Put("/{id}", lessonController.Update)
 				r.Delete("/{id}", lessonController.Delete)
@@ -113,6 +113,7 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 			})
 			r.Route("/notification", func(r chi.Router) {
 				r.Get("/", notificationController.List)
+				r.Patch("/{id}/viewed", notificationController.Viewed)
 			})
 		})
 	})

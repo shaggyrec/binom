@@ -626,6 +626,47 @@ code {
     display: block;
     height: 80px;
 }
+.notification-header {
+    font-size: 14px;
+    padding-left: 5%;
+    color: #808080;
+    padding-bottom: 5px;
+}
+.notification-row {
+    display: flex;
+    align-items: flex-start;
+}
+.notification-new {
+    font-weight: 900;
+}
+.notification-text {
+    width: 80%;
+}
+
+.notification-date {
+    text-align: right;
+    width: 15%;
+    font-size: 14px;
+}
+.notification-status {
+    width: 5%;
+}
+.notification-status:after {
+    content: '';
+    display: block;
+    background-color: #5c5e63;
+    width: 10px;
+    height: 10px;
+    border-radius: 10px;
+}
+
+.notification-new .notification-status:after {
+    background-color: #AE1100;
+}
+
+.no-decoration {
+    text-decoration: none;
+}
 
 @keyframes slideFromBottom {
     0% { transform: translateY(200%); }

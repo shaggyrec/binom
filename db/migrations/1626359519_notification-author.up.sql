@@ -1,0 +1,1 @@
+ALTER TABLE notifications ADD COLUMN IF NOT EXISTS author uuid references users(id);

@@ -2,7 +2,7 @@ import React, { ReactElement, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { Topic } from '../dataTypes/topic';
-import { Checked, Edit } from './Icons';
+import { Checked, Edit, Processing } from './Icons';
 import Button from './Button';
 import Paddingable from './Paddingable';
 import SortableList from './SortableList';
@@ -32,7 +32,22 @@ function Sublist({ items, open, onMove, isAdmin }) {
         </div>
     );
 }
-// <div className="list-item-icon"><Checked fill="#039151" /></div>
+
+function renderIcon(topicStatus: { created: Date, finished: Date, lessonId: string }) {
+    if (!topicStatus) {
+        return <div className="card-icon card-icon-paragraph">§</div>;
+    }
+    return (
+        <div className="card-icon">
+            {topicStatus.finished
+                ? <Checked fill="#039151"/>
+                : <Processing fill="#AE1100"/>
+            }
+        </div>
+    );
+
+}
+
 function TopicsList(
     { topics, isAdmin, onMoveTopic, onMoveLesson }: { topics: Topic[], isAdmin?: boolean, onMoveTopic: (id: string, moveAt: number) => any, onMoveLesson: (id: string, moveAt: number) => any }
 ): ReactElement {
@@ -52,9 +67,9 @@ function TopicsList(
     return listContainer(topics.map(t => (
             <Paddingable key={t.id} padding={[0,0,20]}>
                 <div className={`card transition3 ${openTopics.indexOf(t.id) === -1 ? ' pointer' : ''}`}>
-                    <div className="flex outline-background" onClick={() => handleClickTopic(t.id)}>
+                    <div className="flex flex-vertical-top outline-background" onClick={() => handleClickTopic(t.id)}>
                         <div>
-                            <div className="card-icon card-icon-paragraph">§</div>
+                            {renderIcon(t.status)}
                         </div>
                         <div>
                             <div className="card-title">{t.name}</div>

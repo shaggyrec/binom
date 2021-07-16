@@ -5,4 +5,9 @@ export interface Topic {
     alias: string;
     name: string;
     lessons?: Lesson[];
+    status?: {
+        created: Date,
+        finished: Date,
+        lessonId: string
+    }
 }

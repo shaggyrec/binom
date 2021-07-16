@@ -7,7 +7,6 @@ import TopicsList from '../components/TopicsList';
 import Loader from '../components/Loader';
 import Paddingable from '../components/Paddingable';
 import { UserRole } from '../dataTypes/user';
-import { Back } from '../components/Icons';
 import TopBar from '../components/TopBar';
 import { Link } from 'react-router-dom';
 import Button from '../components/Button';

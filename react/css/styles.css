@@ -211,6 +211,14 @@ button:active {
     align-items: baseline;
 }
 
+.flex-vertical-centered {
+    align-items: center;
+}
+
+.flex-vertical-top {
+    align-items: flex-start;
+}
+
 .mb-0 {
     margin-bottom: 0;
 }
@@ -444,7 +452,7 @@ button:active {
 }
 .list-item-icon, .card-icon {
     margin-right: 20px;
-    margin-top: 5px;
+    margin-top: 3px;
     width: 30px;
     height: 30px;
 }

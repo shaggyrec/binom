@@ -14,7 +14,7 @@ function* afterwards() {
 
 function* requestListProcess(): IterableIterator<any> {
     try {
-        const topics = yield call(apiRequest,'/api/topic/list');
+        const topics = yield call(apiRequest,'/api/topic/list?withLessons=true');
         yield put(topicsActions.topics(topics));
     } catch (e) {
         yield put(topicsActions.error(e.message))

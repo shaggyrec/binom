@@ -32,17 +32,26 @@ func (s *TopicStorage) Update(topic *dataType.Topic) (*dataType.Topic, error) {
 	return topic, err
 }
 
-func (s *TopicStorage) List(limit int, offset int, withLessons bool) (*[]dataType.Topic, error) {
+func (s *TopicStorage) List(limit int, offset int, withLessons bool, userId string) (*[]dataType.Topic, error) {
 	var topics []dataType.Topic
-	err := s.db.Model(&topics).
-		Relation("Lessons", func (q *orm.Query) (*orm.Query, error) {
+	stmt := s.db.Model(&topics)
+	if withLessons {
+		stmt.Relation("Lessons", func(q *orm.Query) (*orm.Query, error) {
 			return q.Order("lesson.pos ASC"), nil
-		}).
-		Limit(limit).
-		Offset(offset).
-		OrderExpr("pos ASC, created DESC").
-		Select()
+		})
+	}
 
+	if userId != "" {
+		stmt.Relation("Status", func(q *orm.Query) (*orm.Query, error) {
+			return q.JoinOn("status.user_id = ?", userId), nil
+		})
+	}
+
+	stmt.Limit(limit).
+		Offset(offset).
+		OrderExpr("pos ASC, created DESC")
+
+	err := stmt.Select()
 	return &topics, err
 }
 

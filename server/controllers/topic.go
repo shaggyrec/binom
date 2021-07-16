@@ -81,6 +81,8 @@ func (c *TopicController) List(w http.ResponseWriter, r *http.Request) {
 	limitFromRequest := r.URL.Query().Get("limit")
 	offsetFromRequest := r.URL.Query().Get("offset")
 	withLessonsFromRequest := r.URL.Query().Get("withLessons")
+	userId := r.Context().Value("userId").(string)
+	userRole := r.Context().Value("userRole").(int)
 
 	if limitFromRequest != "" {
 		limit, _ = strconv.Atoi(limitFromRequest)
@@ -94,7 +96,13 @@ func (c *TopicController) List(w http.ResponseWriter, r *http.Request) {
 		withLessons, _ = strconv.ParseBool(withLessonsFromRequest)
 	}
 
-	topics, err := c.topicStorage.List(limit, offset, withLessons)
+	userIdForListRequest := ""
+
+	if userRole != dataType.UserRoleAdmin {
+		userIdForListRequest = userId
+	}
+
+	topics, err := c.topicStorage.List(limit, offset, withLessons, userIdForListRequest)
 	if err != nil {
 		log.Print(err)
 		exceptions.ServerError(w, r)

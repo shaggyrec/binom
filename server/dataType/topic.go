@@ -13,4 +13,13 @@ type Topic struct {
 	Pos null.Int `json:"pos"`
 	Alias null.String `json:"alias"`
 	Lessons []Lesson `pg:"rel:has-many" json:"lessons"`
+	Status *UserTopic `pg:"rel:has-one" json:"status"`
+}
+
+type UserTopic struct {
+	UserId string `json:"userId"`
+	TopicId string `json:"topicId"`
+	LessonId string `json:"lessonId"`
+	Created string `json:"created"`
+	Finished string `json:"finished"`
 }

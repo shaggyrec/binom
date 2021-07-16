@@ -198,7 +198,9 @@ button:active {
     padding-top: 20px;
     padding-bottom: 20px;
 }
-
+.text-center {
+    text-align: center;
+}
 .block {
     display: block;
     width: 100%;

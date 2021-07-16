@@ -7,7 +7,11 @@ import { UserNotification } from '../dataTypes/notification';
 
 function* requestListProcess({ payload: { limit, offset } }): IterableIterator<any> {
     try {
-        const list = yield call(apiRequest, `/api/notification?limit=${limit}&offset=${offset}`);
+        const list: any[] = yield call(apiRequest, `/api/notification?limit=${limit}&offset=${offset}`);
+        if (list.length === 0) {
+            yield put(notificationsActions.setNoMore());
+            return;
+        }
         yield put(notificationsActions.list(list));
     } catch (e) {
         yield put(notificationsActions.error(getApiErrorMessage(e)));

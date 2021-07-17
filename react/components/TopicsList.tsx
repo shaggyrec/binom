@@ -83,7 +83,7 @@ function renderIcon(topicStatus: { created: Date, finished: Date, lessonId: stri
 function TopicsList(
     { topics, isAdmin, onMoveTopic, onMoveLesson }: { topics: Topic[], isAdmin?: boolean, onMoveTopic: (id: string, moveAt: number) => any, onMoveLesson: (id: string, moveAt: number) => any }
 ): ReactElement {
-    const [openTopics, setOpenTopics] = useState([]);
+    const [openTopics, setOpenTopics] = useState(topics.filter(t => t.status && !t.status.finished).map(t => t.id));
 
     function handleClickTopic(id) {
         if (openTopics.indexOf(id) === -1) {

@@ -163,6 +163,11 @@ select, .file-input {
     position: relative;
 }
 
+button {
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
 button:hover, button.hover, .neomorphic {
     box-shadow: -2px -2px 5px #FFF, 2px 2px 5px #BABECC;
 }
@@ -676,6 +681,31 @@ code {
 
 .no-decoration {
     text-decoration: none;
+}
+.topic-lesson-item {
+    position: relative;
+}
+.topic-lesson-item-icon {
+    display: inline-block;
+    width: 25px;
+}
+.topic-lesson-item-allowed {
+    color: #2D3A41;
+}
+
+.topic-lesson-item-active * {
+    fill: #039151;
+}
+.topic-lesson-item-allowed * {
+    fill: #2D3A41;
+}
+
+.topic-lesson-item-passed {
+    color: #19bf74;
+}
+
+.topic-lesson-item-passed * {
+    fill: #19bf74;
 }
 
 @keyframes slideFromBottom {

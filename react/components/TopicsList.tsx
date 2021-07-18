@@ -109,9 +109,11 @@ function TopicsList(
                                 {t.lessons && <span>{t.lessons.length} уроков</span>}
                             </div>
                         </div>
-                        {!isAdmin && !t.status && t.lessons?.length > 0 && (
+                        {!isAdmin && (!t.status || !t.status.finished) && t.lessons?.length > 0 && (
                             <div style={{ flexGrow: 1, textAlign: 'right' }}>
-                                <Link to={`/lesson/${t.lessons[0].alias}`}><Button green>Начать</Button></Link>
+                                <Link to={`/lesson/${t?.status ? t.lessons.find(l => l.id === t.status.lessonId).alias : t.lessons[0].alias}`}>
+                                    <Button green>{t.status ? 'Продолжить' : 'Начать'}</Button>
+                                </Link>
                             </div>
                         )}
                         {isAdmin &&

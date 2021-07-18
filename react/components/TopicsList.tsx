@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { Topic } from '../dataTypes/topic';
@@ -6,6 +6,7 @@ import { ArrowRight, Checked, Edit, Locked, Processing } from './Icons';
 import Button from './Button';
 import Paddingable from './Paddingable';
 import SortableList from './SortableList';
+import { usePrevious } from '../hooks/usePrevious';
 
 function listContainer (items, onMove, isAdmin) {
     return isAdmin ?  <SortableList onMove={onMove} items={items}/> : <>{items}</>;
@@ -84,6 +85,13 @@ function TopicsList(
     { topics, isAdmin, onMoveTopic, onMoveLesson }: { topics: Topic[], isAdmin?: boolean, onMoveTopic: (id: string, moveAt: number) => any, onMoveLesson: (id: string, moveAt: number) => any }
 ): ReactElement {
     const [openTopics, setOpenTopics] = useState(topics.filter(t => t.status && !t.status.finished).map(t => t.id));
+    const prevTopics: Topic[] = usePrevious<Topic[]>(topics);
+
+    useEffect(() => {
+        if (topics.length > 0 && prevTopics && prevTopics.length === 0) {
+            setOpenTopics(topics.filter(t => t.status && !t.status.finished).map(t => t.id))
+        }
+    }, [topics])
 
     function handleClickTopic(id) {
         if (openTopics.indexOf(id) === -1) {

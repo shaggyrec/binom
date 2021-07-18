@@ -31,7 +31,7 @@ export const serverRequest = (url: string, method: Method = 'get', body: any = {
 }
 
 export const getApiErrorMessage = (error): string => {
-    return error.response?.data?.message || error.message
+    return error?.response?.data?.message || error.message
 }
 
 export const setCookie = (name, value, options: {expires?: number|Date|string, path?: string, 'max-age'?: number } = {}) => {

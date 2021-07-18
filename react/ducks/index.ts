@@ -7,6 +7,7 @@ import lessons, { initialState as lessonsState } from './lessons';
 import files, { initialState as filesState } from './files';
 import lessonComments, { initialState as lessonCommentsState } from './lessonComments';
 import notifications, { initialState as notificationsState } from './notifications';
+import learningProgress, { initialState as learningProgressState } from './learningProgress';
 
 export const initialState = {
     topics: topicsState,
@@ -17,6 +18,7 @@ export const initialState = {
     files: filesState,
     lessonComments: lessonCommentsState,
     notifications: notificationsState,
+    learningProgress: learningProgressState,
 };
 
 export default (router: any = null): Reducer => combineReducers({
@@ -29,4 +31,5 @@ export default (router: any = null): Reducer => combineReducers({
     files,
     lessonComments,
     notifications,
+    learningProgress,
 });

@@ -1,17 +1,17 @@
 import { all, call } from '@redux-saga/core/effects';
+import { push } from 'connected-react-router';
 import { AxiosResponse, Method } from 'axios';
 
 import { topics } from './topics';
 import { users } from './users';
-import { auth } from './auth';
+import { auth, refreshTokenProcess } from './auth';
 import { serverRequest } from '../functions';
 import { ApiErrors } from '../ApiErrors';
-import { refreshTokenProcess } from '../sagas/auth';
 import { lessons } from './lessons';
 import { files } from './files';
 import { lessonComments } from './lessonComments';
 import { notifications } from './notifications';
-import { push } from 'connected-react-router';
+import { learningProgress } from './learningProgress';
 
 const MAX_REQUEST_TRIES = 10;
 let tries = 0;
@@ -52,5 +52,6 @@ export default function* rootSaga(): any {
         files(),
         lessonComments(),
         notifications(),
+        learningProgress(),
     ]);
 }

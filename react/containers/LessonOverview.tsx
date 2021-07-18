@@ -18,7 +18,7 @@ import LessonComments from '../components/LessonsComments';
 import { Redirect } from 'react-router';
 
 function LessonOverview ({ requestLesson, lesson, loading, match: { params, url }, me, resetCurrentLesson, setBackLink,
-                             requestComments, comments, addComment, requestUser, user }): ReactElement {
+                             requestComments, comments, addComment, requestUser, user, isAdmin, lessonsProgress }): ReactElement {
     useEffect(() => {
         requestLesson(params.alias);
         if (params.username) {
@@ -53,7 +53,7 @@ function LessonOverview ({ requestLesson, lesson, loading, match: { params, url 
 
     return (
         <>
-            {me.role === UserRole.admin &&
+            {isAdmin &&
                 <TopBar>
                     <Link to={`/lesson/${params.alias}/edit`}>
                         <Button small><Edit size={15}/></Button>
@@ -63,6 +63,9 @@ function LessonOverview ({ requestLesson, lesson, loading, match: { params, url 
             <Lesson {...lesson} name={lesson.name + (params.username ? ` (${params.username})` : '')}/>
             <div className="container">
                 <LessonComments comments={comments} onLeaveComment={handleLeaveComment} />
+                <div>
+                    {isAdmin && params.username && <Button green>{lessonsProgress ? 'Зачесть урок' : 'Отменить зачёт'}</Button>}
+                </div>
             </div>
             <Loader show={loading}/>
         </>
@@ -77,6 +80,8 @@ export default connect(
         comments: state.lessonComments.list,
         commentsError: state.lessonComments.error,
         user: state.users.current,
+        isAdmin: state.users.me.role === UserRole.admin,
+        lessonsProgress: state.learningProgress.list
     }),
     dispatch => ({
         requestLesson: alias => dispatch(lessonsActions.request(alias)),

@@ -22,3 +22,12 @@ func MD5(text string) string {
 	algorithm.Write([]byte(text))
 	return hex.EncodeToString(algorithm.Sum(nil))
 }
+
+func IndexOf(slice []string, item string) int {
+	for i := range slice {
+		if slice[i] == item {
+			return i
+		}
+	}
+	return -1
+}

@@ -30,6 +30,9 @@ function* requestProcess({ payload: alias }): IterableIterator<any> {
         if (e.response.status === 404) {
             yield put(push('/404'));
         }
+        if (e.response.status === 403) {
+            yield put(push('/app'));
+        }
         yield put(lessonsActions.error(e.message));
     }
 }

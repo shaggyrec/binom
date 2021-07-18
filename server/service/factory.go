@@ -37,3 +37,9 @@ func (f *Factory) Notification(notificationStorage *storage.NotificationStorage,
 	s.Init(notificationStorage, userStorage)
 	return &s
 }
+
+func (f *Factory) LessonProgress(db *pg.DB) *LearningProgressService {
+	s := LearningProgressService{}
+	s.Init(db)
+	return &s
+}

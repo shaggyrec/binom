@@ -45,7 +45,7 @@ GROUP BY tl.topic_id, ut.lesson_id, ut.finished
 
 	indexOFCurrentLesson := functions.IndexOf(pl.Lessons, pl.LessonId)
 
-	if indexOFCurrentLesson > -1 {
+	if indexOFCurrentLesson > 0 {
 		pl.PassedLessons = pl.Lessons[:indexOFCurrentLesson+1]
 		pl.PassedLessonsAliases = pl.LessonsAliases[:indexOFCurrentLesson+1]
 	} else {

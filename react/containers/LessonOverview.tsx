@@ -7,6 +7,7 @@ import * as lessonsActions from '../ducks/lessons';
 import * as lessonCommentsActions from '../ducks/lessonComments';
 import * as applicationActions from '../ducks/application';
 import * as usersActions from '../ducks/users';
+import * as learningProgressActions from '../ducks/learningProgress';
 import Loader from '../components/Loader';
 import Lesson from '../components/Lesson';
 import Button from '../components/Button';
@@ -18,7 +19,9 @@ import LessonComments from '../components/LessonsComments';
 import { Redirect } from 'react-router';
 
 function LessonOverview ({ requestLesson, lesson, loading, match: { params, url }, me, resetCurrentLesson, setBackLink,
-                             requestComments, comments, addComment, requestUser, user, isAdmin, lessonsProgress }): ReactElement {
+                             requestComments, comments, addComment, requestUser, user, isAdmin, isLessonPassed, requestLessonPassedInfo,
+                             toggleLessonPassed
+                        }): ReactElement {
     useEffect(() => {
         requestLesson(params.alias);
         if (params.username) {
@@ -31,6 +34,7 @@ function LessonOverview ({ requestLesson, lesson, loading, match: { params, url 
         if (lesson?.alias === params.alias) {
             if (params.username) {
                 if (user?.username === params.username) {
+                    requestLessonPassedInfo(lesson.alias, user.id)
                     requestComments(lesson.id, user.id);
                 }
             } else  {
@@ -64,7 +68,14 @@ function LessonOverview ({ requestLesson, lesson, loading, match: { params, url 
             <div className="container">
                 <LessonComments comments={comments} onLeaveComment={handleLeaveComment} />
                 <div>
-                    {isAdmin && params.username && <Button green>{lessonsProgress ? 'Зачесть урок' : 'Отменить зачёт'}</Button>}
+                    {isAdmin && params.username && (
+                        <Button green onClick={() => toggleLessonPassed(lesson.alias, user.id, !isLessonPassed)}>
+                            {isLessonPassed
+                                ? 'Отменить зачёт'
+                                : 'Зачесть урок'
+                            }
+                        </Button>
+                    )}
                 </div>
             </div>
             <Loader show={loading}/>
@@ -81,7 +92,7 @@ export default connect(
         commentsError: state.lessonComments.error,
         user: state.users.current,
         isAdmin: state.users.me.role === UserRole.admin,
-        lessonsProgress: state.learningProgress.list
+        isLessonPassed: state.learningProgress.list[state.users.current?.id] && state.learningProgress.list[state.users.current?.id][state.lessons.current?.alias]
     }),
     dispatch => ({
         requestLesson: alias => dispatch(lessonsActions.request(alias)),
@@ -90,5 +101,7 @@ export default connect(
         requestComments: (id, userId) => dispatch(lessonCommentsActions.requestList(id, userId)),
         addComment: (lessonId, userId, text, files) => dispatch(lessonCommentsActions.add(lessonId, userId, text, files)),
         requestUser: alias => dispatch(usersActions.requestUser(alias)),
+        requestLessonPassedInfo: (lessonAlias, userId) => dispatch(learningProgressActions.requestProgressForLesson(lessonAlias, userId)),
+        toggleLessonPassed: (lessonAlias, userId, passed) => dispatch(learningProgressActions.save(lessonAlias, userId, passed))
     })
 )(LessonOverview);

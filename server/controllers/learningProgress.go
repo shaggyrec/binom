@@ -7,6 +7,7 @@ import (
 	"binom/server/responses"
 	"binom/server/service"
 	"github.com/go-chi/chi"
+	"github.com/go-chi/render"
 	"net/http"
 )
 
@@ -29,7 +30,7 @@ func (s *LearningProgressController) UsersProgressByLesson(w http.ResponseWriter
 		return
 	}
 
-	functions.RenderJSON(w, r, responses.UsersProgressByLessonResponse{Passed: isPassed})
+	render.JSON(w, r, responses.UsersProgressByLessonResponse{Passed: isPassed})
 }
 
 func (s *LearningProgressController) UpdateUsersProgressByLesson(w http.ResponseWriter, r *http.Request) {

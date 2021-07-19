@@ -48,6 +48,8 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 	lessonCommentController.Init(lessonCommentStorage, notificationService, userStorage)
 	notificationController := controllers.NotificationController{}
 	notificationController.Init(notificationService)
+	learningProgressController := controllers.LearningProgressController{}
+	learningProgressController.Init(lessonProgressService)
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
@@ -117,6 +119,13 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 			r.Route("/notification", func(r chi.Router) {
 				r.Get("/", notificationController.List)
 				r.Patch("/{id}/viewed", notificationController.Viewed)
+			})
+			r.Route("/progress", func(r chi.Router) {
+				r.Get("/{userId}/{lessonAlias}", learningProgressController.UsersProgressByLesson)
+				r.Group(func(r chi.Router) {
+					r.Use(middlewares.OnlyForAdmin)
+					r.Put("/{userId}/{lessonAlias}", learningProgressController.UpdateUsersProgressByLesson)
+				})
 			})
 		})
 	})

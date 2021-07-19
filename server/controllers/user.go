@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"binom/server/dataType"
 	"binom/server/exceptions"
 	"binom/server/functions"
 	"binom/server/requests"
@@ -32,11 +33,18 @@ func (u *UserController) Me(w http.ResponseWriter, r *http.Request) {
 
 func (u *UserController) ByUsername(w http.ResponseWriter, r *http.Request)  {
 	username := chi.URLParam(r, "username")
+	userRole :=r.Context().Value("userRole")
+	userId := r.Context().Value("userId").(string)
+
 	user, err := u.storage.GetByUsername(username)
 
 	if err != nil {
 		exceptions.NotFoundError(w, r, "User not found")
 		return
+	}
+
+	if userId != user.Id && userRole != dataType.UserRoleAdmin {
+		user.Email = null.String{}
 	}
 
 	functions.RenderJSON(w, r, user)

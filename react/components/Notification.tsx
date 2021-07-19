@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+    import React, { ReactElement } from 'react';
 import { Link } from 'react-router-dom';
 
 import { Notification as NotificationType, NotificationTypes } from '../dataTypes/notification';
@@ -8,12 +8,12 @@ const NOTIFICATION_TITLE = {
     [NotificationTypes.lessonComment]: 'Комметарий к уроку'
 }
 
-function generateLink(notification: NotificationType) {
+function generateLink(notification: NotificationType, isAdmin: boolean) {
     if (notification.meta?.link) {
         return notification.meta?.link;
     }
 
-    const linkStart = `/@${notification.author.username}`;
+    const linkStart = isAdmin ? `/@${notification.author.username}` : '';
     let linkEnd = '';
 
     switch (notification.type) {
@@ -27,9 +27,9 @@ function generateLink(notification: NotificationType) {
     return linkStart + linkEnd;
 }
 
-function Notification({ notification, viewed = false, onClick }: { notification: NotificationType, viewed: boolean, onClick: () => any }): ReactElement {
+function Notification({ notification, viewed = false, onClick, isAdmin }: { notification: NotificationType, viewed: boolean, onClick: () => any, isAdmin: boolean }): ReactElement {
     return (
-        <Link to={generateLink(notification)} className="no-decoration" onClick={onClick}>
+        <Link to={generateLink(notification, isAdmin)} className="no-decoration" onClick={onClick}>
             <div className="neomorphic">
                 <div className={`notification${viewed ? '' : ' notification-new'}`}>
                     <div className="notification-header">

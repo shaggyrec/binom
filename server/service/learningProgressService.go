@@ -10,7 +10,7 @@ type LearningProgressService struct {
 	db *pg.DB
 }
 
-type progressLevel struct {
+type ProgressLevel struct {
 	TopicId string
 	Lessons []string
 	PassedLessons []string
@@ -24,8 +24,8 @@ func (s *LearningProgressService) Init(db *pg.DB) {
 	s.db = db
 }
 
-func (s *LearningProgressService) ProgressLevelByLessonAlias(lessonAlias string, userId string) (*progressLevel, error) {
-	var pl progressLevel
+func (s *LearningProgressService) ProgressLevelByLessonAlias(lessonAlias string, userId string) (*ProgressLevel, error) {
+	var pl ProgressLevel
 	_, err := s.db.Query(
 		&pl,
 		`SELECT
@@ -56,12 +56,16 @@ GROUP BY tl.topic_id, ut.lesson_id, ut.finished
 	return &pl, err
 }
 
-func (s *LearningProgressService) Save(lessonAlias string, userId string) error {
+func (s *LearningProgressService) Save(lessonAlias string, userId string) (*ProgressLevel, error) {
 	currentProgress, err := s.ProgressLevelByLessonAlias(lessonAlias, userId)
 	if err != nil {
-		return err
+		return &ProgressLevel{}, err
 	}
-	return s.save(currentProgress, lessonAlias, userId)
+	err = s.save(currentProgress, lessonAlias, userId)
+
+	currentProgress.LessonId = currentProgress.Lessons[functions.IndexOf(currentProgress.LessonsAliases, lessonAlias)]
+
+	return currentProgress, err
 }
 
 
@@ -74,26 +78,25 @@ func (s *LearningProgressService) IsLessonPassed(lessonAlias string, userId stri
 	return functions.IndexOf(currentProgress.PassedLessonsAliases, lessonAlias) != -1, nil
 }
 
-func (s *LearningProgressService) Pass(lessonAlias string, userId string) error {
+func (s *LearningProgressService) Pass(lessonAlias string, userId string) (*ProgressLevel, error) {
 	currentProgress, err := s.ProgressLevelByLessonAlias(lessonAlias, userId)
 
 	if err != nil {
-		return err
+		return &ProgressLevel{}, err
 	}
 
 	indexOfTheNextLesson := functions.IndexOf(currentProgress.LessonsAliases, lessonAlias) + 1
 
 	if indexOfTheNextLesson == len(currentProgress.Lessons) {
 		currentProgress.Finished = pg.NullTime{Time: time.Now()}
-		// TODO notify about passed topic
 	} else {
 		lessonAlias = currentProgress.LessonsAliases[indexOfTheNextLesson]
-		// TODO notify about passed lesson
+		currentProgress.LessonId = currentProgress.Lessons[indexOfTheNextLesson]
 	}
-
-	return s.save(currentProgress, lessonAlias, userId)
+	err = s.save(currentProgress, lessonAlias, userId)
+	return currentProgress, err
 }
-func (s *LearningProgressService) save(currentProgress *progressLevel, lessonAlias string, userId string) error {
+func (s *LearningProgressService) save(currentProgress *ProgressLevel, lessonAlias string, userId string) error {
 	var err error
 	if currentProgress.LessonId == "" {
 		_, err = s.db.Exec(

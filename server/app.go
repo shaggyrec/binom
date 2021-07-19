@@ -49,7 +49,7 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 	notificationController := controllers.NotificationController{}
 	notificationController.Init(notificationService)
 	learningProgressController := controllers.LearningProgressController{}
-	learningProgressController.Init(lessonProgressService)
+	learningProgressController.Init(lessonProgressService, notificationService)
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
@@ -105,7 +105,7 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 
 			r.Route("/lesson", func(r chi.Router) {
 				r.Group(func(r chi.Router) {
-					r.Use(middlewares.LessonProgress(lessonProgressService))
+					r.Use(middlewares.LessonProgress(lessonProgressService, lessonStorage))
 					r.Get("/{alias}", lessonController.GetOneLesson)
 				})
 				r.Group(func(r chi.Router) {

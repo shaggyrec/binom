@@ -8,6 +8,7 @@ import (
 const NotificationInfo = 1
 const NotificationLessonComment = 2
 const NotificationFeedComment = 3
+const NotificationLessonProgressChanged = 3
 
 type Meta struct {
 	Lesson string `json:"lesson"`

@@ -1,29 +1,36 @@
 package controllers
 
 import (
+	"binom/server/dataType"
 	"binom/server/exceptions"
 	"binom/server/functions"
 	"binom/server/requests"
 	"binom/server/responses"
 	"binom/server/service"
+	"database/sql"
+	"fmt"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
+	"gopkg.in/guregu/null.v4"
+	"log"
 	"net/http"
 )
 
 type LearningProgressController struct {
 	lessonProgressService *service.LearningProgressService
+	notificationService *service.NotificationService
 }
 
-func (s *LearningProgressController) Init(lessonProgressService *service.LearningProgressService) {
-	s.lessonProgressService = lessonProgressService
+func (c *LearningProgressController) Init(lessonProgressService *service.LearningProgressService, notificationService *service.NotificationService) {
+	c.lessonProgressService = lessonProgressService
+	c.notificationService = notificationService
 }
 
-func (s *LearningProgressController) UsersProgressByLesson(w http.ResponseWriter, r *http.Request) {
+func (c *LearningProgressController) UsersProgressByLesson(w http.ResponseWriter, r *http.Request) {
 	userId := chi.URLParam(r, "userId")
 	lessonAlias := chi.URLParam(r, "lessonAlias")
 
-	isPassed, err := s.lessonProgressService.IsLessonPassed(lessonAlias, userId)
+	isPassed, err := c.lessonProgressService.IsLessonPassed(lessonAlias, userId)
 
 	if err != nil {
 		exceptions.BadRequestError(w, r, err.Error(), 0)
@@ -33,7 +40,8 @@ func (s *LearningProgressController) UsersProgressByLesson(w http.ResponseWriter
 	render.JSON(w, r, responses.UsersProgressByLessonResponse{Passed: isPassed})
 }
 
-func (s *LearningProgressController) UpdateUsersProgressByLesson(w http.ResponseWriter, r *http.Request) {
+func (c *LearningProgressController) UpdateUsersProgressByLesson(w http.ResponseWriter, r *http.Request) {
+	changerId := r.Context().Value("userId").(string)
 	userId := chi.URLParam(r, "userId")
 	lessonAlias := chi.URLParam(r, "lessonAlias")
 
@@ -46,11 +54,29 @@ func (s *LearningProgressController) UpdateUsersProgressByLesson(w http.Response
 		return
 	}
 
+	var notificationText string
+	var p *service.ProgressLevel
 	if request.Passed {
-		err = s.lessonProgressService.Pass(lessonAlias, userId)
+		p, err = c.lessonProgressService.Pass(lessonAlias, userId)
+		notificationText = fmt.Sprintf("Зачёт за урок «%s» можно переходить к следующему", lessonAlias)
 	} else {
-		err = s.lessonProgressService.Save(lessonAlias, userId)
+		p, err = c.lessonProgressService.Save(lessonAlias, userId)
+		notificationText = fmt.Sprintf("Перподавтель отменил зачёт в вернул на урок «%s»", lessonAlias)
 	}
+
+	if err != nil {
+		log.Print(err)
+		exceptions.ServerError(w, r)
+		return
+	}
+
+	n := &dataType.Notification{
+		Type: null.Int{NullInt64: sql.NullInt64{Int64: dataType.NotificationLessonProgressChanged}},
+		Message: notificationText,
+		Meta: dataType.Meta{ Lesson: p.LessonId },
+		AuthorId: changerId,
+	}
+	err = c.notificationService.Create(n, []string{userId})
 
 	functions.RenderJSON(w, r, "Ok")
 }

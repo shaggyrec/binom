@@ -691,20 +691,23 @@ code {
 .topic-lesson-item-allowed {
     color: #2D3A41;
 }
-
+.topic-lesson-item-active {
+    color: #ad1100;
+}
 .topic-lesson-item-active * {
-    fill: #039151;
+    fill: #ad1100;
 }
 .topic-lesson-item-allowed * {
     fill: #2D3A41;
 }
 
 .topic-lesson-item-passed {
-    color: #19bf74;
+    color: #039151;
+    text-decoration: none;
 }
 
 .topic-lesson-item-passed * {
-    fill: #19bf74;
+    fill: #039151;
 }
 
 @keyframes slideFromBottom {

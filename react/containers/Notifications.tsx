@@ -7,8 +7,9 @@ import * as notificationsActions from '../ducks/notifications';
 import Button from '../components/Button';
 import Loader from '../components/Loader';
 import { Add } from '../components/Icons';
+import { UserRole } from '../dataTypes/user';
 
-function Notifications({ notifications, setViewed, requestNotifications, loading, noMore }): ReactElement {
+function Notifications({ notifications, setViewed, requestNotifications, loading, noMore, isAdmin }): ReactElement {
     function handleClickButton() {
         requestNotifications(notifications.length);
     }
@@ -17,7 +18,7 @@ function Notifications({ notifications, setViewed, requestNotifications, loading
             <div className="container py-20">
                 {notifications.map(n => (
                     <Paddingable key={n.notification.id} padding={[10, 0]}>
-                        <Notification notification={n.notification} viewed={n.viewed} onClick={() => setViewed(n.id)}/>
+                        <Notification notification={n.notification} viewed={n.viewed} onClick={() => setViewed(n.id)} isAdmin={isAdmin}/>
                     </Paddingable>
                 ))}
                 <div className="py-20 text-center">
@@ -34,6 +35,7 @@ export default connect(
         notifications: state.notifications.list,
         loading: state.notifications.loading,
         noMore: state.notifications.noMore,
+        isAdmin: state.users.me.role === UserRole.admin,
     }),
     dispatch => ({
         setViewed: id => dispatch(notificationsActions.setViewed(id)),

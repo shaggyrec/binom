@@ -91,10 +91,13 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 			r.Route("/topic", func(r chi.Router) {
 				r.Get("/list", topicController.List)
 				r.Get("/{alias}", topicController.ByAlias)
-				r.Post("/", topicController.Create)
-				r.Put("/{id}", topicController.Update)
-				r.Delete("/{id}", topicController.Delete)
-				r.Patch("/{id}/at/{pos:[0-9]+}", topicController.MoveAtPosition)
+				r.Group(func(r chi.Router) {
+					r.Use(middlewares.OnlyForAdmin)
+					r.Post("/", topicController.Create)
+					r.Put("/{id}", topicController.Update)
+					r.Delete("/{id}", topicController.Delete)
+					r.Patch("/{id}/at/{pos:[0-9]+}", topicController.MoveAtPosition)
+				})
 			})
 
 			r.Route("/lesson", func(r chi.Router) {
@@ -102,10 +105,13 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 					r.Use(middlewares.LessonProgress(lessonProgressService))
 					r.Get("/{alias}", lessonController.GetOneLesson)
 				})
-				r.Post("/", lessonController.Create)
-				r.Put("/{id}", lessonController.Update)
-				r.Delete("/{id}", lessonController.Delete)
-				r.Patch("/{id}/at/{pos:[0-9]+}", lessonController.MoveAtPosition)
+				r.Group(func(r chi.Router) {
+					r.Use(middlewares.OnlyForAdmin)
+					r.Post("/", lessonController.Create)
+					r.Put("/{id}", lessonController.Update)
+					r.Delete("/{id}", lessonController.Delete)
+					r.Patch("/{id}/at/{pos:[0-9]+}", lessonController.MoveAtPosition)
+				})
 			})
 			r.Route("/lesson/{lesson}/{userId}/comment", func(r chi.Router) {
 				r.Get("/", lessonCommentController.List)
@@ -121,11 +127,9 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 				r.Patch("/{id}/viewed", notificationController.Viewed)
 			})
 			r.Route("/progress", func(r chi.Router) {
+				r.Use(middlewares.OnlyForAdmin)
+				r.Put("/{userId}/{lessonAlias}", learningProgressController.UpdateUsersProgressByLesson)
 				r.Get("/{userId}/{lessonAlias}", learningProgressController.UsersProgressByLesson)
-				r.Group(func(r chi.Router) {
-					r.Use(middlewares.OnlyForAdmin)
-					r.Put("/{userId}/{lessonAlias}", learningProgressController.UpdateUsersProgressByLesson)
-				})
 			})
 		})
 	})

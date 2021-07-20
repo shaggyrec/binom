@@ -33,7 +33,7 @@ function renderLessonItem(lesson, type) {
     );
 }
 
-function Sublist({ items, open, onMove, isAdmin, active }) {
+function Sublist({ items, open, onMove, isAdmin, active, isFinished }) {
     let isActive = true;
     return (
         <div className={`sub-list ${open ? 'opened' : 'closed'}`}>
@@ -49,6 +49,9 @@ function Sublist({ items, open, onMove, isAdmin, active }) {
                         }
                         if (active === item.id || (!active && i === 0)) {
                             isActive = false;
+                        }
+                        if (isFinished) {
+                            itemType = 'passed';
                         }
                         return (
                             <div key={`sub-list${item.id}${i}`} className="sub-list-item">
@@ -134,7 +137,15 @@ function TopicsList(
                             </div>
                         }
                     </div>
-                    {t.lessons && t.lessons.length > 0 && <Sublist items={t.lessons} open={openTopics.indexOf(t.id) !== -1} onMove={onMoveLesson} isAdmin={isAdmin} active={t.status?.lessonId}/>}
+                    {t.lessons && t.lessons.length > 0 && (
+                        <Sublist
+                            items={t.lessons}
+                            open={openTopics.indexOf(t.id) !== -1}
+                            onMove={onMoveLesson}
+                            isAdmin={isAdmin}
+                            active={t.status?.lessonId}
+                            isFinished={t.status?.finished}
+                        />)}
                 </div>
             </Paddingable>
         )),

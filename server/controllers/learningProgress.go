@@ -58,10 +58,14 @@ func (c *LearningProgressController) UpdateUsersProgressByLesson(w http.Response
 	var p *service.ProgressLevel
 	if request.Passed {
 		p, err = c.lessonProgressService.Pass(lessonAlias, userId)
-		notificationText = fmt.Sprintf("Зачёт за урок «%s» можно переходить к следующему", lessonAlias)
+		if p != nil && p.Finished.String() == "" {
+			notificationText = fmt.Sprintf("Зачёт за урок «%s» можно переходить к следующему", p.LessonsNames[functions.IndexOf(p.LessonsAliases, lessonAlias)])
+		} else {
+			notificationText = fmt.Sprintf("Тема «%s» пройдена!", p.TopicName)
+		}
 	} else {
 		p, err = c.lessonProgressService.Save(lessonAlias, userId)
-		notificationText = fmt.Sprintf("Перподавтель отменил зачёт в вернул на урок «%s»", lessonAlias)
+		notificationText = fmt.Sprintf("Преподаватель отменил зачёт и вернул на урок «%s»", p.LessonsNames[functions.IndexOf(p.LessonsAliases, lessonAlias)])
 	}
 
 	if err != nil {

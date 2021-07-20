@@ -13,7 +13,8 @@ function* requestListProcess({ payload: { limit, offset } }): IterableIterator<a
             return;
         }
         const currentList: UserNotification[] = yield select(notificationsActions.currentList);
-        yield put(notificationsActions.list(list.filter(newNotification => !currentList.find(n => newNotification.id === n.id))));
+        const currentListIds = currentList.map(n => n.id);
+        yield put(notificationsActions.addToList(list.filter(newNotification => currentListIds.indexOf(newNotification.id) === -1)));
     } catch (e) {
         yield put(notificationsActions.error(getApiErrorMessage(e)));
     }

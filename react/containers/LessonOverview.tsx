@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { RootState } from '../Application';
+import { history, RootState } from '../Application';
 import { Link } from 'react-router-dom';
 import * as uuid from 'uuid';
 import * as lessonsActions from '../ducks/lessons';
@@ -16,7 +16,6 @@ import TopBar from '../components/TopBar';
 import { UserRole } from '../dataTypes/user';
 import { BackLink } from '../dataTypes/backLink';
 import LessonComments from '../components/LessonsComments';
-import { Redirect } from 'react-router';
 
 function LessonOverview ({ requestLesson, lesson, loading, match: { params, url }, me, resetCurrentLesson, setBackLink,
                              requestComments, comments, addComment, requestUser, user, isAdmin, isLessonPassed, requestLessonPassedInfo,
@@ -31,6 +30,10 @@ function LessonOverview ({ requestLesson, lesson, loading, match: { params, url 
     }, []);
 
     useEffect(() => {
+        if (uuid.validate(params.alias) && lesson?.id === params.alias) {
+            history.push(url.replace(params.alias, lesson.alias));
+            return;
+        }
         if (lesson?.alias === params.alias) {
             if (params.username) {
                 if (user?.username === params.username) {
@@ -42,10 +45,6 @@ function LessonOverview ({ requestLesson, lesson, loading, match: { params, url 
             }
         }
     }, [lesson, user, params.alias]);
-
-    if (lesson && lesson.alias !== params.alias && uuid.validate(params.alias)) {
-        return <Redirect to={url.replace(params.alias, lesson.alias)} />;
-    }
 
     if (!lesson || lesson.alias !== params.alias) {
         return <Loader />;
@@ -102,6 +101,7 @@ export default connect(
         addComment: (lessonId, userId, text, files) => dispatch(lessonCommentsActions.add(lessonId, userId, text, files)),
         requestUser: alias => dispatch(usersActions.requestUser(alias)),
         requestLessonPassedInfo: (lessonAlias, userId) => dispatch(learningProgressActions.requestProgressForLesson(lessonAlias, userId)),
-        toggleLessonPassed: (lessonAlias, userId, passed) => dispatch(learningProgressActions.save(lessonAlias, userId, passed))
+        toggleLessonPassed: (lessonAlias, userId, passed) => dispatch(learningProgressActions.save(lessonAlias, userId, passed)),
+        resetLesson: () => dispatch(lessonsActions.lesson(null)),
     })
 )(LessonOverview);

@@ -3,6 +3,7 @@ package service
 import (
 	"binom/server/functions"
 	"github.com/go-pg/pg"
+	"log"
 	"time"
 )
 
@@ -12,7 +13,9 @@ type LearningProgressService struct {
 
 type ProgressLevel struct {
 	TopicId string
+	TopicName string
 	Lessons []string
+	LessonsNames []string
 	PassedLessons []string
 	LessonId string
 	Finished pg.NullTime
@@ -30,24 +33,29 @@ func (s *LearningProgressService) ProgressLevelByLessonAlias(lessonAlias string,
 		&pl,
 		`SELECT
 	tl.topic_id,
+	t.name as topic_name,
 	jsonb_agg(tl.id order by tl.pos ASC, tl.created ASC) lessons,
 	jsonb_agg(tl.alias order by tl.pos ASC, tl.created ASC) lessons_aliases,
+	jsonb_agg(tl.name order by tl.pos ASC, tl.created ASC) lessons_names,
 	ut.lesson_id,
 	ut.finished
 FROM lessons l
 LEFT JOIN lessons tl ON tl.topic_id = l.topic_id
 LEFT JOIN user_topics ut ON ut.topic_id = l.topic_id AND ut.user_id = ?
+LEFT JOIN topics t ON l.topic_id = t.id
 WHERE l.alias = ?
-GROUP BY tl.topic_id, ut.lesson_id, ut.finished
+GROUP BY tl.topic_id, t.name, ut.lesson_id, ut.finished
 `,
 	userId, lessonAlias,
 )
 
 	indexOFCurrentLesson := functions.IndexOf(pl.Lessons, pl.LessonId)
-
-	if indexOFCurrentLesson > 0 {
-		pl.PassedLessons = pl.Lessons[:indexOFCurrentLesson+1]
-		pl.PassedLessonsAliases = pl.LessonsAliases[:indexOFCurrentLesson+1]
+	if pl.Finished.String() != "" {
+		pl.PassedLessons = pl.Lessons
+		pl.PassedLessonsAliases = pl.LessonsAliases
+	} else if indexOFCurrentLesson > 0 {
+		pl.PassedLessons = pl.Lessons[:indexOFCurrentLesson]
+		pl.PassedLessonsAliases = pl.LessonsAliases[:indexOFCurrentLesson]
 	} else {
 		pl.PassedLessons = []string{}
 		pl.PassedLessonsAliases = []string{}
@@ -74,6 +82,8 @@ func (s *LearningProgressService) IsLessonPassed(lessonAlias string, userId stri
 	if err != nil {
 		return false, err
 	}
+
+	log.Print(currentProgress)
 
 	return functions.IndexOf(currentProgress.PassedLessonsAliases, lessonAlias) != -1, nil
 }

@@ -97,7 +97,7 @@ function TopicsList(
     const [openTopics, setOpenTopics] = useState(topics.filter(t => t.status && !t.status.finished).map(t => t.id));
     const [scrolled, setScrolled] = useState(false);
     const prevTopics: Topic[] = usePrevious<Topic[]>(topics);
-    const [activeTheme, scrollToActiveTheme] = useScroll();
+    const [activeTheme, scrollToActiveTheme] = useScroll<HTMLDivElement>({ behavior: 'smooth' });
 
     useEffect(() => {
         if (scrolled === false && openTopics.length > 0) {

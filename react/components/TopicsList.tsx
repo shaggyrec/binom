@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { ReactElement, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { Topic } from '../dataTypes/topic';
@@ -7,6 +7,7 @@ import Button from './Button';
 import Paddingable from './Paddingable';
 import SortableList from './SortableList';
 import { usePrevious } from '../hooks/usePrevious';
+import { useScroll } from '../hooks/useScroll';
 
 function listContainer (items, onMove, isAdmin) {
     return isAdmin ?  <SortableList onMove={onMove} items={items}/> : <>{items}</>;
@@ -81,14 +82,29 @@ function renderIcon(topicStatus: { created: Date, finished: Date, lessonId: stri
             }
         </div>
     );
+}
 
+function topicStatusClass(topicStatus: { created: Date, finished: Date }): string {
+    if (!topicStatus) {
+        return '';
+    }
+    return topicStatus.finished ? 'finished' : 'in-progress'
 }
 
 function TopicsList(
     { topics, isAdmin, onMoveTopic, onMoveLesson }: { topics: Topic[], isAdmin?: boolean, onMoveTopic: (id: string, moveAt: number) => any, onMoveLesson: (id: string, moveAt: number) => any }
 ): ReactElement {
     const [openTopics, setOpenTopics] = useState(topics.filter(t => t.status && !t.status.finished).map(t => t.id));
+    const [scrolled, setScrolled] = useState(false);
     const prevTopics: Topic[] = usePrevious<Topic[]>(topics);
+    const [activeTheme, scrollToActiveTheme] = useScroll();
+
+    useEffect(() => {
+        if (scrolled === false && openTopics.length > 0) {
+            setScrolled(true);
+            scrollToActiveTheme();
+        }
+    }, [openTopics])
 
     useEffect(() => {
         if (topics.length > 0 && prevTopics && prevTopics.length === 0) {
@@ -108,46 +124,53 @@ function TopicsList(
     }
 
     return listContainer(topics.map(t => (
-            <Paddingable key={t.id} padding={[0,0,20]}>
-                <div className={`card transition3 ${openTopics.indexOf(t.id) === -1 ? ' pointer' : ''}`}>
-                    <div className="flex flex-vertical-top outline-background" onClick={() => handleClickTopic(t.id)}>
-                        <div>
-                            {renderIcon(t.status)}
+            <div key={t.id} ref={openTopics[0] === t.id ? activeTheme : null}>
+                <Paddingable padding={[30,0,0]}>
+                    <div className={`card transition3 ${openTopics.indexOf(t.id) === -1 ? ' pointer' : ''} ${topicStatusClass(t.status)}`}>
+                        <div className="flex flex-vertical-top outline-background" onClick={() => handleClickTopic(t.id)}>
+                            <div>
+                                {renderIcon(t.status)}
+                            </div>
+                            <div>
+                                <div className="card-title">{t.name}</div>
+                                <div className="card-info">
+                                    {t.lessons && <span>{t.lessons.length} уроков</span>}
+                                </div>
+                            </div>
+                            {!isAdmin && (!t.status || !t.status.finished) && t.lessons?.length > 0 && (
+                                <div style={{ flexGrow: 1, textAlign: 'right' }}>
+                                    <Link to={`/lesson/${t?.status ? t.lessons.find(l => l.id === t.status.lessonId).alias : t.lessons[0].alias}`}>
+                                        <Button green>{t.status ? 'Продолжить' : 'Начать'}</Button>
+                                    </Link>
+                                </div>
+                            )}
+                            {t.status?.finished && (
+                                <Paddingable padding={[5,0,0,10]}>
+                                    <span className="badge">Зачёт</span>
+                                </Paddingable>
+                            )}
+                            {isAdmin &&
+                                <div style={{ flexGrow: 1, textAlign: 'right' }}>
+                                    <Link to={`/topic/${t.alias}`}>
+                                        <Button small>
+                                            <Edit size={20}/>
+                                        </Button>
+                                   </Link>
+                                </div>
+                            }
                         </div>
-                        <div>
-                            <div className="card-title">{t.name}</div>
-                            <div className="card-info">
-                                {t.lessons && <span>{t.lessons.length} уроков</span>}
-                            </div>
-                        </div>
-                        {!isAdmin && (!t.status || !t.status.finished) && t.lessons?.length > 0 && (
-                            <div style={{ flexGrow: 1, textAlign: 'right' }}>
-                                <Link to={`/lesson/${t?.status ? t.lessons.find(l => l.id === t.status.lessonId).alias : t.lessons[0].alias}`}>
-                                    <Button green>{t.status ? 'Продолжить' : 'Начать'}</Button>
-                                </Link>
-                            </div>
-                        )}
-                        {isAdmin &&
-                            <div style={{ flexGrow: 1, textAlign: 'right' }}>
-                                <Link to={`/topic/${t.alias}`}>
-                                    <Button small>
-                                        <Edit size={20}/>
-                                    </Button>
-                               </Link>
-                            </div>
-                        }
+                        {t.lessons && t.lessons.length > 0 && (
+                            <Sublist
+                                items={t.lessons}
+                                open={openTopics.indexOf(t.id) !== -1}
+                                onMove={onMoveLesson}
+                                isAdmin={isAdmin}
+                                active={t.status?.lessonId}
+                                isFinished={t.status?.finished}
+                            />)}
                     </div>
-                    {t.lessons && t.lessons.length > 0 && (
-                        <Sublist
-                            items={t.lessons}
-                            open={openTopics.indexOf(t.id) !== -1}
-                            onMove={onMoveLesson}
-                            isAdmin={isAdmin}
-                            active={t.status?.lessonId}
-                            isFinished={t.status?.finished}
-                        />)}
-                </div>
-            </Paddingable>
+                </Paddingable>
+            </div>
         )),
         (i, at) => onMoveTopic(topics[i].id, at),
         isAdmin

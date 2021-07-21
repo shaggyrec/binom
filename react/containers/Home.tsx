@@ -51,7 +51,7 @@ function Home({ topics, requestTopics, isAdmin, moveTopicAtPosition, moveLessonA
                     </TopBar>
                 }
                 <div className="container">
-                    <Paddingable padding={[20, 0]}>
+                    <Paddingable padding={[10, 0, 20]}>
                         <TopicsList topics={topics} isAdmin={isAdmin} onMoveTopic={handleMoveTopic} onMoveLesson={handleMoveLesson}/>
                     </Paddingable>
                 </div>

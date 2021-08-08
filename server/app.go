@@ -105,7 +105,7 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 
 			r.Route("/lesson", func(r chi.Router) {
 				r.Group(func(r chi.Router) {
-					r.Use(middlewares.LessonProgress(lessonProgressService, lessonStorage))
+					r.Use(middlewares.LessonProgress(lessonProgressService, lessonStorage, topicStorage))
 					r.Get("/{alias}", lessonController.GetOneLesson)
 				})
 				r.Group(func(r chi.Router) {

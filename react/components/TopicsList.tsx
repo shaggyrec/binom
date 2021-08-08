@@ -70,9 +70,11 @@ function Sublist({ items, open, onMove, isAdmin, active, isFinished }) {
     );
 }
 
-function renderIcon(topicStatus: { created: Date, finished: Date, lessonId: string }) {
+function renderIcon(topicStatus: { created: Date, finished: Date, lessonId: string }, isPreviousFinished) {
     if (!topicStatus) {
-        return <div className="card-icon card-icon-paragraph">§</div>;
+        return isPreviousFinished
+            ? <div className="card-icon"><Locked size={25} /></div>
+            : <div className="card-icon card-icon-paragraph">§</div>;
     }
     return (
         <div className="card-icon">
@@ -123,13 +125,13 @@ function TopicsList(
         }
     }
 
-    return listContainer(topics.map(t => (
+    return listContainer(topics.map((t, index) => (
             <div key={t.id} ref={openTopics[0] === t.id ? activeTheme : null}>
                 <Paddingable padding={[30,0,0]}>
                     <div className={`card transition3 ${openTopics.indexOf(t.id) === -1 ? ' pointer' : ''} ${topicStatusClass(t.status)}`}>
                         <div className="flex flex-vertical-top outline-background" onClick={() => handleClickTopic(t.id)}>
                             <div>
-                                {renderIcon(t.status)}
+                                {renderIcon(t.status, !(topics[index-1] && topics[index-1].status?.finished))}
                             </div>
                             <div>
                                 <div className="card-title">{t.name}</div>

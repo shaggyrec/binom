@@ -12,7 +12,7 @@ import (
 	"net/http"
 )
 
-func LessonProgress(learningProgressService *service.LearningProgressService, lessonStorage *storage.LessonStorage) func(next http.Handler) http.Handler {
+func LessonProgress(learningProgressService *service.LearningProgressService, lessonStorage *storage.LessonStorage, topicStorage *storage.TopicStorage) func(next http.Handler) http.Handler {
 	return func (next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
@@ -29,11 +29,29 @@ func LessonProgress(learningProgressService *service.LearningProgressService, le
 					 }
 					lessonAlias = l.Alias.String
 				}
-
 				userId := r.Context().Value("userId").(string)
 				l, _ := learningProgressService.ProgressLevelByLessonAlias(lessonAlias, userId)
 				if l.LessonId == "" {
-					_, err := learningProgressService.Save(lessonAlias, userId)
+					topicsWithProgress, err := topicStorage.List(1000, 0, false, userId)
+					if err != nil {
+						log.Print(err)
+						exceptions.ServerError(w, r)
+						return
+					}
+					var isPrevTopicFinished bool
+					for i, topic := range *topicsWithProgress {
+						if topic.Id == l.TopicId {
+							if isPrevTopicFinished || i == 0 {
+								break
+							} else {
+								exceptions.Forbidden(w, r, "You must to pass previous Theme")
+								return
+							}
+						}
+						isPrevTopicFinished = topic.Status.Finished != ""
+					}
+
+					_, err = learningProgressService.Save(lessonAlias, userId)
 					if err != nil {
 						log.Print(err)
 						exceptions.ServerError(w, r)

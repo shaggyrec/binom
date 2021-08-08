@@ -23,6 +23,14 @@ type ProgressLevel struct {
 	PassedLessonsAliases []string
 }
 
+type UserProgress struct {
+	TopicId string
+	TopicName string
+	LessonId string
+	Finished pg.NullTime
+	Created pg.NullTime
+}
+
 func (s *LearningProgressService) Init(db *pg.DB) {
 	s.db = db
 }
@@ -106,6 +114,21 @@ func (s *LearningProgressService) Pass(lessonAlias string, userId string) (*Prog
 	err = s.save(currentProgress, lessonAlias, userId)
 	return currentProgress, err
 }
+
+func (s *LearningProgressService) AllProgress(userId string) (*[]UserProgress, error) {
+	var pl []UserProgress
+	_, err := s.db.Query(
+		&pl,
+		`SELECT p.topic_id, t.name as topic_name, p.lesson_id, p.created, p.finished
+			FROM user_topics p
+			 LEFT JOIN topics t ON t.id = p.topic_id
+			WHERE p.user_id = ?`,
+		userId,
+	)
+
+	return &pl, err
+}
+
 func (s *LearningProgressService) save(currentProgress *ProgressLevel, lessonAlias string, userId string) error {
 	var err error
 	if currentProgress.LessonId == "" {

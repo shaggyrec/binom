@@ -68,6 +68,7 @@ func (c *LessonController) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	mergo.Merge(&lessonToUpdate, l)
+	// TODO fix erasing data
 	_, err = c.lessonStorage.Update(&lessonToUpdate)
 
 	if err != nil {

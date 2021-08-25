@@ -21,6 +21,7 @@ func (s *LessonStorage) Create(lesson *dataType.Lesson) (*dataType.Lesson, error
 }
 
 func (s *LessonStorage) Update(lesson *dataType.Lesson) (*dataType.Lesson, error) {
+	// TODO fix erasing data
 	r, err := s.db.Model(lesson).WherePK().Update()
 
 	if r != nil && r.RowsAffected() == 0 {

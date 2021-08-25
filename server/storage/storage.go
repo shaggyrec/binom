@@ -60,3 +60,9 @@ func (f *Factory) Notification(db *pg.DB) *NotificationStorage {
 	storage.Init(db)
 	return &storage
 }
+
+func (f *Factory) Subscription(db *pg.DB) *SubscriptionStorage {
+	storage := SubscriptionStorage{}
+	storage.Init(db)
+	return &storage
+}

@@ -23,6 +23,7 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 	fileStorage := storageFactory.File(db)
 	lessonCommentStorage := storageFactory.LessonComment(db)
 	notificationStorage := storageFactory.Notification(db)
+	subscriptionStorage := storageFactory.Subscription(db)
 	// services
 	serviceFactory := service.Factory{}
 	tokenService := serviceFactory.TokenService(jwtSecret, tokenStorage)
@@ -50,6 +51,8 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 	notificationController.Init(notificationService)
 	learningProgressController := controllers.LearningProgressController{}
 	learningProgressController.Init(lessonProgressService, notificationService)
+	subscriptionController := controllers.SubscriptionController{}
+	subscriptionController.Init(subscriptionStorage)
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
@@ -130,10 +133,18 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 				r.Get("/", notificationController.List)
 				r.Patch("/{id}/viewed", notificationController.Viewed)
 			})
-			r.Route("/progress", func(r chi.Router) {
+			r.Group(func(r chi.Router) {
 				r.Use(middlewares.OnlyForAdmin)
-				r.Put("/{userId}/{lessonAlias}", learningProgressController.UpdateUsersProgressByLesson)
-				r.Get("/{userId}/{lessonAlias}", learningProgressController.UsersProgressByLesson)
+				r.Route("/progress", func(r chi.Router) {
+					r.Put("/{userId}/{lessonAlias}", learningProgressController.UpdateUsersProgressByLesson)
+					r.Get("/{userId}/{lessonAlias}", learningProgressController.UsersProgressByLesson)
+				})
+				r.Route("/subscription", func(r chi.Router) {
+					r.Get("/", subscriptionController.List)
+					r.Post("/", subscriptionController.Create)
+					r.Put("/{id}", subscriptionController.Update)
+					r.Delete("/{id}", subscriptionController.Delete)
+				})
 			})
 		})
 	})

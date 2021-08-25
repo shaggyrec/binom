@@ -4,6 +4,7 @@ import (
 	"binom/server/exceptions"
 	"encoding/json"
 	"github.com/go-chi/render"
+	"log"
 	"net/http"
 	"reflect"
 )
@@ -11,6 +12,7 @@ import (
 func ParseRequest(w http.ResponseWriter, r *http.Request, b interface{}) error {
 	err := json.NewDecoder(r.Body).Decode(b)
 	if err != nil {
+		log.Println(err.Error())
 		exceptions.BadRequestError(w, r, "Can't parse body", http.StatusBadRequest)
 	}
 	return err

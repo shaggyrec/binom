@@ -166,6 +166,7 @@ select, .file-input {
 
 button {
     padding: 12px 24px;
+    line-height: 1.5;
 }
 
 button:hover, button.hover, .neomorphic, .badge {
@@ -210,6 +211,22 @@ button:active {
     padding-top: 20px;
     padding-bottom: 20px;
 }
+
+.py-10 {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.px-10 {
+    padding-left: 10px!important;
+    padding-right: 10px!important;
+}
+
+.px-20 {
+    padding-left: 20px!important;
+    padding-right: 20px!important;
+}
+
 .text-center {
     text-align: center;
 }
@@ -726,6 +743,16 @@ code {
 }
 .in-progress .card-title {
     color: #ad1100;
+}
+
+.gap-10 {
+    gap: 10px;
+}
+.gap-20 {
+    gap: 20px;
+}
+.flex-wrap {
+    flex-wrap: wrap;
 }
 
 @keyframes slideFromBottom {

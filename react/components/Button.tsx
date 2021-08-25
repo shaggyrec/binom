@@ -15,9 +15,9 @@ interface ButtonProps {
 function Button(props: ButtonProps): ReactElement {
     const className = [
         props.className,
-        props.green && "button-green",
-        props.block && "block",
-        props.small && "button-small",
+        props.green && 'button-green',
+        props.block && 'block',
+        props.small && 'button-small',
         props.red && 'button-red'
     ].filter(c => c).join(' ')
     return (

@@ -35,8 +35,8 @@
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/explicit-function-return-type": ["warn", { "allowExpressions": true }],
     "react/no-unescaped-entities": "off",
-    "allowSyntheticDefaultImports": true,
-    "react/prop-types": false
+    "allowSyntheticDefaultImports": 0,
+    "react/prop-types": 0
   },
   "settings":  {
     "react":  {

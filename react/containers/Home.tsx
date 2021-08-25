@@ -47,6 +47,11 @@ function Home({ topics, requestTopics, isAdmin, moveTopicAtPosition, moveLessonA
                                     <Button small>Создать урок</Button>
                                 </Link>
                             </Paddingable>
+                            <Paddingable padding={[0, 10, 0, 0]}>
+                                <Link to="/subscriptions/edit">
+                                    <Button small>Управлени подписками</Button>
+                                </Link>
+                            </Paddingable>
                         </div>
                     </TopBar>
                 }

@@ -25,6 +25,7 @@ import Profile from './Profile';
 import CompleteProfile from './CompleteProfile';
 import NotFoundPage from '../components/NotFoundPage';
 import Notifications from './Notifications';
+import SubscriptionsManager from './SubscriptionsManager';
 
 function Root({ history, me, requestMe, setFrom, loading, setLoading, hideModal, message }): ReactElement {
     useEffect(() => {
@@ -57,6 +58,7 @@ function Root({ history, me, requestMe, setFrom, loading, setLoading, hideModal,
                     <ProtectedRoute component={TopicOverview} isAuthorized={me?.role === UserRole.admin} path="/topic/:alias" exact authPath="/auth" />
                     <ProtectedRoute component={LessonOverview} isAuthorized={me?.role === UserRole.admin} path="/@:username/lesson/:alias" exact authPath="/auth" />
                     <ProtectedRoute component={Notifications} isAuthorized={!!me} path="/notifications" exact authPath="/auth" />
+                    <ProtectedRoute component={SubscriptionsManager} isAuthorized={me?.role === UserRole.admin} path="/subscriptions/edit" exact authPath="/auth" />
                     <Route path="*" component={NotFoundPage} />
                 </Switch>
                 <BottomMenu />

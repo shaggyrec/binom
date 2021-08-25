@@ -12,6 +12,7 @@ import { files } from './files';
 import { lessonComments } from './lessonComments';
 import { notifications } from './notifications';
 import { learningProgress } from './learningProgress';
+import { subscriptions } from './subscriptions';
 
 const MAX_REQUEST_TRIES = 10;
 let tries = 0;
@@ -53,5 +54,6 @@ export default function* rootSaga(): any {
         lessonComments(),
         notifications(),
         learningProgress(),
+        subscriptions(),
     ]);
 }

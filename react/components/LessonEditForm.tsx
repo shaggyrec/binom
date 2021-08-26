@@ -35,12 +35,13 @@ function fileEdition(fileId, onClickDelete): ReactElement {
     );
 }
 
-function LessonEditForm({ onSubmit, name, alias, text, task, video, topics, topicId, taskFiles, onVideoUpload, onTaskUpload, loading = false, onClickDeleteFile }): ReactElement {
+function LessonEditForm({ onSubmit, name, alias, text, task, video, topics, topicId, taskFiles, taskValue, onVideoUpload, onTaskUpload, loading = false, onClickDeleteFile }): ReactElement {
     const [lessonName, setLessonName] = useState(name);
     const [lessonAlias, setLessonAlias] = useState(alias);
     const [lessonDescription, setLessonDescription] = useState(text);
     const [lessonTask, setLessonTask] = useState(task);
     const [lessonCategory, setLessonCategory] = useState(topicId);
+    const [lessonTaskValue, setLessonTaskValue] = useState(taskValue || 5);
 
     useEffect(() => {
         setLessonAlias(slugify(lessonName));
@@ -53,6 +54,7 @@ function LessonEditForm({ onSubmit, name, alias, text, task, video, topics, topi
             text: lessonDescription,
             topicId: lessonCategory || topics[0]?.value,
             task: lessonTask,
+            taskValue: parseInt(lessonTaskValue) || 5,
         });
     }
 
@@ -78,6 +80,7 @@ function LessonEditForm({ onSubmit, name, alias, text, task, video, topics, topi
             <div style={{ marginTop: 20 }}>
                 <FileUpload name="taskFile" onChange={handleTaskUpload} label={taskFiles?.length ? 'Ещё файл задания' : 'Файл задания'} accept="*"/>
             </div>
+            <Input required type="number" label="Баллов за домашнюю работу" value={lessonTaskValue} onChange={setLessonTaskValue}/>
             <Input required onChange={setLessonAlias} label="Alias" value={lessonAlias}/>
             <Button block green disabled={loading}>Сохранить</Button>
         </Form>

@@ -16,4 +16,5 @@ type Lesson struct {
 	Alias null.String `json:"alias"`
 	Video []string `json:"video"`
 	TaskFiles []string `json:"taskFiles"`
+	TaskValue null.Int `json:"taskValue"`
 }

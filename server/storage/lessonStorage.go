@@ -97,5 +97,10 @@ func (s *LessonStorage) mapDbRow(data map[string]interface{}) *dataType.Lesson {
 		lesson.Alias.Valid = true
 	}
 
+	if val, ok := data["taskValue"]; ok {
+		lesson.TaskValue.Int64 = int64(val.(float64))
+		lesson.TaskValue.Valid = true
+	}
+
 	return &lesson
 }

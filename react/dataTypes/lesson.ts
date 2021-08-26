@@ -7,4 +7,5 @@ export interface Lesson {
     video: string[];
     topicId: string;
     alias: string;
+    taskValue: number;
 }

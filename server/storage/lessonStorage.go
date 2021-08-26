@@ -2,8 +2,10 @@ package storage
 
 import (
 	"binom/server/dataType"
+	"binom/server/functions"
 	"errors"
 	"github.com/go-pg/pg"
+	"github.com/mitchellh/mapstructure"
 )
 
 type LessonStorage struct {
@@ -20,14 +22,16 @@ func (s *LessonStorage) Create(lesson *dataType.Lesson) (*dataType.Lesson, error
 	return lesson, err
 }
 
-func (s *LessonStorage) Update(lesson *dataType.Lesson) (*dataType.Lesson, error) {
-	// TODO fix erasing data
-	r, err := s.db.Model(lesson).WherePK().Update()
+func (s *LessonStorage) Update(id string, lessonMap map[string]interface{}) error {
+	r, err := s.db.Model(s.mapDbRow(lessonMap)).
+		Column(functions.ArrayToSnakeCase(functions.MapKeys(lessonMap))...).
+		Where("id = ?", id).
+		Update()
 
 	if r != nil && r.RowsAffected() == 0 {
 		err = errors.New("nothing affected")
 	}
-	return lesson, err
+	return err
 }
 
 func (s *LessonStorage) Delete(id string) error {
@@ -67,4 +71,31 @@ func (s *LessonStorage) ListByTopic(topicId string, limit int, offset int) (*[]d
 	err := s.db.Model(&lessons).Where("topic = ?", topicId).Limit(limit).Offset(offset).OrderExpr("pos ASC, created DESC").Select()
 
 	return &lessons, err
+}
+
+func (s *LessonStorage) mapDbRow(data map[string]interface{}) *dataType.Lesson {
+	var lesson dataType.Lesson
+	mapstructure.Decode(data, &lesson)
+
+	if val, ok := data["name"]; ok {
+		lesson.Name.String = val.(string)
+		lesson.Name.Valid = true
+	}
+
+	if val, ok := data["text"]; ok {
+		lesson.Text.String = val.(string)
+		lesson.Text.Valid = true
+	}
+
+	if val, ok := data["task"]; ok {
+		lesson.Task.String = val.(string)
+		lesson.Task.Valid = true
+	}
+
+	if val, ok := data["alias"]; ok {
+		lesson.Alias.String = val.(string)
+		lesson.Alias.Valid = true
+	}
+
+	return &lesson
 }

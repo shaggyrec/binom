@@ -4,7 +4,6 @@ import (
 	"binom/server/dataType"
 	"binom/server/functions"
 	"errors"
-	"fmt"
 	"github.com/go-pg/pg"
 	"github.com/mitchellh/mapstructure"
 )
@@ -25,7 +24,7 @@ func (s *SubscriptionStorage) Create(subscription *dataType.Subscription) (*data
 
 func (s *SubscriptionStorage) Update(id int, subscriptionMap map[string]interface{}) error {
 
-	r, err := s.db.Model(mapDbRow(subscriptionMap)).
+	r, err := s.db.Model(s.mapDbRow(subscriptionMap)).
 		Column(functions.MapKeys(subscriptionMap)...).
 		Where("id = ?", id).
 		Update()
@@ -63,13 +62,12 @@ func (s *SubscriptionStorage) ById(id int) (*dataType.Subscription, error)  {
 	return &subscription, err
 }
 
-func mapDbRow(data map[string]interface{}) *dataType.Subscription {
+func (s *SubscriptionStorage) mapDbRow(data map[string]interface{}) *dataType.Subscription {
 	var subscription dataType.Subscription
 	mapstructure.Decode(data, &subscription)
 	if val, ok := data["status"]; ok {
 		subscription.Status.Int64 = int64(val.(float64))
 		subscription.Status.Valid = true
 	}
-	fmt.Println(subscription)
 	return &subscription
 }

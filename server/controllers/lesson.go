@@ -10,7 +10,6 @@ import (
 	"github.com/go-chi/render"
 	"github.com/go-pg/pg"
 	"github.com/google/uuid"
-	"github.com/imdario/mergo"
 	"log"
 	"net/http"
 	"strconv"
@@ -54,28 +53,18 @@ func (c *LessonController) Create(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *LessonController) Update(w http.ResponseWriter, r *http.Request) {
-	var lessonToUpdate dataType.Lesson
+	var lessonToUpdate map[string]interface{}
 	if err := functions.ParseRequest(w, r, &lessonToUpdate);  err != nil {
 		return
 	}
 
-	lessonToUpdate.Id = chi.URLParam(r, "id")
-
-	l, err := c.lessonStorage.GetById(lessonToUpdate.Id)
-
-	if err != nil {
-		exceptions.NotFoundError(w, r, "Lesson not found")
-		return
-	}
-	mergo.Merge(&lessonToUpdate, l)
-	// TODO fix erasing data
-	_, err = c.lessonStorage.Update(&lessonToUpdate)
+	err := c.lessonStorage.Update(chi.URLParam(r, "id"), lessonToUpdate)
 
 	if err != nil {
 		log.Print(err)
 		pgErr, ok := err.(pg.Error)
 		if ok && pgErr.IntegrityViolation() {
-			exceptions.BadRequestError(w, r, "Lessson with alias \"" + l.Alias.String + "\" already exists", exceptions.AlreadyExists)
+			exceptions.BadRequestError(w, r, "Lesson with alias \"" + lessonToUpdate["alias"].(string) + "\" already exists", exceptions.AlreadyExists)
 		} else {
 			exceptions.BadRequestError(w, r, err.Error(), exceptions.NothingAffected)
 		}

@@ -98,7 +98,8 @@ func (c *FileController) Serve(w http.ResponseWriter, r *http.Request)  {
 	f, err := c.storage.Get(chi.URLParam(r, "id"))
 
 	if err != nil {
-		exceptions.NotFoundError(w, r, err.Error())
+		exceptions.NotFoundError(w, r, "File not found")
+		return
 	}
 
 	pathToFile := filepath.Join(c.uploadPath, f.Id + f.Extension)

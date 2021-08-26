@@ -5,18 +5,36 @@ import { SERVER_REQUESTS_BASE } from '../functions';
 import Paddingable from './Paddingable';
 import MathsText from './MathsText';
 
+function renderTaskFiles(taskFiles) {
+    if (!taskFiles) {
+        return null;
+    }
+    return (
+        <Paddingable padding={[10, 0, 30]}>
+            <h2>Ссылка на домашнее задание</h2>
+            {taskFiles.map((f, i) => (
+                <div className="link-to-task" key={f} >
+                    <a href={`${SERVER_REQUESTS_BASE}/file/${f}`} target="_blank" rel="noreferrer">Домашнее задание {taskFiles.length > 1 ? (i + 1) : ''}</a>
+                </div>
+            ))}
+        </Paddingable>
+    );
+}
+
 function Lesson(props: Lesson): ReactElement {
     return (
         <div>
             <div className="container">
                 <h1>{props.name}</h1>
             </div>
-            {props.video && (
-                <div className="video-container">
-                    <div className="container">
-                        <Video src={SERVER_REQUESTS_BASE + '/file/' + props.video}/>
+            {props.video && props.video.map(
+                (v, i) => (
+                    <div key={v} className="video-container" style={{ marginTop: i > 0 ? 50 : 0 }}>
+                        <div className="container">
+                            <Video src={SERVER_REQUESTS_BASE + '/file/' + v}/>
+                        </div>
                     </div>
-                </div>
+                )
             )}
             <div className="container">
                 <p className="text break-spaces">{props.text}</p>
@@ -27,6 +45,7 @@ function Lesson(props: Lesson): ReactElement {
                         <MathsText>{props.task}</MathsText>
                     </Paddingable>
                 )}
+                {renderTaskFiles(props.taskFiles)}
             </div>
         </div>
     );

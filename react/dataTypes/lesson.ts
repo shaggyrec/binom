@@ -3,7 +3,8 @@ export interface Lesson {
     name: string;
     text: string;
     task: string;
-    video: string;
+    taskFiles: string[];
+    video: string[];
     topicId: string;
     alias: string;
 }

@@ -13,6 +13,7 @@ type Lesson struct {
 	Text null.String `json:"text"`
 	Pos null.Int `json:"pos"`
 	Task null.String `json:"task"`
-	Video null.String `json:"video"`
 	Alias null.String `json:"alias"`
+	Video []string `json:"video"`
+	TaskFiles []string `json:"taskFiles"`
 }

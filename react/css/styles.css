@@ -755,6 +755,16 @@ code {
     flex-wrap: wrap;
 }
 
+.link-to-task {
+    font-size: 20px;
+    font-weight: bold;
+    padding: 10px 0;
+}
+
+.link-to-task a:hover {
+    text-decoration: none;
+}
+
 @keyframes slideFromBottom {
     0% { transform: translateY(200%); }
     100% { transform: translateY(0); }

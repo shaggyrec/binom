@@ -11,9 +11,13 @@ import { Back } from '../components/Icons';
 import TopBar from '../components/TopBar';
 import Modal from '../components/Modal';
 
+const WAITING_VIDEO = 'WAITING_VIDEO';
+const WAITING_TASK = 'WAITING_TASK';
+
 function LessonEdit({ requestLesson, lesson, loading, match: { params }, updateLesson, requestTopics, topics, uploadFile,
-                        uploadedFile, resetUploadedFile, removeFile, removedFile, resetURemovedFile }): ReactElement {
+    uploadedFile, resetUploadedFile, removeFile, removedFile, resetURemovedFile }): ReactElement {
     const [showDeletingModal, setShowDeletingModal] = useState(false);
+    const [waitFile, setWaitFile] = useState(null);
 
     useEffect(() => {
         if (!lesson) {
@@ -25,14 +29,26 @@ function LessonEdit({ requestLesson, lesson, loading, match: { params }, updateL
     }, [])
     useEffect(() => {
         if (uploadedFile) {
-            updateLesson(lesson.id, { video: uploadedFile });
+            if (waitFile === WAITING_VIDEO) {
+                updateLesson(lesson.id, { video: [...(lesson.video || []), uploadedFile] });
+            }
+            if (waitFile === WAITING_TASK) {
+                updateLesson(lesson.id, { taskFiles: [...(lesson.taskFiles || []), uploadedFile] });
+            }
+            setWaitFile(null);
             resetUploadedFile();
         }
     }, [uploadedFile]);
 
     useEffect(() => {
-        if (removedFile && removedFile === lesson.video) {
+        if (removedFile && lesson.video && (lesson.video.indexOf(removedFile) !== -1 || lesson.taskFiles.indexOf(removedFile) !== -1)) {
             requestLesson(lesson.alias);
+            const indexOfFile = lesson.video.indexOf(removedFile) !== -1  ? lesson.video.indexOf(removedFile) : lesson.taskFiles.indexOf(removedFile);
+            if (lesson.video.indexOf(removedFile) !== -1) {
+                updateLesson(lesson.id, { video: [...lesson.video.slice(0, indexOfFile), ...lesson.video.slice(indexOfFile + 1)] });
+            } else {
+                updateLesson(lesson.id, { taskFiles: [...lesson.taskFiles.slice(0, indexOfFile), ...lesson.taskFiles.slice(indexOfFile + 1)] });
+            }
             resetURemovedFile();
         }
     }, [removedFile])
@@ -44,9 +60,19 @@ function LessonEdit({ requestLesson, lesson, loading, match: { params }, updateL
         updateLesson(lesson.id, updated);
     }
 
-    function handleDeleteVideo() {
-        lesson.video && removeFile(lesson.video);
+    function handleDeleteFile() {
+        lesson.video && (lesson.video.indexOf(showDeletingModal) !== -1 || lesson.taskFiles.indexOf(showDeletingModal) !== -1) && removeFile(showDeletingModal);
         setShowDeletingModal(false);
+    }
+
+    function handleUploadVideo(f) {
+        setWaitFile(WAITING_VIDEO);
+        uploadFile(f);
+    }
+
+    function handleUploadTask(f) {
+        setWaitFile(WAITING_TASK);
+        uploadFile(f);
     }
     return (
         <>
@@ -60,12 +86,13 @@ function LessonEdit({ requestLesson, lesson, loading, match: { params }, updateL
                     {...lesson}
                     topics={topics}
                     onSubmit={handleSubmit}
-                    onFileUpload={uploadFile}
+                    onVidelUpload={handleUploadVideo}
+                    onTaskUpload={handleUploadTask}
                     loading={loading}
-                    onClickDeleteVideo={() => setShowDeletingModal(true)}
+                    onClickDeleteFile={(id) => setShowDeletingModal(id)}
                 />
             </div>
-            {showDeletingModal && <Modal onClickOk={handleDeleteVideo} onClickCancel={() => setShowDeletingModal(false)}>Уверены, что хотите удалить видео?</Modal>}
+            {showDeletingModal && <Modal onClickOk={handleDeleteFile} onClickCancel={() => setShowDeletingModal(false)}>Уверены, что хотите удалить файл?</Modal>}
             <Loader show={loading}/>
         </>
     );

@@ -15,7 +15,7 @@ import MathsTextarea from './form/MathsTextarea';
 
 function videoEdition(videoId, onClickDeleteVideo): ReactElement {
     return (
-        <div>
+        <div key={videoId} style={{ marginBottom: 10 }}>
             <Video src={SERVER_REQUESTS_BASE + '/file/' + videoId}/>
             <Paddingable padding={[10, 0]}>
                 <Button type="button" small red onClick={onClickDeleteVideo}><Bin size={15} fill="#fff"/> Удалить видео</Button>
@@ -24,7 +24,18 @@ function videoEdition(videoId, onClickDeleteVideo): ReactElement {
     );
 }
 
-function LessonEditForm({ onSubmit, name, alias, text, task, video, topics, topicId, onFileUpload, loading = false, onClickDeleteVideo }): ReactElement {
+function fileEdition(fileId, onClickDelete): ReactElement {
+    return (
+        <div key={fileId} className="flex gap-20" style={{ marginBottom: 10 }}>
+            <a href={`${SERVER_REQUESTS_BASE}/file/${fileId}`} target="_blank" rel="noreferrer">{fileId}</a>
+            <Paddingable padding={[10, 0]}>
+                <Button type="button" small red onClick={onClickDelete}><Bin size={15} fill="#fff"/> Удалить файл</Button>
+            </Paddingable>
+        </div>
+    );
+}
+
+function LessonEditForm({ onSubmit, name, alias, text, task, video, topics, topicId, taskFiles, onVideoUpload, onTaskUpload, loading = false, onClickDeleteFile }): ReactElement {
     const [lessonName, setLessonName] = useState(name);
     const [lessonAlias, setLessonAlias] = useState(alias);
     const [lessonDescription, setLessonDescription] = useState(text);
@@ -45,13 +56,28 @@ function LessonEditForm({ onSubmit, name, alias, text, task, video, topics, topi
         });
     }
 
+    function handleTaskUpload(e, reset) {
+        onTaskUpload(e);
+        reset();
+    }
+
+    function handleVideoUpload(e, reset) {
+        onVideoUpload(e);
+        reset();
+    }
+
     return (
         <Form onSubmit={handleSubmit}>
             <Input required onChange={setLessonName} label="Название" value={lessonName}/>
             <Select options={topics} label="Категория" onChange={setLessonCategory} value={lessonCategory} />
-            {video ? videoEdition(video, onClickDeleteVideo) : <FileUpload name="file" onChange={onFileUpload} label="Видео" accept="video/*"/>}
+            {video?.length && video.map(v => videoEdition(v, () => onClickDeleteFile(v)))}
+            <FileUpload name="file" onChange={handleVideoUpload} label={video?.length ? 'Ещё видео' : 'Видео'} accept="video/*"/>
             <Textarea onChange={setLessonDescription} label="Описание" value={lessonDescription || ''}/>
             <MathsTextarea label="Задание" value={lessonTask || ''}  onChange={setLessonTask}/>
+            {taskFiles?.length && taskFiles.map(v => fileEdition(v, () => onClickDeleteFile(v)))}
+            <div style={{ marginTop: 20 }}>
+                <FileUpload name="taskFile" onChange={handleTaskUpload} label={taskFiles?.length ? 'Ещё файл задания' : 'Файл задания'} accept="*"/>
+            </div>
             <Input required onChange={setLessonAlias} label="Alias" value={lessonAlias}/>
             <Button block green disabled={loading}>Сохранить</Button>
         </Form>

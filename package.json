@@ -2,9 +2,10 @@
   "name": "binom",
   "version": "1.0.0",
   "description": "Maths studying application on react",
-  "main": "react/index.tsx",
+  "main": "dist/index.js",
   "scripts": {
-    "start": "parcel react/index.html"
+    "start": "parcel react/index.html",
+    "build": "rm -rf dist/* && parcel build react/index.tsx && cp -R react/static/* dist/"
   },
   "author": "Alexander Shogenov <i@shagg.ru>",
   "license": "UNLICENSED",

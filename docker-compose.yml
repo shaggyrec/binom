@@ -14,6 +14,18 @@ services:
       - ./db/dump-fixture.sh:/dump-fixture.sh
     env_file:
       - .env
+  nginx:
+    build: nginx
+    env_file:
+      - .env
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - golang
+    volumes:
+      - ./nginx/ssl:/etc/ssl/
+      - ./dist:/golang/static
   golang:
     build: .
     command: ["./scripts/wait-for-it.sh", "pg:5432", "--", "gow", "run", "."]
@@ -32,3 +44,4 @@ services:
       - ./go.sum:/goapp/go.sum
       - ./scripts:/goapp/scripts
       - ./upload:/goapp/upload
+      - ./dist:/goapp/dist

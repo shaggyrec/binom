@@ -26,17 +26,13 @@ function Lesson(props: Lesson): ReactElement {
         <div>
             <div className="container">
                 <h1>{props.name}</h1>
-            </div>
-            {props.video && props.video.map(
-                (v, i) => (
-                    <div key={v} className="video-container" style={{ marginTop: i > 0 ? 50 : 0 }}>
-                        <div className="container">
+                {props.video && props.video.map(
+                    (v, i) => (
+                        <div key={v} className="video-container" style={{ marginTop: i > 0 ? 50 : 0 }}>
                             <Video src={SERVER_REQUESTS_BASE + '/file/' + v}/>
                         </div>
-                    </div>
-                )
-            )}
-            <div className="container">
+                    )
+                )}
                 <p className="text break-spaces">{props.text}</p>
 
                 {props.task && (

@@ -20,3 +20,9 @@ func (c *PageController) Main (w http.ResponseWriter, r *http.Request)  {
 	tmpl := template.Must(template.ParseFiles(c.viewsPath + "/index.html"))
 	tmpl.Execute(w, nil)
 }
+
+
+func (c *PageController) App (w http.ResponseWriter, r *http.Request)  {
+	tmpl := template.Must(template.ParseFiles(c.viewsPath + "/react.html"))
+	tmpl.Execute(w, nil)
+}

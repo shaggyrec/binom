@@ -3,59 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <title>Платформа для подготвки к ЕГЭ по математике онлайн - Binom</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
     <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;700&display=swap');
+
         html, body {
             background-color: #EBECF0;
-            font-family: 'Arial', sans-serif;
+            font-family: 'Roboto', sans-serif;
             font-size: 18px;
             line-height: 1.2;
             color: #2D3A41;
         }
-        .logo, .logo-svg {
-            width: 155px;
+        .logo, .logo-svg, .logo-svg svg {
+            width: 145px;
         }
         .logo {
             display: block;
             background: url('/binom_green.svg') no-repeat;
             background-size: contain;
-            width: 150px;
             height: 40px;
         }
         .logo-svg svg {
-            width: 150px;
             height: 40px;
         }
         .logo-svg * {
             fill: #fff;
         }
         .logo-text {
-            font-size: 12px;
-            line-height: .95;
+            font-size: 11px;
+            line-height: 1;
+        }
+        .logo-text b {
+            font-size: 13px;
+        }
+        @media (min-width: 768px) {
+            .main-screen {
+                height: 510px;
+            }
+        }
+        .screen-image {
+            width: 500px;
+            height: 500px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            position: relative;
+        }
+        .main-screen .screen-image {
+            background-image: url("/i/rostislav-m.png");
+        }
+        .main-screen a {
+            color: #fff;
+        }
+        .screen-image:before, .screen-image:after {
+            content: '';
+            background: rgba(255,255,255,.3);
+            position: absolute;
+            z-index: -1;
+            border-radius: 50%  50% 20% 20%;
+        }
+        .screen-image:before {
+            content: '';
+            background: rgba(255,255,255,.3);
+            position: absolute;
+            left:5%;
+            top: 10%;
+            right: 8%;
+            bottom: 7%;
+        }
+        .screen-image:after {
+            background: rgba(255,255,255,.2);
+            left:15%;
+            top: 20%;
+            right: 15%;
+            bottom: 7%;
+        }
+        .show-from-left {
+            animation: showFromLeft backwards .3s;
+        }
+        .delay-300 {
+            animation-delay: .3s;
+        }
+        .delay-500 {
+            animation-delay: .5s;
+        }
+        .delay-600 {
+            animation-delay: .6s;
+        }
+
+        .text-white {
+            color: #fff;
+        }
+
+        @keyframes showFromLeft {
+            0%{ opacity: 0; transform: translateX(-50%)}
+            100%{ opacity: 1; transform: translateX(0)}
         }
     </style>
 </head>
 <body>
-<header class="fixed w-full top-0 z-40">
+<header class="fixed w-full top-0 z-40 bg-opacity-25 bg-white">
     <div class="max-w-screen-2xl px-5 py-2">
         <div class="logo"></div>
     </div>
 </header>
 <header class="relative w-full top-0 z-50 bg-green-600">
-    <div class="max-w-screen-2xl px-5 py-2">
+    <div class="max-w-screen-2xl px-5 xl:px-48 py-2">
         <div class="logo-svg">
             <svg xmlns="http://www.w3.org/2000/svg" style="transform: none; transform-origin: 50% 50%; cursor: move;" width="999" height="260" viewBox="0 0 9990 2600"><g id="l6WLTTm7Z6dGCl5c5bWeCzd" fill="rgb(3,145,81)" style="transform: none;"><g><path id="penUBoZFu" d="M1160 2359 c-142 -17 -243 -70 -349 -185 -37 -41 -71 -74 -74 -74 -4 0 -7 52 -7 115 l0 115 -270 0 -270 0 0 -1075 0 -1075 290 0 290 0 0 370 c0 263 3 370 11 370 6 0 34 -20 61 -45 57 -52 166 -107 248 -125 76 -18 232 -16 307 3 245 64 418 269 468 552 8 49 15 146 15 220 0 266 -60 468 -185 628 -120 152 -326 232 -535 206z m-27 -442 c122 -52 174 -179 165 -404 -6 -141 -28 -210 -85 -265 -56 -53 -93 -68 -166 -68 -163 0 -262 117 -274 326 -13 212 54 365 178 410 46 17 143 17 182 1z"></path><path id="pnXURwPBx" d="M5865 2359 c-115 -10 -247 -49 -350 -102 -113 -58 -254 -199 -312 -313 -70 -134 -88 -214 -87 -389 0 -114 4 -167 18 -220 72 -273 275 -480 548 -559 171 -49 427 -52 611 -6 302 76 515 302 573 606 22 117 15 307 -16 414 -84 295 -317 498 -634 554 -110 20 -243 25 -351 15z m125 -379 c8 0 48 3 87 6 66 6 76 4 118 -21 96 -56 193 -179 235 -298 25 -70 28 -229 6 -282 -23 -55 -66 -104 -110 -128 -33 -18 -57 -22 -126 -21 -72 0 -94 5 -145 29 -53 25 -63 26 -90 15 -87 -36 -135 -49 -181 -50 -107 0 -195 55 -235 148 -27 62 -26 202 2 285 40 118 129 236 228 299 43 27 51 29 121 24 41 -3 82 -5 90 -6z m26 -725 c-4 -12 3 -15 35 -15 58 0 105 -26 141 -77 36 -54 50 -123 24 -123 -85 0 -179 66 -192 136 -9 48 -19 28 -28 -56 -12 -112 -11 -110 -72 -110 -30 0 -54 3 -54 8 0 4 23 62 51 130 46 109 55 122 77 122 17 0 23 -4 18 -15z"></path><path id="pCBp90lm9" d="M2210 1550 l0 -780 290 0 290 0 0 780 0 780 -290 0 -290 0 0 -780z"></path><path id="p1D7sJAcEh" d="M3180 1550 l0 -780 270 0 270 0 0 125 c0 141 6 150 55 84 41 -54 146 -142 215 -178 79 -42 176 -63 300 -64 254 -1 412 106 488 331 l27 77 3 593 3 592 -290 0 -291 0 0 -454 c0 -265 -4 -475 -10 -507 -21 -112 -90 -169 -202 -169 -106 1 -175 46 -218 142 -31 71 -39 202 -40 616 l0 372 -290 0 -290 0 0 -780z"></path><path id="pDvT74M7O" d="M7190 1550 l0 -780 270 0 270 0 0 110 c0 61 4 110 8 110 5 0 18 -13 30 -30 31 -41 147 -133 209 -164 78 -39 174 -58 294 -59 185 0 282 36 384 144 35 37 66 77 70 88 3 12 11 21 17 21 6 0 38 -27 72 -60 151 -147 259 -192 466 -193 274 0 445 130 506 388 14 59 17 155 21 638 l5 567 -291 0 -291 0 0 -465 c0 -303 -4 -482 -11 -516 -8 -37 -22 -64 -50 -94 -52 -56 -84 -68 -164 -63 -87 5 -139 40 -180 123 l-30 60 -3 478 -3 477 -289 0 -289 0 -3 -492 c-3 -479 -4 -494 -24 -539 -40 -86 -129 -125 -237 -105 -49 9 -120 75 -148 138 l-24 53 -3 473 -3 472 -290 0 -289 0 0 -780z"></path><path id="p7tycePtv" d="M2210 380 l0 -200 290 0 290 0 0 200 0 200 -290 0 -290 0 0 -200z"></path></g></g></svg>
             <div class="logo-text text-white pl-0.5">онлайн-школа математики<br/><b>Ростислава Докучаева</b></div>
         </div>
     </div>
 </header>
-<div class="h-screen pt-24 pb-8 bg-green-600 relative z-50">
-    <div class="max-w-screen-2xl px-5">
-        <h1>Привет Бином</h1>
+<div class="pt-8 pb-8 bg-green-600 relative z-50 main-screen">
+    <div class="max-w-screen-2xl px-5 xl:px-48">
+        <div class="flex justify-between flex-col md:flex-row">
+            <div class="text-white text-lg flex flex-col gap-10 pt-8 px-12 md:px-0">
+                <div class="flex flex-col gap-3 font-thin">
+                    <div class="text-xl show-from-left">Я сдал <b class="text-2xl font-bold">ЕГЭ</b> на <b class="text-2xl font-bold">100 баллов</b><br/>
+                        <div class="text-lg show-from-left delay-300">И ты сможешь!</div>
+                    </div>
+                    <div class="show-from-left delay-500">Готовься к ЕГЭ на моей онлайн-платформе</div>
+                </div>
+                <hr class="show-from-left delay-300"/>
+                <div>
+                    <a
+                        class="inline-block text-lg rounded bg-transparent border border-white py-2 px-5 shadow hover:bg-white hover:text-green-600 transition show-from-left delay-600"
+                        href="/app"
+                    >
+                        Перейти на платформу
+                    </a>
+                </div>
+            </div>
+            <div>
+                <div class="screen-image main-screen"></div>
+            </div>
+        </div>
     </div>
 </div>
-<div class="h-screen py-6 px-5">
-    <h2>Курс посвящён базовым темам алгебры и теории чисел</h2>
+<div class="max-w-screen-2xl py-12 px-5">
+    <h1 class="text-2xl font-bold">Онлайн-платформа для подготовки к ЕГЭ по математике</h1>
+    <ul class="py-12">
+        <li>Смотри видео</li>
+        <li>Решай домашнее задание</li>
+        <li>Задавай вопросы</li>
+        <li>Получай зачёт и переходи к следующему уроку</li>
+    </ul>
 </div>
+<div class="max-w-screen-2xl py-12 px-5">
+    <h2 class="text-2xl font-bold">Полноценная подготовка к ЕГЭ</h2>
+    <h3 class="text-xl font-bold">Все темы курса</h3>
+</div>
+<div class="max-w-screen-2xl py-12 px-5">
+    <h2 class="text-2xl font-bold">Я сам сдал ЕГЭ на 100 баллов и могу научить тебя</h2>
+    <h3 class="text-lg font-bold">Эта платформа - цифровой итог моего опыта</h3>
+</div>
+<div class="max-w-screen-2xl py-12 px-5">
+    <h2 class="text-2xl font-bold">Цены</h2>
+</div>
+<footer class="bg-green-600">
+    <div class="max-w-screen-2xl px-5 pt-6 pb-12 text-white font-thin text-xs">
+        &copy 2021 Онлайн-школа «Бином»
+    </div>
+</footer>
 </body>
 </html>

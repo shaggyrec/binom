@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import 'moment/locale/ru';
+import './css/styles.css'
 
 import Application from './Application';
 import { initialState } from './ducks'

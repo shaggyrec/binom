@@ -1,6 +1,6 @@
 import React from 'react';
 import MDEditor, { commands } from '@uiw/react-md-editor';
-import '@uiw/react-md-editor/dist/markdown-editor.css'
+import '@uiw/react-md-editor/markdown-editor.css'
 import katex from 'katex';
 import 'katex/dist/katex.css';
 import '../../css/math-editor.css';

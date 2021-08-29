@@ -149,5 +149,6 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 			})
 		})
 	})
+	r.Get("/*", pageController.App)
 	return r
 }

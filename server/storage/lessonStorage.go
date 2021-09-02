@@ -104,3 +104,13 @@ func (s *LessonStorage) mapDbRow(data map[string]interface{}) *dataType.Lesson {
 
 	return &lesson
 }
+
+func (s *LessonStorage) Count() int {
+	var lessons []dataType.Lesson
+	amount, err := s.db.Model(&lessons).Count()
+	if err != nil {
+		return 0
+	}
+	return amount
+
+}

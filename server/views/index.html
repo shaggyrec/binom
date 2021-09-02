@@ -5,6 +5,13 @@
     <title>Платформа для подготвки к ЕГЭ по математике онлайн - Binom</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
     <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#069668">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;700&display=swap');
 
@@ -95,6 +102,28 @@
             color: #fff;
         }
 
+        .platform-description {
+            background: url('/i/binom_platform_user.jpg') no-repeat;
+            background-size: cover;
+        }
+
+        .ege-class {
+            background: url('/i/ege_class.jpeg') no-repeat;
+            background-size: cover;
+            position: relative;
+            z-index: 1;
+        }
+        .ege-class:before {
+            content: '';
+            position: absolute;
+            z-index: -1;
+            background: rgba(255,255,255,.7);
+            top:0;
+            left:0;
+            bottom:0;
+            right:0;
+        }
+
         @keyframes showFromLeft {
             0%{ opacity: 0; transform: translateX(-50%)}
             100%{ opacity: 1; transform: translateX(0)}
@@ -136,23 +165,56 @@
                 </div>
             </div>
             <div>
-                <div class="screen-image main-screen"></div>
+                <div class="screen-image"></div>
             </div>
         </div>
     </div>
 </div>
-<div class="max-w-screen-2xl py-12 px-5">
-    <h1 class="text-2xl font-bold">Онлайн-платформа для подготовки к ЕГЭ по математике</h1>
-    <ul class="py-12">
-        <li>Смотри видео</li>
-        <li>Решай домашнее задание</li>
-        <li>Задавай вопросы</li>
-        <li>Получай зачёт и переходи к следующему уроку</li>
-    </ul>
+<div class="platform-description">
+    <div class="max-w-screen-2xl py-24 px-5 m-auto">
+        <div class="bg-black text-white bg-opacity-75 lg:w-1/2 px-6 py-12 rounded shadow">
+            <h1 class="text-2xl font-bold">Онлайн-платформа для подготовки к ЕГЭ по математике</h1>
+            <ul class="py-12 font-thin marker list-decimal px-6">
+                <li class="py-2">Смотри видео</li>
+                <li class="py-2">Решай домашнее задание</li>
+                <li class="py-2">Задавай вопросы</li>
+                <li class="py-2">Получай зачёт и переходи к следующему уроку</li>
+                <li class="py-2">Проходи весь курс</li>
+                <li class="py-2">Сдавай ЕГЭ на 100 балов</li>
+                <li class="py-2 font-bold">PROFIT!!!1</li>
+            </ul>
+            <div>
+                <a
+                        class="inline-block text-lg rounded bg-green-600 py-2 px-5 shadow hover:bg-white hover:text-green-600 transition show-from-left delay-600 text-white"
+                        href="/app"
+                >
+                    Зарегистрироваться
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
-<div class="max-w-screen-2xl py-12 px-5">
-    <h2 class="text-2xl font-bold">Полноценная подготовка к ЕГЭ</h2>
-    <h3 class="text-xl font-bold">Все темы курса</h3>
+<div class="ege-class m-auto">
+    <div class="max-w-screen-2xl py-24 px-5">
+        <div class="lg:w-1/2 flex flex-col justify-between gap-10">
+            <h2 class="text-2xl font-bold py-8">Полноценная подготовка к ЕГЭ 2022 по математике</h2>
+            <div>
+                <p class="pb-4">Программа курса создана с учётом нововедений 2021 года, которые появятся в ЕГЭ в 2022 году.</p>
+                <p>
+                    Курс включает в себя {{.TopicsCount}} тем и {{.LessonsCount}} уроков и покрывет все задания
+                    Единого Государственного экзамена по математике 2022.
+                </p>
+            </div>
+            <div class="py-8">
+                <a
+                        class="inline-block text-lg rounded bg-green-600 py-2 px-5 shadow hover:bg-white hover:text-green-600 transition show-from-left delay-600 text-white"
+                        href="/app"
+                >
+                    Начать учиться
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
 <div class="max-w-screen-2xl py-12 px-5">
     <h2 class="text-2xl font-bold">Я сам сдал ЕГЭ на 100 баллов и могу научить тебя</h2>

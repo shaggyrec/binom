@@ -79,3 +79,13 @@ func (s *TopicStorage) Delete(id string) (error) {
 
 	return err
 }
+
+func (s *TopicStorage) Count() int {
+	var topics []dataType.Topic
+	amount, err := s.db.Model(&topics).Count()
+
+	if err != nil {
+		return 0
+	}
+	return amount
+}

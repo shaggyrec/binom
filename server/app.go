@@ -37,7 +37,7 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 	authController := controllers.AuthController{}
 	authController.Init(authCodeService, authService, tokenService, userStorage)
 	pageController := controllers.PageController{}
-	pageController.Init()
+	pageController.Init(topicStorage, lessonStorage)
 	userController := controllers.UserController{}
 	userController.Init(userStorage)
 	topicController := controllers.TopicController{}
@@ -149,6 +149,7 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 			})
 		})
 	})
+	r.Get("/m", pageController.MiniLanding)
 	r.Get("/*", pageController.App)
 	return r
 }

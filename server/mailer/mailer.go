@@ -10,7 +10,7 @@ import (
 	"runtime"
 )
 
-var from = &mail.Address{Name: "Binom", Address: "notify@binom.ru"}
+var from = &mail.Address{Name: "Binom", Address: "i@shagg.ru"}
 
 
 func Mail(to []string, subject string, body string, emailType EmailType) error {

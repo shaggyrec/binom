@@ -41,7 +41,10 @@ func (c *AuthController) Email(w http.ResponseWriter, r *http.Request) {
 	err := mailer.Mail(
 		[]string{ b.Email },
 		"Verification code",
-		authCode.Code,
+		struct {
+			Code string
+			Id string
+		}{authCode.Code, authCode.Id},
 		mailer.TypeVerificationCode,
 	)
 

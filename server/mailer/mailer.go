@@ -13,7 +13,7 @@ import (
 var from = &mail.Address{Name: "Binom", Address: "i@shagg.ru"}
 
 
-func Mail(to []string, subject string, body string, emailType EmailType) error {
+func Mail(to []string, subject string, body interface{}, emailType EmailType) error {
 	var toAddresses []*mail.Address
 
 	for _, email := range to {
@@ -28,7 +28,7 @@ func Mail(to []string, subject string, body string, emailType EmailType) error {
 	}
 
 	tpl := messageTemplate(emailType)
-	err := tpl.Execute(&sm.Text, &struct{ Body string }{body})
+	err := tpl.Execute(&sm.Text, body)
 
 	if err != nil {
 		log.Panic(err)

@@ -4,7 +4,7 @@ import * as subscriptionsActions from '../ducks/subscriptions';
 import { RootState } from '../Application';
 import SubscriptionEditCard from '../components/SubscriptionEditCard';
 
-function SubscriptionsManager({ subscriptions, requestSubscriptions, create, update }): ReactElement {
+function SubscriptionsManager({ subscriptions, requestSubscriptions, create, update, remove }): ReactElement {
     useEffect(() => {
         requestSubscriptions()
     }, []);
@@ -21,6 +21,7 @@ function SubscriptionsManager({ subscriptions, requestSubscriptions, create, upd
                         key={`subscription${s.id}`}
                         {...s}
                         onChange={updated => update(s.id, updated)}
+                        onDelete={() => remove(s.id)}
                     />
                 ))}
             </div>
@@ -38,6 +39,7 @@ export default connect(
     dispatch => ({
         requestSubscriptions: () => dispatch(subscriptionsActions.requestList()),
         create: (name, price, duration) => dispatch(subscriptionsActions.create({ name, price, duration })),
-        update: (id, s) => dispatch(subscriptionsActions.update(id, s))
+        update: (id, s) => dispatch(subscriptionsActions.update(id, s)),
+        remove: id => dispatch(subscriptionsActions.remove(id)),
     })
 )(SubscriptionsManager);

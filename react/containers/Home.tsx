@@ -49,7 +49,7 @@ function Home({ topics, requestTopics, isAdmin, moveTopicAtPosition, moveLessonA
                             </Paddingable>
                             <Paddingable padding={[0, 10, 0, 0]}>
                                 <Link to="/subscriptions/edit">
-                                    <Button small>Управлени подписками</Button>
+                                    <Button small>Управление тарифами</Button>
                                 </Link>
                             </Paddingable>
                         </div>

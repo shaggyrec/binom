@@ -23,7 +23,7 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 	fileStorage := storageFactory.File(db)
 	lessonCommentStorage := storageFactory.LessonComment(db)
 	notificationStorage := storageFactory.Notification(db)
-	subscriptionStorage := storageFactory.Subscription(db)
+	tariffStorage := storageFactory.Tariff(db)
 	// services
 	serviceFactory := service.Factory{}
 	tokenService := serviceFactory.TokenService(jwtSecret, tokenStorage)
@@ -52,8 +52,8 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 	notificationController.Init(notificationService)
 	learningProgressController := controllers.LearningProgressController{}
 	learningProgressController.Init(lessonProgressService, notificationService)
-	subscriptionController := controllers.SubscriptionController{}
-	subscriptionController.Init(subscriptionStorage)
+	tariffController := controllers.TariffController{}
+	tariffController.Init(tariffStorage)
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
@@ -140,11 +140,11 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 					r.Put("/{userId}/{lessonAlias}", learningProgressController.UpdateUsersProgressByLesson)
 					r.Get("/{userId}/{lessonAlias}", learningProgressController.UsersProgressByLesson)
 				})
-				r.Route("/subscription", func(r chi.Router) {
-					r.Get("/", subscriptionController.List)
-					r.Post("/", subscriptionController.Create)
-					r.Put("/{id}", subscriptionController.Update)
-					r.Delete("/{id}", subscriptionController.Delete)
+				r.Route("/tariff", func(r chi.Router) {
+					r.Get("/", tariffController.List)
+					r.Post("/", tariffController.Create)
+					r.Put("/{id}", tariffController.Update)
+					r.Delete("/{id}", tariffController.Delete)
 				})
 			})
 		})

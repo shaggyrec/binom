@@ -3,6 +3,7 @@ package functions
 import (
 	"crypto/md5"
 	"encoding/hex"
+	"encoding/json"
 	"math/rand"
 	"path"
 	"regexp"
@@ -59,4 +60,16 @@ func ArrayToSnakeCase(arr []string) []string {
 		result = append(result, ToSnakeCase(element))
 	}
 	return result
+}
+
+func InterfaceToMap(v interface{}) map[string]interface{} {
+	vEncoded, _ := json.Marshal(v)
+	b := []byte(vEncoded)
+
+	var f interface{}
+	json.Unmarshal(b, &f)
+
+	myMap := f.(map[string]interface{})
+
+	return myMap
 }

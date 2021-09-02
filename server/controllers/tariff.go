@@ -5,7 +5,6 @@ import (
 	"binom/server/exceptions"
 	"binom/server/functions"
 	"binom/server/storage"
-	"fmt"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
 	"log"
@@ -13,15 +12,15 @@ import (
 	"strconv"
 )
 
-type SubscriptionController struct {
-	storage *storage.SubscriptionStorage
+type TariffController struct {
+	storage *storage.TariffStorage
 }
 
-func (c *SubscriptionController) Init(storage *storage.SubscriptionStorage) {
+func (c *TariffController) Init(storage *storage.TariffStorage) {
 	c.storage = storage
 }
 
-func (c *SubscriptionController) List(w http.ResponseWriter, r *http.Request) {
+func (c *TariffController) List(w http.ResponseWriter, r *http.Request) {
 	list, err := c.storage.List()
 	if err != nil {
 		log.Print(err)
@@ -31,8 +30,8 @@ func (c *SubscriptionController) List(w http.ResponseWriter, r *http.Request) {
 	functions.RenderJSON(w, r, *list)
 }
 
-func (c *SubscriptionController) Create(w http.ResponseWriter, r *http.Request)  {
-	var subscription dataType.Subscription
+func (c *TariffController) Create(w http.ResponseWriter, r *http.Request)  {
+	var subscription dataType.Tariff
 	if err := functions.ParseRequest(w, r, &subscription);  err != nil {
 		return
 	}
@@ -53,9 +52,9 @@ func (c *SubscriptionController) Create(w http.ResponseWriter, r *http.Request) 
 	render.JSON(w, r, subscription)
 }
 
-func (c *SubscriptionController) Update(w http.ResponseWriter, r *http.Request)  {
-	var subscription map[string]interface{}
-	if err := functions.ParseRequest(w, r, &subscription);  err != nil {
+func (c *TariffController) Update(w http.ResponseWriter, r *http.Request)  {
+	var tariff map[string]interface{}
+	if err := functions.ParseRequest(w, r, &tariff);  err != nil {
 		return
 	}
 
@@ -67,8 +66,7 @@ func (c *SubscriptionController) Update(w http.ResponseWriter, r *http.Request) 
 	}
 	// TODO check access
 
-	fmt.Println(subscription)
-	err = c.storage.Update(id, subscription)
+	err = c.storage.Update(id, tariff)
 
 	if err != nil {
 		log.Print(err)
@@ -79,14 +77,14 @@ func (c *SubscriptionController) Update(w http.ResponseWriter, r *http.Request) 
 	render.JSON(w, r, "ok")
 }
 
-func (c *SubscriptionController) Delete(w http.ResponseWriter, r *http.Request)  {
+func (c *TariffController) Delete(w http.ResponseWriter, r *http.Request)  {
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
 		log.Print(err)
 		exceptions.ServerError(w, r)
 		return
 	}
-	err = c.storage.Delete(id)
+	err = c.storage.Update(id, map[string]interface{}{"status": dataType.StatusDeleted})
 
 	if err != nil {
 		log.Print(err)
@@ -97,7 +95,7 @@ func (c *SubscriptionController) Delete(w http.ResponseWriter, r *http.Request) 
 	render.JSON(w, r, "ok")
 }
 
-func (c *SubscriptionController) Subscribe(w http.ResponseWriter, r *http.Request) {
+func (c *TariffController) Subscribe(w http.ResponseWriter, r *http.Request) {
 
 }
 

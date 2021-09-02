@@ -6,11 +6,20 @@ import (
 	"time"
 )
 
-type Subscription struct {
-	Id int `json:"id"`
-	Name string `json:"name"`
+type TariffPrice struct {
+	Id string `json:"id"`
+	TariffId int `json:"tariffId"`
 	Price int `json:"price"`
 	Duration int `json:"duration"`
+	Created pg.NullTime `json:"created"`
+	RiseOn int `json:"riseOn"`
+	RisePeriod int `json:"risePeriod"`
+}
+
+type Tariff struct {
+	Id int `json:"id"`
+	Name string `json:"name"`
+	Prices []TariffPrice `json:"prices"`
 	Created pg.NullTime `json:"created"`
 	Status null.Int `json:"status"`
 }
@@ -18,7 +27,7 @@ type Subscription struct {
 type UserSubscription struct {
 	Id string `json:"id"`
 	UserId string `json:"user_id"`
-	Subscription *Subscription `pg:"rel:has-one" json:"subscription"`
+	Subscription *Tariff `pg:"rel:has-one" json:"subscription"`
 	PaidPrice int `json:"paidPrice"`
 	Created pg.NullTime `json:"created"`
 	Expired time.Time `json:"expired"`

@@ -50,14 +50,14 @@ func (s *TariffStorage) Delete(id int) error {
 	return nil
 }
 
-func (s *TariffStorage) List() (*[]dataType.Tariff, error) {
+func (s *TariffStorage) List(statuses []int) (*[]dataType.Tariff, error) {
 	var tariffs []dataType.Tariff
 
 	err := s.db.Model(&tariffs).
 		Relation("Prices", func(q *orm.Query) (*orm.Query, error) {
 		return q.Order("price ASC", "created ASC"), nil
 	}).
-		Where("status < ?", dataType.StatusDeleted).
+		Where("status IN (?)", pg.In(statuses)).
 		Order("created ASC").
 		Select()
 

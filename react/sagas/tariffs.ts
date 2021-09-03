@@ -109,6 +109,10 @@ function* removePriceProcess({ payload }): IterableIterator<any> {
     }
 }
 
+function* subscribeProcess({ payload: { tariffId, priceId } }): IterableIterator<any> {
+    yield call(apiRequest, '/api/tariff/' + tariffId + '/price/' + priceId + '/subscribe');
+}
+
 export function* tariffs(): IterableIterator<ForkEffect> {
     yield takeEvery(tariffsActions.requestList, requestListProcess);
     yield takeEvery(tariffsActions.create, createProcess);
@@ -117,4 +121,5 @@ export function* tariffs(): IterableIterator<ForkEffect> {
     yield takeEvery(tariffsActions.createPrice, createPriceProcess);
     yield takeLatest(tariffsActions.updatePrice, updatePriceProcess);
     yield takeEvery(tariffsActions.removePrice, removePriceProcess);
+    yield takeLatest(tariffsActions.subscribe, subscribeProcess)
 }

@@ -97,6 +97,9 @@ input:focus {
     padding: 10px 0;
 }
 
+.input-select {
+}
+
 video {
     width: 100%;
 }
@@ -188,7 +191,7 @@ button:active {
 }
 
 .button-green {
-    background: #039151;
+    background: #069668;
     color: #deefe7;
     text-shadow: none;
 }
@@ -205,6 +208,10 @@ button:active {
 
 .w-600 {
     max-width: 600px;
+}
+
+.h-100 {
+    height: 100%;
 }
 
 .py-20 {
@@ -243,6 +250,10 @@ button:active {
     align-items: baseline;
 }
 
+.flex-col {
+    flex-direction: column;
+}
+
 .flex-vertical-centered {
     align-items: center;
 }
@@ -251,12 +262,28 @@ button:active {
     align-items: flex-start;
 }
 
+.flex-around {
+    justify-content: space-around;
+}
+
+.flex-between {
+    justify-content: space-between;
+}
+
+.flex-stretch {
+    align-items: stretch;
+}
+
 .mb-0 {
     margin-bottom: 0;
 }
 
 .mt-0 {
     margin-top: 0;
+}
+
+.text-green {
+    color: #069668;
 }
 
 .transition2 {
@@ -619,10 +646,6 @@ code {
     margin-bottom: 10px;
 }
 
-.lesson-comment-block {
-
-}
-
 .lesson-comment-header {
     display: flex;
     align-items: baseline;
@@ -761,6 +784,24 @@ code {
 
 .link-to-task a:hover {
     text-decoration: none;
+}
+
+.wrap {
+    white-space: break-spaces;
+}
+
+.text-xs {
+    font-size: 14px;
+}
+
+.line-height-2 {
+    line-height: 2;
+}
+
+@media (min-width:1024px) {
+    .w-33 {
+        width: 33.3%;
+    }
 }
 
 @keyframes slideFromBottom {

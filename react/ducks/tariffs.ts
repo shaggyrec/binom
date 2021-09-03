@@ -10,6 +10,7 @@ const ERROR = 'tariffs/ERROR';
 const CREATE_PRICE = 'tariffs/CREATE_PRICE';
 const UPDATE_PRICE = 'tariffs/UPDATE_PRICE';
 const REMOVE_PRICE = 'tariffs/REMOVE_PRICE';
+const SUBSCRIBE = 'tariffs/SUBSCRIBE';
 
 export const initialState = {
     list: [],
@@ -38,6 +39,7 @@ export const error = createAction(ERROR, e => e);
 export const createPrice = createAction(CREATE_PRICE, (tariffId, price) => ({ tariffId, price }));
 export const updatePrice = createAction(UPDATE_PRICE, (tariffId, id, price) => ({ tariffId, id, price }));
 export const removePrice = createAction(REMOVE_PRICE, (tariffId, id) => ({ tariffId, id }));
+export const subscribe = createAction(SUBSCRIBE, (tariffId, priceId) => ({ tariffId, priceId }));
 
 
 export const tariffsList = state => state.tariffs.list;

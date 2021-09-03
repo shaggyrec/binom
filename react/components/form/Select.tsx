@@ -8,7 +8,7 @@ function Select({ label, options, value, onChange, error = null }): ReactElement
         <div className="input-raw">
             <label>
                 <span className="input-label text">{label}</span>
-                <select onChange={handleChange} value={value}>
+                <select className="input-select" onChange={handleChange} value={value}>
                     {options.map(o => (<option key={'select-option' + o.value} value={o.value}>{o.title}</option>))}
                 </select>
                 {error && <span className="input-error">{error}</span>}

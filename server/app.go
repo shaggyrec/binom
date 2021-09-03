@@ -141,8 +141,11 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 					r.Put("/{userId}/{lessonAlias}", learningProgressController.UpdateUsersProgressByLesson)
 					r.Get("/{userId}/{lessonAlias}", learningProgressController.UsersProgressByLesson)
 				})
-				r.Route("/tariff", func(r chi.Router) {
-					r.Get("/", tariffController.List)
+			})
+			r.Route("/tariff", func(r chi.Router) {
+				r.Get("/", tariffController.List)
+				r.Group(func(r chi.Router) {
+					r.Use(middlewares.OnlyForAdmin)
 					r.Post("/", tariffController.Create)
 					r.Put("/{id}", tariffController.Update)
 					r.Delete("/{id}", tariffController.Delete)

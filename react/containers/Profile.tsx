@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { ReactElement, useEffect } from 'react';
 import { connect } from 'react-redux';
 import * as authAction from '../ducks/auth'
 import Button from '../components/Button';
@@ -6,14 +6,17 @@ import Paddingable from '../components/Paddingable';
 import { RootState } from '../Application';
 import * as applicationActions from '../ducks/application';
 import * as usersActions from '../ducks/users';
+import * as tariffsActions from '../ducks/tariffs';
 import Loader from '../components/Loader';
+import TariffsList from '../components/TariffsList';
 
-function Profile ({ logout, me, resetBackLink, user, match: { params: { username } }, requestUser }): ReactElement {
+function Profile ({ logout, me, resetBackLink, user, match: { params: { username } }, requestUser, requestTariffs, tariffs, onBuyTariff }): ReactElement {
     useEffect(() => {
         resetBackLink();
         if (!user) {
             requestUser(username);
         }
+        requestTariffs()
     }, []);
 
     return (
@@ -21,12 +24,15 @@ function Profile ({ logout, me, resetBackLink, user, match: { params: { username
             ? (
                 <div className="container">
                     <Paddingable padding={[20, 0]}>
-                        <div className="flex">
-                            <h1>{user.name || user.username}</h1>
-                            {user.username === me.username && <h3>&nbsp;(это вы)</h3>}
+                        <div className="flex flex-between">
+                            <div className="flex">
+                                <h1>{user.name || user.username}</h1>
+                                {user.username === me.username && <h3>&nbsp;(это вы)</h3>}
+                            </div>
+                            {user.username === me.username && <Button small onClick={logout}><small>Выйти</small></Button>}
                         </div>
-                        {user.username === me.username && <Button onClick={logout}>Выйти</Button>}
                     </Paddingable>
+                    {user.username === me.username && <TariffsList tariffs={tariffs} onBuy={onBuyTariff}/>}
                 </div>
             )
             : <Loader show />
@@ -39,10 +45,13 @@ export default connect(
         me: state.users.me,
         // @ts-ignore
         user: props.match.params?.username === state.users.me?.username ? state.users.me : state.users.current,
+        tariffs: state.tariffs.list
     }),
     dispatch => ({
         logout: () => dispatch(authAction.logout()),
         resetBackLink: () => dispatch(applicationActions.backLink(null)),
         requestUser: username => dispatch(usersActions.requestUser(username)),
+        requestTariffs: () => dispatch(tariffsActions.requestList()),
+        onBuyTariff: (tariffId, priceId) => dispatch(tariffsActions.subscribe(tariffId, priceId)),
     })
 )(Profile)

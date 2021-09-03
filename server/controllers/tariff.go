@@ -23,7 +23,12 @@ func (c *TariffController) Init(storage *storage.TariffStorage, tariffPriceStora
 }
 
 func (c *TariffController) List(w http.ResponseWriter, r *http.Request) {
-	list, err := c.storage.List()
+	userRole := r.Context().Value("userRole").(int)
+	statuses := []int{dataType.StatusLive}
+	if userRole == dataType.UserRoleAdmin {
+		statuses = append(statuses, dataType.StatusDraft)
+	}
+	list, err := c.storage.List(statuses)
 	if err != nil {
 		log.Print(err)
 		exceptions.ServerError(w, r)

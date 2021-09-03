@@ -53,8 +53,6 @@ func (c *TopicController) Update(w http.ResponseWriter, r *http.Request) {
 
 	topicToUpdate.Id = chi.URLParam(r, "id")
 
-	// TODO check access
-
 	_, err := c.topicStorage.Update(&topicToUpdate)
 
 	if err != nil {

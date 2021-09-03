@@ -24,6 +24,7 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 	lessonCommentStorage := storageFactory.LessonComment(db)
 	notificationStorage := storageFactory.Notification(db)
 	tariffStorage := storageFactory.Tariff(db)
+	tariffPriceStorage := storageFactory.TariffPrice(db)
 	// services
 	serviceFactory := service.Factory{}
 	tokenService := serviceFactory.TokenService(jwtSecret, tokenStorage)
@@ -53,7 +54,7 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 	learningProgressController := controllers.LearningProgressController{}
 	learningProgressController.Init(lessonProgressService, notificationService)
 	tariffController := controllers.TariffController{}
-	tariffController.Init(tariffStorage)
+	tariffController.Init(tariffStorage, tariffPriceStorage)
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
@@ -145,6 +146,11 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 					r.Post("/", tariffController.Create)
 					r.Put("/{id}", tariffController.Update)
 					r.Delete("/{id}", tariffController.Delete)
+					r.Route("/{tariffId}/price", func(r chi.Router) {
+						r.Post("/", tariffController.CreatePrice)
+						r.Put("/{id}", tariffController.UpdatePrice)
+						r.Delete("/{id}", tariffController.DeletePrice)
+					})
 				})
 			})
 		})

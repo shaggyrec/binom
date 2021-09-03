@@ -14,10 +14,12 @@ import (
 
 type TariffController struct {
 	storage *storage.TariffStorage
+	tariffPriceStorage *storage.TariffPriceStorage
 }
 
-func (c *TariffController) Init(storage *storage.TariffStorage) {
+func (c *TariffController) Init(storage *storage.TariffStorage, tariffPriceStorage *storage.TariffPriceStorage) {
 	c.storage = storage
+	c.tariffPriceStorage = tariffPriceStorage
 }
 
 func (c *TariffController) List(w http.ResponseWriter, r *http.Request) {
@@ -31,17 +33,17 @@ func (c *TariffController) List(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *TariffController) Create(w http.ResponseWriter, r *http.Request)  {
-	var subscription dataType.Tariff
-	if err := functions.ParseRequest(w, r, &subscription);  err != nil {
+	var tariff dataType.Tariff
+	if err := functions.ParseRequest(w, r, &tariff);  err != nil {
 		return
 	}
 
-	if subscription.Name == "" {
+	if tariff.Name == "" {
 		exceptions.BadRequestError(w, r, "`name` is mandatory", exceptions.ErrorFieldIsMandatory)
 		return
 	}
 
-	_, err := c.storage.Create(&subscription)
+	_, err := c.storage.Create(&tariff)
 
 	if err != nil {
 		log.Print(err)
@@ -49,7 +51,7 @@ func (c *TariffController) Create(w http.ResponseWriter, r *http.Request)  {
 		return
 	}
 
-	render.JSON(w, r, subscription)
+	render.JSON(w, r, tariff)
 }
 
 func (c *TariffController) Update(w http.ResponseWriter, r *http.Request)  {
@@ -95,8 +97,62 @@ func (c *TariffController) Delete(w http.ResponseWriter, r *http.Request)  {
 	render.JSON(w, r, "ok")
 }
 
+func (c *TariffController) CreatePrice(w http.ResponseWriter, r *http.Request) {
+	var price dataType.TariffPrice
+	if err := functions.ParseRequest(w, r, &price);  err != nil {
+		return
+	}
+
+	if price.Price == 0 || price.Duration == 0 {
+		exceptions.BadRequestError(w, r, "`price` and `duration` are mandatory", exceptions.ErrorFieldIsMandatory)
+		return
+	}
+
+	tariffId, err := strconv.Atoi(chi.URLParam(r, "tariffId"))
+
+	price.TariffId = tariffId
+
+	newPrice, err := c.tariffPriceStorage.Create(&price)
+
+	if err != nil {
+		log.Print(err)
+		exceptions.ServerError(w, r)
+		return
+	}
+
+	render.JSON(w, r, newPrice)
+}
+
+func (c *TariffController) UpdatePrice(w http.ResponseWriter, r *http.Request) {
+	var price map[string]interface{}
+	if err := functions.ParseRequest(w, r, &price);  err != nil {
+		return
+	}
+
+	// TODO check access
+
+	err := c.tariffPriceStorage.Update(chi.URLParam(r, "id"), price)
+
+	if err != nil {
+		log.Print(err)
+		exceptions.BadRequestError(w, r, err.Error(), exceptions.NothingAffected)
+		return
+	}
+
+	render.JSON(w, r, "ok")
+}
+
+func (c *TariffController) DeletePrice(w http.ResponseWriter, r *http.Request) {
+	err := c.tariffPriceStorage.Delete(chi.URLParam(r, "id"))
+
+	if err != nil {
+		exceptions.BadRequestError(w, r, err.Error(), exceptions.NothingAffected)
+		return
+	}
+
+	render.JSON(w, r, "ok")
+}
+
 func (c *TariffController) Subscribe(w http.ResponseWriter, r *http.Request) {
 
 }
-
-

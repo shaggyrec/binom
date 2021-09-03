@@ -19,6 +19,7 @@ type TariffPrice struct {
 type Tariff struct {
 	Id int `json:"id"`
 	Name string `json:"name"`
+	Description string `json:"description"`
 	Prices []TariffPrice `json:"prices"`
 	Created pg.NullTime `json:"created"`
 	Status null.Int `json:"status"`

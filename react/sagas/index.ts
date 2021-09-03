@@ -1,4 +1,4 @@
-import { all, call } from '@redux-saga/core/effects';
+import { all, call, put } from '@redux-saga/core/effects';
 import { push } from 'connected-react-router';
 import { AxiosResponse, Method } from 'axios';
 
@@ -12,7 +12,8 @@ import { files } from './files';
 import { lessonComments } from './lessonComments';
 import { notifications } from './notifications';
 import { learningProgress } from './learningProgress';
-import { subscriptions } from './subscriptions';
+import { tariffs } from './tariffs';
+import * as applicationActions from '../ducks/application';
 
 const MAX_REQUEST_TRIES = 10;
 let tries = 0;
@@ -23,6 +24,10 @@ export function* apiRequest(url: string, method: Method  = 'GET', body: any = {}
         tries = 0;
         return data;
     } catch (e) {
+        if (!e.response) {
+            yield put(applicationActions.error(e.message));
+            return;
+        }
         const { status, data } = e.response;
         if (status === 401 && data.code === ApiErrors.ErrorBadToken) {
             try {
@@ -54,6 +59,6 @@ export default function* rootSaga(): any {
         lessonComments(),
         notifications(),
         learningProgress(),
-        subscriptions(),
+        tariffs(),
     ]);
 }

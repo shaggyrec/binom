@@ -1,12 +1,15 @@
 import { handleActions, createAction } from 'redux-actions';
 
-const REQUEST_LIST = 'subscriptions/REQUEST_LIST';
-const LIST = 'subscriptions/LIST';
-const CREATE = 'subscriptions/CREATE';
-const UPDATE = 'subscriptions/UPDATE';
-const DELETE = 'subscriptions/DELETE';
-const SUCCESS = 'subscriptions/DELETE';
-const ERROR = 'subscriptions/ERROR';
+const REQUEST_LIST = 'tariffs/REQUEST_LIST';
+const LIST = 'tariffs/LIST';
+const CREATE = 'tariffs/CREATE';
+const UPDATE = 'tariffs/UPDATE';
+const DELETE = 'tariffs/DELETE';
+const SUCCESS = 'tariffs/SUCCESS';
+const ERROR = 'tariffs/ERROR';
+const CREATE_PRICE = 'tariffs/CREATE_PRICE';
+const UPDATE_PRICE = 'tariffs/UPDATE_PRICE';
+const REMOVE_PRICE = 'tariffs/REMOVE_PRICE';
 
 export const initialState = {
     list: [],
@@ -18,8 +21,9 @@ export default handleActions({
     [REQUEST_LIST]: state => ({ ...state, loading: true }),
     [LIST]: (state, { payload }) => ({ ...state, loading: false, list: payload }),
     [CREATE]: (state) => ({ ...state, loading: true }),
-    [UPDATE]: (state) => ({ ...state, loading: true }),
     [DELETE]: (state) => ({ ...state, loading: true }),
+    [CREATE_PRICE]: (state) => ({ ...state, loading: true }),
+    [REMOVE_PRICE]: (state) => ({ ...state, loading: true }),
     [SUCCESS]: (state) => ({ ...state, loading: false }),
     [ERROR]: (state, { payload }) => ({ ...state, loading: false, error: payload }),
 }, initialState);
@@ -31,4 +35,9 @@ export const update = createAction(UPDATE, (id, subscription) => ({ id, subscrip
 export const remove = createAction(DELETE, id => id);
 export const success = createAction(SUCCESS, () => ({}));
 export const error = createAction(ERROR, e => e);
+export const createPrice = createAction(CREATE_PRICE, (tariffId, price) => ({ tariffId, price }));
+export const updatePrice = createAction(UPDATE_PRICE, (tariffId, id, price) => ({ tariffId, id, price }));
+export const removePrice = createAction(REMOVE_PRICE, (tariffId, id) => ({ tariffId, id }));
 
+
+export const tariffsList = state => state.tariffs.list;

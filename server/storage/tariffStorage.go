@@ -5,8 +5,8 @@ import (
 	"binom/server/functions"
 	"errors"
 	"github.com/go-pg/pg"
+	"github.com/go-pg/pg/orm"
 	"github.com/mitchellh/mapstructure"
-	"reflect"
 )
 
 type TariffStorage struct {
@@ -24,11 +24,7 @@ func (s *TariffStorage) Create(subscription *dataType.Tariff) (*dataType.Tariff,
 }
 
 func (s *TariffStorage) Update(id int, tariffMap map[string]interface{}) error {
-	if prices, ok := tariffMap["prices"]; ok {
-		err := s.updatePrices(id, prices.([]interface{}))
-		if err != nil {
-			return err
-		}
+	if _, ok := tariffMap["prices"]; ok {
 		delete(tariffMap, "prices")
 	}
 
@@ -58,7 +54,9 @@ func (s *TariffStorage) List() (*[]dataType.Tariff, error) {
 	var tariffs []dataType.Tariff
 
 	err := s.db.Model(&tariffs).
-		Relation("Prices").
+		Relation("Prices", func(q *orm.Query) (*orm.Query, error) {
+		return q.Order("price ASC", "created ASC"), nil
+	}).
 		Where("status < ?", dataType.StatusDeleted).
 		Order("created ASC").
 		Select()
@@ -78,37 +76,8 @@ func (s *TariffStorage) mapDbRow(data map[string]interface{}) *dataType.Tariff {
 	var tariff dataType.Tariff
 	mapstructure.Decode(data, &tariff)
 	if val, ok := data["status"]; ok {
-		if reflect.TypeOf(val).Name() == "int" {
-			tariff.Status.Int64 = int64(val.(int))
-		} else {
-			tariff.Status.Int64 = int64(val.(float64))
-		}
+		tariff.Status.Int64 = statusToInt(val)
 		tariff.Status.Valid = true
 	}
 	return &tariff
-}
-
-func (s *TariffStorage) mapTariffPriceDbRow(data map[string]interface{}) *dataType.TariffPrice  {
-	var price dataType.TariffPrice
-	mapstructure.Decode(data, &price)
-
-	return &price
-}
-
-func (s *TariffStorage) updatePrices(tariffId int, prices []interface{}) error {
-	for _, price := range prices {
-		priceMap := functions.InterfaceToMap(price)
-		priceMap["tariffId"] = tariffId
-		tariffPrice := s.mapTariffPriceDbRow(priceMap)
-
-		_, err := s.db.Model(tariffPrice).
-			Column(functions.ArrayToSnakeCase(functions.MapKeys(priceMap))...).
-			OnConflict("(id) DO UPDATE").
-			Insert()
-
-		if err != nil {
-			return err
-		}
-	}
-	return nil
 }

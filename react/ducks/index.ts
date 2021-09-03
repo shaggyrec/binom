@@ -1,4 +1,4 @@
-import {combineReducers, Reducer} from 'redux';
+import { combineReducers, Reducer } from 'redux';
 import topics, { initialState as topicsState } from './topics';
 import users, { initialState as usersState } from './users';
 import auth, { initialState as authState } from './auth';
@@ -8,7 +8,7 @@ import files, { initialState as filesState } from './files';
 import lessonComments, { initialState as lessonCommentsState } from './lessonComments';
 import notifications, { initialState as notificationsState } from './notifications';
 import learningProgress, { initialState as learningProgressState } from './learningProgress';
-import subscriptions, { initialState as subscriptionsState } from './subscriptions';
+import tariffs, { initialState as tariffsState } from './tariffs';
 
 export const initialState = {
     topics: topicsState,
@@ -20,7 +20,7 @@ export const initialState = {
     lessonComments: lessonCommentsState,
     notifications: notificationsState,
     learningProgress: learningProgressState,
-    subscriptions: subscriptionsState,
+    tariffs: tariffsState,
 };
 
 export default (router: any = null): Reducer => combineReducers({
@@ -34,5 +34,5 @@ export default (router: any = null): Reducer => combineReducers({
     lessonComments,
     notifications,
     learningProgress,
-    subscriptions,
+    tariffs,
 });

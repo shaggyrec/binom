@@ -13,6 +13,5 @@ CREATE TABLE tariff_prices (
     duration INTEGER not null,
     created TIMESTAMP NOT NULL DEFAULT NOW(),
     rise_on INTEGER,
-    rise_period INTEGER,
-    UNIQUE (tariff_id, price, duration)
+    rise_period INTEGER
 );

@@ -1,6 +1,9 @@
 package storage
 
-import "github.com/go-pg/pg"
+import (
+	"github.com/go-pg/pg"
+	"reflect"
+)
 
 type Storage interface {
 	Init()
@@ -65,4 +68,18 @@ func (f *Factory) Tariff(db *pg.DB) *TariffStorage {
 	storage := TariffStorage{}
 	storage.Init(db)
 	return &storage
+}
+
+func (f *Factory) TariffPrice(db *pg.DB) *TariffPriceStorage {
+	storage := TariffPriceStorage{}
+	storage.Init(db)
+	return &storage
+}
+
+func statusToInt(status interface{}) int64 {
+	if reflect.TypeOf(status).Name() == "int" {
+		return int64(status.(int))
+	} else {
+		return int64(status.(float64))
+	}
 }

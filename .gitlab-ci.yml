@@ -6,16 +6,28 @@ variables:
   DOCKER_TLS_CERTDIR: ""
 
 stages:
+  - build-react
   - build
   - deploy
 
+build-react:
+  stage: build-react
+  image: node
+  script:
+    - npm i
+    - npm run build
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - dist
+      - node_modules
 build:
   stage: build
   script:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
     - docker build -t $CI_REGISTRY/binom.study/binom/pg:${CI_COMMIT_BRANCH} ./db
     - docker push $CI_REGISTRY/binom.study/binom/pg:${CI_COMMIT_BRANCH}
-    - docker build -t $CI_REGISTRY/binom.study/binom/nginx:${CI_COMMIT_BRANCH} ./nginx
+    - docker build -t $CI_REGISTRY/binom.study/binom/nginx:${CI_COMMIT_BRANCH} -f ./nginx/Dockerfile .
     - docker push $CI_REGISTRY/binom.study/binom/nginx:${CI_COMMIT_BRANCH}
     - docker build -t $CI_REGISTRY/binom.study/binom/golang:${CI_COMMIT_BRANCH} .
     - docker push $CI_REGISTRY/binom.study/binom/golang:${CI_COMMIT_BRANCH}

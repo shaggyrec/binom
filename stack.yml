@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  pg:
+    image:  $CI_REGISTRY/binom.study/binom/pg:${CI_COMMIT_BRANCH}
+    command: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - /var/postgres/data:/data/postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_HOST: pg
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB_NAME: postgres
+      POSTGRES_DB_NAME_TEST: postgres_test
+  nginx:
+    build: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - golang
+    volumes:
+      - /etc/letsencrypt:/etc/ssl/
+    environment:
+      HOST: 202391.fornex.cloud
+  golang:
+    build: .
+    command: ["./scripts/wait-for-it.sh", "pg:5432", "--", "gow", "run", "."]
+    ports:
+      - ${APP_PORT}:${APP_PORT}
+    restart: always
+    depends_on:
+      - pg
+    environment:
+      JWT_SECRET: ${JWT_SECRET}
+      UPLOAD_PATH: /goapp/upload

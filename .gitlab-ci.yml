@@ -1,0 +1,44 @@
+image: docker:latest
+
+services:
+  - docker:dind
+variables:
+  DOCKER_TLS_CERTDIR: ""
+
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker build -t $CI_REGISTRY/binom.study/binom/pg:${CI_COMMIT_BRANCH} ./db
+    - docker push $CI_REGISTRY/binom.study/binom/pg:${CI_COMMIT_BRANCH}
+    - docker build -t $CI_REGISTRY/binom.study/binom/nginx:${CI_COMMIT_BRANCH} ./nginx
+    - docker push $CI_REGISTRY/binom.study/binom/nginx:${CI_COMMIT_BRANCH}
+    - docker build -t $CI_REGISTRY/binom.study/binom/golang:${CI_COMMIT_BRANCH} .
+    - docker push $CI_REGISTRY/binom.study/binom/golang:${CI_COMMIT_BRANCH}
+  only:
+    - main
+
+deploy:
+  stage: deploy
+  variables:
+    DOCKER_HOST: tcp://31.220.25.196:2376
+    DOCKER_TLS_VERIFY: 1
+    DOCKER_CERT_PATH: "/certs"
+  script:
+    - mkdir -p $DOCKER_CERT_PATH
+    - echo "$TLSCACERT" > $DOCKER_CERT_PATH/ca.pem
+    - echo "$TLSCERT" > $DOCKER_CERT_PATH/cert.pem
+    - echo "$TLSKEY" > $DOCKER_CERT_PATH/key.pem
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" "$CI_REGISTRY" --password-stdin
+    - env DB_PWD="$DB_PWD" DB_BETA_PWD="$DB_BETA_PWD" docker stack deploy -c stack.yml ws --with-registry-auth --prune
+    - rm -rf $DOCKER_CERT_PATH
+  environment:
+    name: master
+    url:  http://31.220.25.196
+  only:
+    - main
+

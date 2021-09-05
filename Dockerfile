@@ -6,6 +6,7 @@ RUN export PATH=$PATH:$GOPATH/bin
 WORKDIR /goapp
 
 ADD server/ server
+ADD scripts/ ./scripts
 ADD go.mod ./
 ADD go.sum ./
 ADD main.go ./

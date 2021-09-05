@@ -7,10 +7,10 @@ WORKDIR /goapp
 
 ADD server/ server
 ADD scripts/ ./scripts
+ADD db/migrations/ ./db/migrations
 ADD go.mod ./
 ADD go.sum ./
 ADD main.go ./
-ADD db/migrations ./db/migrations
 
 ADD etc/update-exim4.conf.conf /etc/exim4/update-exim4.conf.conf
 

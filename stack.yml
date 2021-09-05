@@ -4,7 +4,6 @@ services:
   pg:
     image: $CI_REGISTRY/binom.study/binom/pg:${CI_COMMIT_BRANCH}
     command: postgres
-    restart: always
     ports:
       - "5432:5432"
     volumes:
@@ -26,15 +25,26 @@ services:
       - /etc/letsencrypt:/etc/ssl/
     environment:
       HOST: binom.shagg.ru
+    logging:
+      driver: "json-file"
+      options:
+        compress: "true"
+        max-size: "10m"
+        max-file: "1000"
   golang:
     image: $CI_REGISTRY/binom.study/binom/golang:${CI_COMMIT_BRANCH}
     command: ["./scripts/wait-for-it.sh", "pg:5432", "--", "/goapp/main"]
     ports:
       - ${APP_PORT}:${APP_PORT}
-    restart: always
     depends_on:
       - pg
     environment:
       JWT_SECRET: ${JWT_SECRET}
       UPLOAD_PATH: /goapp/upload
       APP_PORT: ${APP_PORT}
+    logging:
+      driver: "json-file"
+      options:
+        compress: "true"
+        max-size: "10m"
+        max-file: "1000"

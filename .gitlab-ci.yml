@@ -37,7 +37,7 @@ build:
 deploy:
   stage: deploy
   variables:
-    DOCKER_HOST: tcp://31.172.66.187:2377
+    DOCKER_HOST: tcp://31.172.66.187:2376
     DOCKER_TLS_VERIFY: 1
     DOCKER_CERT_PATH: "/certs"
   script:

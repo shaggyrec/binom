@@ -19,3 +19,5 @@ RUN echo "postfix postfix/mailname string binommath.ru" | debconf-set-selections
 RUN go mod download
 RUN go install github.com/mitranim/gow@latest
 RUN go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+
+RUN go build -o main .

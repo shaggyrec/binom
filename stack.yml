@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   pg:
-    image:  $CI_REGISTRY/binom.study/binom/pg:${CI_COMMIT_BRANCH}
+    image: $CI_REGISTRY/binom.study/binom/pg:${CI_COMMIT_BRANCH}
     command: postgres
     restart: always
     ports:
@@ -16,7 +16,7 @@ services:
       POSTGRES_DB_NAME: postgres
       POSTGRES_DB_NAME_TEST: postgres_test
   nginx:
-    build: nginx
+    image: $CI_REGISTRY/binom.study/binom/nginx:${CI_COMMIT_BRANCH}
     ports:
       - "80:80"
       - "443:443"
@@ -25,10 +25,10 @@ services:
     volumes:
       - /etc/letsencrypt:/etc/ssl/
     environment:
-      HOST: 202391.fornex.cloud
+      HOST: binom.shagg.ru
   golang:
-    build: .
-    command: ["./scripts/wait-for-it.sh", "pg:5432", "--", "gow", "run", "."]
+    image: $CI_REGISTRY/binom.study/binom/golang:${CI_COMMIT_BRANCH}
+    command: ["./scripts/wait-for-it.sh", "pg:5432", "--", "/goapp/main"]
     ports:
       - ${APP_PORT}:${APP_PORT}
     restart: always

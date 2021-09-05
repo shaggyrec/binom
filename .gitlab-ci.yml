@@ -46,7 +46,7 @@ deploy:
     - echo "$TLSCERT" > $DOCKER_CERT_PATH/cert.pem
     - echo "$TLSKEY" > $DOCKER_CERT_PATH/key.pem
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" "$CI_REGISTRY" --password-stdin
-    - env POSTGRES_PASSWORD="$POSTGRES_PASSWORD" JWT_SECRET="$JWT_SECRET" docker stack deploy -c stack.yml binom --with-registry-auth --prune
+    - env POSTGRES_PASSWORD="$POSTGRES_PASSWORD" JWT_SECRET="$JWT_SECRET" APP_PORT="$APP_PORT" docker stack deploy -c stack.yml binom --with-registry-auth --prune
     - rm -rf $DOCKER_CERT_PATH
   environment:
     name: master

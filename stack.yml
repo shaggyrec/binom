@@ -42,6 +42,11 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       UPLOAD_PATH: /goapp/upload
       APP_PORT: ${APP_PORT}
+      POSTGRES_USER: postgres
+      POSTGRES_HOST: pg
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB_NAME: postgres
+      POSTGRES_DB_NAME_TEST: postgres_test
     logging:
       driver: "json-file"
       options:

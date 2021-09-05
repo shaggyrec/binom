@@ -7,6 +7,7 @@ WORKDIR /goapp
 
 ADD server/ server
 ADD go.mod ./
+ADD go.sum ./
 ADD main.go ./
 
 ADD etc/update-exim4.conf.conf /etc/exim4/update-exim4.conf.conf

@@ -22,9 +22,11 @@ services:
     depends_on:
       - golang
     volumes:
-      - /etc/letsencrypt:/etc/ssl/
+      - /etc/letsencrypt/live/binom.shagg.ru:/etc/ssl
     environment:
       HOST: binom.shagg.ru
+      SSL_CERT: /etc/ssl/fullchain.pem;
+      SSL_CERT_KEY: /etc/ssl/privkey.pem;
     logging:
       driver: "json-file"
       options:

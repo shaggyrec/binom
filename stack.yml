@@ -17,16 +17,15 @@ services:
   nginx:
     image: $CI_REGISTRY/binom.study/binom/nginx:${CI_COMMIT_BRANCH}
     ports:
-      - "80:80"
       - "443:443"
     depends_on:
       - golang
     volumes:
-      - /etc/letsencrypt/live/binom.shagg.ru:/etc/ssl
+      - /etc/letsencrypt:/etc/ssl
     environment:
       HOST: binom.shagg.ru
-      SSL_CERT: /etc/ssl/fullchain.pem
-      SSL_CERT_KEY: /etc/ssl/privkey.pem
+      SSL_CERT: /etc/ssl/live/binom.shagg.ru/fullchain.pem
+      SSL_CERT_KEY: /etc/ssl/live/binom.shagg.ru/privkey.pem
     logging:
       driver: "json-file"
       options:

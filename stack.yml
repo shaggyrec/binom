@@ -14,6 +14,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB_NAME: postgres
       POSTGRES_DB_NAME_TEST: postgres_test
+      PGDATA: /data/postgres
   nginx:
     image: $CI_REGISTRY/binom.study/binom/nginx:${CI_COMMIT_BRANCH}
     ports:

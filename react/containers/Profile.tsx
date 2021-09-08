@@ -10,7 +10,7 @@ import * as tariffsActions from '../ducks/tariffs';
 import Loader from '../components/Loader';
 import TariffsList from '../components/TariffsList';
 
-function Profile ({ logout, me, resetBackLink, user, match: { params: { username } }, requestUser, requestTariffs, tariffs, onBuyTariff }): ReactElement {
+function Profile ({ logout, me, resetBackLink, user, match: { params: { username } }, requestUser, requestTariffs, tariffs, onBuyTariff, loading }): ReactElement {
     useEffect(() => {
         resetBackLink();
         if (!user) {
@@ -33,6 +33,7 @@ function Profile ({ logout, me, resetBackLink, user, match: { params: { username
                         </div>
                     </Paddingable>
                     {user.username === me.username && <TariffsList tariffs={tariffs} onBuy={onBuyTariff}/>}
+                    <Loader show={loading}/>
                 </div>
             )
             : <Loader show />
@@ -45,7 +46,8 @@ export default connect(
         me: state.users.me,
         // @ts-ignore
         user: props.match.params?.username === state.users.me?.username ? state.users.me : state.users.current,
-        tariffs: state.tariffs.list
+        tariffs: state.tariffs.list,
+        loading: state.tariffs.loading,
     }),
     dispatch => ({
         logout: () => dispatch(authAction.logout()),

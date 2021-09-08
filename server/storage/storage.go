@@ -76,6 +76,18 @@ func (f *Factory) TariffPrice(db *pg.DB) *TariffPriceStorage {
 	return &storage
 }
 
+func (f *Factory) UserSubscription(db *pg.DB) *UserSubscriptionStorage {
+	storage := UserSubscriptionStorage{}
+	storage.Init(db)
+	return &storage
+}
+
+func (f *Factory) Transaction(db *pg.DB) *TransactionStorage {
+	storage := TransactionStorage{}
+	storage.Init(db)
+	return &storage
+}
+
 func statusToInt(status interface{}) int64 {
 	if reflect.TypeOf(status).Name() == "int" {
 		return int64(status.(int))

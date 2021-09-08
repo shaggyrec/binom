@@ -63,8 +63,7 @@ func ArrayToSnakeCase(arr []string) []string {
 }
 
 func InterfaceToMap(v interface{}) map[string]interface{} {
-	vEncoded, _ := json.Marshal(v)
-	b := []byte(vEncoded)
+	b, _ := json.Marshal(v)
 
 	var f interface{}
 	json.Unmarshal(b, &f)

@@ -12,7 +12,7 @@ import (
 	"net/http"
 )
 
-func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
+func Init(db *pg.DB, jwtSecret, uploadPath, yooMoneySecret string) *chi.Mux {
 	// storages
 	storageFactory := &storage.Factory{}
 	authCodeStorage := storageFactory.AuthCode(db)
@@ -25,6 +25,8 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 	notificationStorage := storageFactory.Notification(db)
 	tariffStorage := storageFactory.Tariff(db)
 	tariffPriceStorage := storageFactory.TariffPrice(db)
+	userSubscriptionStorage := storageFactory.UserSubscription(db)
+	transactionStorage := storageFactory.Transaction(db)
 	// services
 	serviceFactory := service.Factory{}
 	tokenService := serviceFactory.TokenService(jwtSecret, tokenStorage)
@@ -54,7 +56,9 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 	learningProgressController := controllers.LearningProgressController{}
 	learningProgressController.Init(lessonProgressService, notificationService)
 	tariffController := controllers.TariffController{}
-	tariffController.Init(tariffStorage, tariffPriceStorage)
+	tariffController.Init(tariffStorage, tariffPriceStorage, userSubscriptionStorage)
+	paymentController := controllers.PaymentController{}
+	paymentController.Init(yooMoneySecret, transactionStorage, userSubscriptionStorage, notificationService)
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
@@ -85,6 +89,9 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 			r.Post("/email", authController.Email)
 			r.Post("/code", authController.CheckCodeAndAuth)
 			r.Post("/refresh", authController.RefreshToken)
+		})
+		r.Route("/payment", func(r chi.Router) {
+			r.Post("/yoomoney", paymentController.YooMoney)
 		})
 		r.Group(func(r chi.Router) {
 			r.Use(middlewares.JwtAuth(jwtSecret))
@@ -144,6 +151,7 @@ func Init(db *pg.DB, jwtSecret string, uploadPath string) *chi.Mux {
 			})
 			r.Route("/tariff", func(r chi.Router) {
 				r.Get("/", tariffController.List)
+				r.Get("/{tariffId}/price/{priceId}/subscribe", tariffController.Subscribe)
 				r.Group(func(r chi.Router) {
 					r.Use(middlewares.OnlyForAdmin)
 					r.Post("/", tariffController.Create)

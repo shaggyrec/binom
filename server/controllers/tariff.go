@@ -5,8 +5,10 @@ import (
 	"binom/server/exceptions"
 	"binom/server/functions"
 	"binom/server/storage"
+	"database/sql"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
+	"gopkg.in/guregu/null.v4"
 	"log"
 	"net/http"
 	"strconv"
@@ -15,11 +17,13 @@ import (
 type TariffController struct {
 	storage *storage.TariffStorage
 	tariffPriceStorage *storage.TariffPriceStorage
+	userSubscriptionStorage *storage.UserSubscriptionStorage
 }
 
-func (c *TariffController) Init(storage *storage.TariffStorage, tariffPriceStorage *storage.TariffPriceStorage) {
+func (c *TariffController) Init(storage *storage.TariffStorage, tariffPriceStorage *storage.TariffPriceStorage, userSubscriptionStorage *storage.UserSubscriptionStorage) {
 	c.storage = storage
 	c.tariffPriceStorage = tariffPriceStorage
+	c.userSubscriptionStorage = userSubscriptionStorage
 }
 
 func (c *TariffController) List(w http.ResponseWriter, r *http.Request) {
@@ -159,5 +163,54 @@ func (c *TariffController) DeletePrice(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *TariffController) Subscribe(w http.ResponseWriter, r *http.Request) {
+	tariffId, err := strconv.Atoi(chi.URLParam(r, "tariffId"))
+	if err != nil {
+		log.Print(err)
+		exceptions.ServerError(w, r)
+		return
+	}
+	priceId := chi.URLParam(r, "priceId")
+	userId := r.Context().Value("userId").(string)
 
+	tariff, err := c.storage.ById(tariffId)
+
+	if err != nil {
+		log.Print(err)
+		exceptions.BadRequestError(w, r, "Tariff not found", exceptions.ErrorBadParam)
+		return
+	}
+	var price *dataType.TariffPrice
+	for _, p := range tariff.Prices {
+		if p.Id == priceId {
+			price = &p
+			break
+		}
+	}
+
+	if price == nil {
+		log.Print(err)
+		exceptions.BadRequestError(w, r, "Price not found", exceptions.ErrorBadParam)
+		return
+	}
+
+	subscription, _ := c.userSubscriptionStorage.ByTariffPrice(tariffId, price.Price, userId, []int{dataType.StatusDraft})
+
+	if subscription == nil {
+		subscription = &dataType.UserSubscription{
+			TariffId: tariffId,
+			Duration: price.Duration,
+			Name: tariff.Name,
+			PaidPrice: price.Price,
+			UserId: userId,
+			Status: null.Int{NullInt64: sql.NullInt64{Int64: dataType.StatusDraft, Valid: true}},
+		}
+		subscription, err = c.userSubscriptionStorage.Create(subscription)
+		if err != nil {
+			log.Print(err)
+			exceptions.ServerError(w, r)
+			return
+		}
+	}
+
+	functions.RenderJSON(w, r, subscription)
 }

@@ -31,7 +31,7 @@ services:
       - ./public/i:/golang/static/i
   golang:
     build: .
-    command: ["./scripts/wait-for-it.sh", "pg:5432", "--", "/goapp/main"]
+    command: ["./scripts/wait-for-it.sh", "pg:5432", "--", "gow", "run", "."]
     ports:
       - ${APP_PORT}:${APP_PORT}
     restart: always

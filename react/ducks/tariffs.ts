@@ -26,6 +26,7 @@ export default handleActions({
     [CREATE_PRICE]: (state) => ({ ...state, loading: true }),
     [REMOVE_PRICE]: (state) => ({ ...state, loading: true }),
     [SUCCESS]: (state) => ({ ...state, loading: false }),
+    [SUBSCRIBE]: (state) => ({ ...state, loading: true }),
     [ERROR]: (state, { payload }) => ({ ...state, loading: false, error: payload }),
 }, initialState);
 

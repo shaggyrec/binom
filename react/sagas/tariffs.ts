@@ -110,7 +110,13 @@ function* removePriceProcess({ payload }): IterableIterator<any> {
 }
 
 function* subscribeProcess({ payload: { tariffId, priceId } }): IterableIterator<any> {
-    yield call(apiRequest, '/api/tariff/' + tariffId + '/price/' + priceId + '/subscribe');
+    try {
+        yield call(apiRequest, '/api/tariff/' + tariffId + '/price/' + priceId + '/subscribe');
+    } catch (e) {
+        const error = getApiErrorMessage(e);
+        yield put(tariffsActions.error(error));
+        yield put(applicationActions.error(error));
+    }
 }
 
 export function* tariffs(): IterableIterator<ForkEffect> {

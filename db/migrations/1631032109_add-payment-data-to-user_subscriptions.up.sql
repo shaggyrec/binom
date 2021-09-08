@@ -1,0 +1,1 @@
+ALTER table user_subscriptions ADD COLUMN IF NOT EXISTS payment_data jsonb;

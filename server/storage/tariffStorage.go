@@ -55,8 +55,8 @@ func (s *TariffStorage) List(statuses []int) (*[]dataType.Tariff, error) {
 
 	err := s.db.Model(&tariffs).
 		Relation("Prices", func(q *orm.Query) (*orm.Query, error) {
-		return q.Order("price ASC", "created ASC"), nil
-	}).
+			return q.Order("price ASC", "created ASC"), nil
+		}).
 		Where("status IN (?)", pg.In(statuses)).
 		Order("created ASC").
 		Select()
@@ -67,7 +67,12 @@ func (s *TariffStorage) List(statuses []int) (*[]dataType.Tariff, error) {
 func (s *TariffStorage) ById(id int) (*dataType.Tariff, error)  {
 	subscription := dataType.Tariff{Id: id}
 
-	err := s.db.Model(&subscription).WherePK().Select()
+	err := s.db.Model(&subscription).
+		Relation("Prices", func(q *orm.Query) (*orm.Query, error) {
+			return q.Order("price ASC", "created ASC"), nil
+		}).
+		WherePK().
+		Select()
 
 	return &subscription, err
 }

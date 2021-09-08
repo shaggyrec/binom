@@ -1,0 +1,1 @@
+ALTER TABLE user_subscriptions ALTER COLUMN expired DROP NOT NULL;

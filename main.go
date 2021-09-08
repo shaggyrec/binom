@@ -23,7 +23,10 @@ func main() {
 	db := functions.DbConnection(pgUser, pgHost, pgDbName, pgPwd)
 	defer db.Close()
 	log.Print("Starting server on port " + appPort)
-	err := http.ListenAndServe(":" + appPort, server.Init(db, os.Getenv("JWT_SECRET"), os.Getenv("UPLOAD_PATH")))
+	err := http.ListenAndServe(
+		":" + appPort,
+		server.Init(db, os.Getenv("JWT_SECRET"), os.Getenv("UPLOAD_PATH"), os.Getenv("YOOMONEY_SECRET")),
+	)
 	if err != nil {
 		log.Panic(err)
 	}

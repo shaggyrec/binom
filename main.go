@@ -25,7 +25,11 @@ func main() {
 	log.Print("Starting server on port " + appPort)
 	err := http.ListenAndServe(
 		":" + appPort,
-		server.Init(db, os.Getenv("JWT_SECRET"), os.Getenv("UPLOAD_PATH"), os.Getenv("YOOMONEY_SECRET")),
+		server.Init(
+			db, os.Getenv("JWT_SECRET"),
+			os.Getenv("UPLOAD_PATH"),
+			os.Getenv("HOST"),
+		),
 	)
 	if err != nil {
 		log.Panic(err)

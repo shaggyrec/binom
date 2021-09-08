@@ -4,6 +4,7 @@ import (
 	"binom/server/dataType"
 	"binom/server/exceptions"
 	"binom/server/functions"
+	"binom/server/service"
 	"binom/server/storage"
 	"database/sql"
 	"github.com/go-chi/chi"
@@ -18,12 +19,14 @@ type TariffController struct {
 	storage *storage.TariffStorage
 	tariffPriceStorage *storage.TariffPriceStorage
 	userSubscriptionStorage *storage.UserSubscriptionStorage
+	yooMoneyService *service.YoomoneyService
 }
 
-func (c *TariffController) Init(storage *storage.TariffStorage, tariffPriceStorage *storage.TariffPriceStorage, userSubscriptionStorage *storage.UserSubscriptionStorage) {
+func (c *TariffController) Init(storage *storage.TariffStorage, tariffPriceStorage *storage.TariffPriceStorage, userSubscriptionStorage *storage.UserSubscriptionStorage, yooMoneyService *service.YoomoneyService) {
 	c.storage = storage
 	c.tariffPriceStorage = tariffPriceStorage
 	c.userSubscriptionStorage = userSubscriptionStorage
+	c.yooMoneyService = yooMoneyService
 }
 
 func (c *TariffController) List(w http.ResponseWriter, r *http.Request) {
@@ -162,7 +165,7 @@ func (c *TariffController) DeletePrice(w http.ResponseWriter, r *http.Request) {
 	render.JSON(w, r, "ok")
 }
 
-func (c *TariffController) Subscribe(w http.ResponseWriter, r *http.Request) {
+func (c *TariffController) Buy(w http.ResponseWriter, r *http.Request) {
 	tariffId, err := strconv.Atoi(chi.URLParam(r, "tariffId"))
 	if err != nil {
 		log.Print(err)
@@ -212,5 +215,5 @@ func (c *TariffController) Subscribe(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	functions.RenderJSON(w, r, subscription)
+	functions.RenderJSON(w, r, c.yooMoneyService.GetPaymentParams(subscription))
 }

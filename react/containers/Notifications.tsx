@@ -18,7 +18,7 @@ function Notifications({ notifications, setViewed, requestNotifications, loading
             <div className="container py-20">
                 {notifications.map(n => (
                     <Paddingable key={n.notification.id} padding={[10, 0]}>
-                        <Notification notification={n.notification} viewed={n.viewed} onClick={() => setViewed(n.id)} isAdmin={isAdmin}/>
+                        <Notification notification={n.notification} viewed={n.viewed} onClick={() => !n.viewed && setViewed(n.id)} isAdmin={isAdmin}/>
                     </Paddingable>
                 ))}
                 <div className="py-20 text-center">

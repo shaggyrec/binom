@@ -3,7 +3,8 @@ import { User } from './user';
 
 export enum NotificationTypes {
     lessonComment = 1,
-    postComment = 2
+    postComment = 2,
+    activateSubscription = 5
 }
 
 

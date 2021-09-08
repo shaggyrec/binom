@@ -43,3 +43,8 @@ func (f *Factory) LessonProgress(db *pg.DB) *LearningProgressService {
 	s.Init(db)
 	return &s
 }
+func (f *Factory) Yoomoney(host string) *YoomoneyService {
+	s := YoomoneyService{}
+	s.Init(host)
+	return &s
+}

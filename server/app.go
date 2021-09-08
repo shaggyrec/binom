@@ -12,7 +12,7 @@ import (
 	"net/http"
 )
 
-func Init(db *pg.DB, jwtSecret, uploadPath, yooMoneySecret string) *chi.Mux {
+func Init(db *pg.DB, jwtSecret, uploadPath, host string) *chi.Mux {
 	// storages
 	storageFactory := &storage.Factory{}
 	authCodeStorage := storageFactory.AuthCode(db)
@@ -35,6 +35,7 @@ func Init(db *pg.DB, jwtSecret, uploadPath, yooMoneySecret string) *chi.Mux {
 	moveAtPositionService := serviceFactory.MoveAtPosition(db)
 	notificationService := serviceFactory.Notification(notificationStorage, userStorage)
 	lessonProgressService := serviceFactory.LessonProgress(db)
+	yooMoneyService := serviceFactory.Yoomoney(host)
 
 	// controllers
 	authController := controllers.AuthController{}
@@ -56,9 +57,9 @@ func Init(db *pg.DB, jwtSecret, uploadPath, yooMoneySecret string) *chi.Mux {
 	learningProgressController := controllers.LearningProgressController{}
 	learningProgressController.Init(lessonProgressService, notificationService)
 	tariffController := controllers.TariffController{}
-	tariffController.Init(tariffStorage, tariffPriceStorage, userSubscriptionStorage)
+	tariffController.Init(tariffStorage, tariffPriceStorage, userSubscriptionStorage, yooMoneyService)
 	paymentController := controllers.PaymentController{}
-	paymentController.Init(yooMoneySecret, transactionStorage, userSubscriptionStorage, notificationService)
+	paymentController.Init(yooMoneyService, transactionStorage, userSubscriptionStorage, notificationService)
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
@@ -151,7 +152,7 @@ func Init(db *pg.DB, jwtSecret, uploadPath, yooMoneySecret string) *chi.Mux {
 			})
 			r.Route("/tariff", func(r chi.Router) {
 				r.Get("/", tariffController.List)
-				r.Get("/{tariffId}/price/{priceId}/subscribe", tariffController.Subscribe)
+				r.Get("/{tariffId}/price/{priceId}/buy", tariffController.Buy)
 				r.Group(func(r chi.Router) {
 					r.Use(middlewares.OnlyForAdmin)
 					r.Post("/", tariffController.Create)

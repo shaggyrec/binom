@@ -7,9 +7,7 @@ import (
 	"binom/server/requests"
 	"binom/server/service"
 	"binom/server/storage"
-	"crypto/sha1"
 	"database/sql"
-	"encoding/hex"
 	"fmt"
 	"github.com/go-chi/render"
 	"gopkg.in/guregu/null.v4"
@@ -17,19 +15,18 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
-	"strings"
 	"time"
 )
 
 type PaymentController struct{
-	yooMoneySecret string
+	yooMoneyService *service.YoomoneyService
 	transactionStorage *storage.TransactionStorage
 	userSubscriptionStorage *storage.UserSubscriptionStorage
 	notificationService *service.NotificationService
 }
 
-func (c *PaymentController) Init(yooMoneySecret string, transactionStorage *storage.TransactionStorage, userSubscriptionStorage *storage.UserSubscriptionStorage, notificationService *service.NotificationService) {
-	c.yooMoneySecret = yooMoneySecret
+func (c *PaymentController) Init(yooMoneyService *service.YoomoneyService, transactionStorage *storage.TransactionStorage, userSubscriptionStorage *storage.UserSubscriptionStorage, notificationService *service.NotificationService) {
+	c.yooMoneyService = yooMoneyService
 	c.transactionStorage = transactionStorage
 	c.userSubscriptionStorage = userSubscriptionStorage
 	c.notificationService = notificationService
@@ -38,21 +35,25 @@ func (c *PaymentController) Init(yooMoneySecret string, transactionStorage *stor
 func (c *PaymentController) YooMoney(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
+		log.Println("Bad body")
 		exceptions.BadRequestError(w, r, "Bad body", exceptions.ErrorBadParam)
 		return
 	}
 
 	paymentData := c.parseData(r.Form)
 
-	if !c.isDataValid(paymentData) {
+	if !c.yooMoneyService.IsDataValid(paymentData) {
+		log.Println("Data invalid")
 		exceptions.BadRequestError(w, r, "Data invalid", exceptions.ErrorBadParam)
 		return
 	}
 
 	amount, err := strconv.ParseFloat(paymentData.Amount, 64)
-	withdrawAmount, err := strconv.Atoi(paymentData.WithdrawAmount)
+	withdrawAmount, err := strconv.ParseFloat(paymentData.WithdrawAmount, 64)
 
 	if err != nil {
+		log.Println("Bad amount")
+		log.Println(err)
 		exceptions.BadRequestError(w, r, "Bad amount", exceptions.ErrorBadParam)
 		return
 	}
@@ -84,12 +85,12 @@ func (c *PaymentController) YooMoney(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		if withdrawAmount < subscription.PaidPrice {
+		if int(withdrawAmount) < subscription.PaidPrice {
 			log.Println(subscription.Id + " amounts not matched")
 			exceptions.BadRequestError(w, r, subscription.Id + " amounts not matched", exceptions.ErrorBadParam)
 			return
 		}
-		activeSubscriptions := c.userSubscriptionStorage.ByUserId("da925358-de21-47ab-8e22-b4e04b542e8e", []int{1})
+		activeSubscriptions := c.userSubscriptionStorage.ByUserId(subscription.UserId, []int{dataType.StatusLive})
 		dateStart := time.Now()
 		if len(*activeSubscriptions) != 0 {
 			for _, activeSubscription := range *activeSubscriptions {
@@ -98,10 +99,10 @@ func (c *PaymentController) YooMoney(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 		}
-		// c.userSubscriptionStorage
 		subscription.Status.Int64 = dataType.StatusLive
 		subscription.Status.Valid = true
 		subscription.Expired = dateStart.AddDate(0, subscription.Duration, 0)
+		subscription.TransactionId = transaction.Id
 
 		_, err = c.userSubscriptionStorage.Update(subscription)
 
@@ -116,7 +117,7 @@ func (c *PaymentController) YooMoney(w http.ResponseWriter, r *http.Request) {
 				subscription.Name,
 				subscription.Expired.Format("02.01.2006"),
 			),
-			Type: null.Int{NullInt64: sql.NullInt64{Int64: dataType.NotificationSubscriptionActivate}},
+			Type: null.Int{NullInt64: sql.NullInt64{Int64: dataType.NotificationSubscriptionActivate, Valid: true}},
 		}
 		err = c.notificationService.Create(&notification, []string{subscription.UserId})
 
@@ -129,26 +130,9 @@ func (c *PaymentController) YooMoney(w http.ResponseWriter, r *http.Request) {
 	render.JSON(w, r, "ok")
 }
 
-func (c *PaymentController) isDataValid(data requests.YooMoneyRequest) bool {
-	h := sha1.New()
-	h.Write([]byte(strings.Join(
-		[]string{
-			data.NotificationType,
-			data.OperationId,
-			data.Amount,
-			data.Currency,
-			data.Datetime,
-			data.Sender,
-			data.Codepro,
-			c.yooMoneySecret,
-			data.Label,
-		},
-		"&",
-	)))
-	return hex.EncodeToString(h.Sum(nil)) == data.Sha1Hash
-}
+
 func(c *PaymentController) parseData(form url.Values) requests.YooMoneyRequest {
-	return requests.YooMoneyRequest{
+	r := requests.YooMoneyRequest{
 		NotificationType: form["notification_type"][0],
 		OperationId:      form["operation_id"][0],
 		Amount:           form["amount"][0],
@@ -158,6 +142,11 @@ func(c *PaymentController) parseData(form url.Values) requests.YooMoneyRequest {
 		Codepro:          form["codepro"][0],
 		Label:            form["label"][0],
 		Sha1Hash:         form["sha1_hash"][0],
-		WithdrawAmount:   form["withdraw_amount"][0],
+		WithdrawAmount:   form["amount"][0],
 	}
+
+	if val, ok := form["withdraw_amount"]; ok {
+		r.WithdrawAmount = val[0]
+	}
+	return r
 }

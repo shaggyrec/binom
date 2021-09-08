@@ -1,8 +1,5 @@
 import axios, { AxiosResponse, Method } from 'axios';
 import { authToken } from './tokens';
-import { put } from '@redux-saga/core/effects';
-import * as applicationActions from './ducks/application';
-import * as lessonsActions from './ducks/lessons';
 
 export const SERVER_REQUESTS_BASE = location.hostname === 'localhost' ? 'http://localhost:4030' : '';
 
@@ -44,13 +41,13 @@ export const setCookie = (name, value, options: {expires?: number|Date|string, p
         options.expires = options.expires.toUTCString();
     }
 
-    let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+    let updatedCookie = encodeURIComponent(name) + '=' + encodeURIComponent(value);
 
-    for (let optionKey in options) {
-        updatedCookie += "; " + optionKey;
-        let optionValue = options[optionKey];
+    for (const optionKey in options) {
+        updatedCookie += '; ' + optionKey;
+        const optionValue = options[optionKey];
         if (optionValue !== true) {
-            updatedCookie += "=" + optionValue;
+            updatedCookie += '=' + optionValue;
         }
     }
 
@@ -58,5 +55,21 @@ export const setCookie = (name, value, options: {expires?: number|Date|string, p
 }
 
 export function deleteCookie(name) {
-    setCookie(name, "", { 'max-age': -1});
+    setCookie(name, '', { 'max-age': -1 });
+}
+
+export function goToYoomoney(params): void {
+    const form = document.createElement('form');
+    form.action = 'https://yoomoney.ru/quickpay/confirm.xml';
+    form.method = 'POST';
+
+    for (const param in params) {
+        const input = document.createElement('input')
+        input.name = param
+        input.value = params[param]
+        form.append(input)
+    }
+    document.body.append(form)
+    form.submit();
+
 }

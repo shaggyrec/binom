@@ -18,4 +18,5 @@ type UserSubscription struct {
 	Expired time.Time `json:"expired"`
 	Status null.Int `json:"status"`
 	Topics []string `json:"topics"`
+	TransactionId string `json:"transactionId"`
 }

@@ -2,7 +2,7 @@ import { call, delay, ForkEffect, put, select, takeEvery, takeLatest } from '@re
 import * as tariffsActions from '../ducks/tariffs';
 import * as applicationActions from '../ducks/application';
 import { apiRequest } from './index';
-import { getApiErrorMessage } from '../functions';
+import { getApiErrorMessage, goToYoomoney } from '../functions';
 
 function* requestListProcess(): IterableIterator<any> {
     try {
@@ -111,7 +111,7 @@ function* removePriceProcess({ payload }): IterableIterator<any> {
 
 function* subscribeProcess({ payload: { tariffId, priceId } }): IterableIterator<any> {
     try {
-        yield call(apiRequest, '/api/tariff/' + tariffId + '/price/' + priceId + '/subscribe');
+        goToYoomoney(yield call(apiRequest, '/api/tariff/' + tariffId + '/price/' + priceId + '/buy'));
     } catch (e) {
         const error = getApiErrorMessage(e);
         yield put(tariffsActions.error(error));

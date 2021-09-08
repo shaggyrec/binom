@@ -1,11 +1,12 @@
-    import React, { ReactElement } from 'react';
+import React, { ReactElement } from 'react';
 import { Link } from 'react-router-dom';
 
 import { Notification as NotificationType, NotificationTypes } from '../dataTypes/notification';
 import Moment from 'react-moment';
 
 const NOTIFICATION_TITLE = {
-    [NotificationTypes.lessonComment]: 'Комметарий к уроку'
+    [NotificationTypes.lessonComment]: 'Комментарий к уроку',
+    [NotificationTypes.activateSubscription]: 'Подписка оплачена'
 }
 
 function generateLink(notification: NotificationType, isAdmin: boolean) {
@@ -27,13 +28,19 @@ function generateLink(notification: NotificationType, isAdmin: boolean) {
     return linkStart + linkEnd;
 }
 
+function Container({ link, children, onClick }): ReactElement {
+    return link
+        ? <Link to={link} className="no-decoration" onClick={onClick}>{children}</Link>
+        : <div className="a" onClick={onClick}>{children}</div>;
+}
+
 function Notification({ notification, viewed = false, onClick, isAdmin }: { notification: NotificationType, viewed: boolean, onClick: () => any, isAdmin: boolean }): ReactElement {
     return (
-        <Link to={generateLink(notification, isAdmin)} className="no-decoration" onClick={onClick}>
+        <Container link={generateLink(notification, isAdmin)} onClick={onClick}>
             <div className="neomorphic">
                 <div className={`notification${viewed ? '' : ' notification-new'}`}>
                     <div className="notification-header">
-                        @{notification.author.username}({notification.author.name}) {NOTIFICATION_TITLE[notification.type]}
+                        {notification.author ? `@${notification.author.username}(${notification.author.name})` : ''} {NOTIFICATION_TITLE[notification.type]}
                     </div>
                     <div className="notification-row">
                         <div className="notification-status"/>
@@ -44,7 +51,7 @@ function Notification({ notification, viewed = false, onClick, isAdmin }: { noti
                     </div>
                 </div>
             </div>
-        </Link>
+        </Container>
     );
 }
 export default Notification;

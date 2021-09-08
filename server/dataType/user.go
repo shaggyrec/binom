@@ -16,4 +16,5 @@ type User struct {
 	Username null.String `json:"username"`
 	Phone null.String `json:"-"`
 	Role null.Int `json:"role"`
+	Subscription *UserSubscription `pg:"rel:has-many" json:"subscription"`
 }

@@ -9,6 +9,7 @@ import * as usersActions from '../ducks/users';
 import * as tariffsActions from '../ducks/tariffs';
 import Loader from '../components/Loader';
 import TariffsList from '../components/TariffsList';
+import ReactMoment from 'react-moment';
 
 function Profile ({ logout, me, resetBackLink, user, match: { params: { username } }, requestUser, requestTariffs, tariffs, onBuyTariff, loading }): ReactElement {
     useEffect(() => {
@@ -25,14 +26,17 @@ function Profile ({ logout, me, resetBackLink, user, match: { params: { username
                 <div className="container">
                     <Paddingable padding={[20, 0]}>
                         <div className="flex flex-between">
-                            <div className="flex">
-                                <h1>{user.name || user.username}</h1>
-                                {user.username === me.username && <h3>&nbsp;(это вы)</h3>}
+                            <div>
+                                <div className="flex">
+                                    <h1 className="mb-0">{user.name || user.username}</h1>
+                                    {user.username === me.username && <h3 className="mb-0">&nbsp;(это вы)</h3>}
+                                </div>
+                                {user.username === me.username && me.subscription && <h5 className="mt-0">&nbsp;{me.subscription.name} до <ReactMoment format="D.MM.YYYY" locale="ru">{me.subscription.expired}</ReactMoment></h5>}
                             </div>
                             {user.username === me.username && <Button small onClick={logout}><small>Выйти</small></Button>}
                         </div>
                     </Paddingable>
-                    {user.username === me.username && <TariffsList tariffs={tariffs} onBuy={onBuyTariff}/>}
+                    {user.username === me.username && !me.subscription && <TariffsList tariffs={tariffs} onBuy={onBuyTariff}/>}
                     <Loader show={loading}/>
                 </div>
             )

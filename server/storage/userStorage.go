@@ -3,6 +3,7 @@ package storage
 import (
 	"binom/server/dataType"
 	"github.com/go-pg/pg"
+	"github.com/go-pg/pg/orm"
 )
 
 type UserStorage struct {
@@ -31,7 +32,13 @@ func (u *UserStorage) Delete() {
 
 func (u *UserStorage) Get(id string) (*dataType.User, error) {
 	user := &dataType.User{ Id: id }
-	err := u.db.Model(user).WherePK().Select()
+	err := u.db.Model(user).
+		Relation("Subscription", func(q *orm.Query) (*orm.Query, error) {
+				return q.JoinOn("status = ? AND expired > NOW()", dataType.StatusLive).Order("expired DESC"), nil
+		}).
+		WherePK().
+		Select()
+
 	return user, err
 }
 

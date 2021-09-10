@@ -27,7 +27,7 @@ services:
     environment:
       HOST: binom.school
       SSL_CERT: /etc/ssl/live/binom.school/fullchain.pem
-      SSL_CERT_KEY: /etc/ssl/binom.school/privkey.pem
+      SSL_CERT_KEY: /etc/ssl/live/binom.school/privkey.pem
     logging:
       driver: "json-file"
       options:

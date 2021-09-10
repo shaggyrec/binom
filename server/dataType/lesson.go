@@ -14,6 +14,7 @@ type Lesson struct {
 	Pos null.Int `json:"pos"`
 	Task null.String `json:"task"`
 	Alias null.String `json:"alias"`
+	YoutubeVideos []string `json:"youtubeVideos"`
 	Video []string `json:"video"`
 	TaskFiles []string `json:"taskFiles"`
 	TaskValue null.Int `json:"taskValue"`

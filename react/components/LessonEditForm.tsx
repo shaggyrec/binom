@@ -12,6 +12,7 @@ import { SERVER_REQUESTS_BASE } from '../functions';
 import Paddingable from './Paddingable';
 import { Bin } from './Icons';
 import MathsTextarea from './form/MathsTextarea';
+import YoutubeVideoManager from './YoutubeVideoManager';
 
 function videoEdition(videoId, onClickDeleteVideo): ReactElement {
     return (
@@ -35,13 +36,14 @@ function fileEdition(fileId, onClickDelete): ReactElement {
     );
 }
 
-function LessonEditForm({ onSubmit, name, alias, text, task, video, topics, topicId, taskFiles, taskValue, onVideoUpload, onTaskUpload, loading = false, onClickDeleteFile }): ReactElement {
+function LessonEditForm({ onSubmit, name, alias, text, task, video, youtubeVideos, topics, topicId, taskFiles, taskValue, onVideoUpload, onTaskUpload, loading = false, onClickDeleteFile }): ReactElement {
     const [lessonName, setLessonName] = useState(name);
     const [lessonAlias, setLessonAlias] = useState(alias);
     const [lessonDescription, setLessonDescription] = useState(text);
     const [lessonTask, setLessonTask] = useState(task);
     const [lessonCategory, setLessonCategory] = useState(topicId);
     const [lessonTaskValue, setLessonTaskValue] = useState(taskValue || 5);
+    const [lessonYoutubeVideos, setLessonYoutubeVideos] = useState(youtubeVideos || [])
 
     useEffect(() => {
         setLessonAlias(slugify(lessonName));
@@ -55,6 +57,7 @@ function LessonEditForm({ onSubmit, name, alias, text, task, video, topics, topi
             topicId: lessonCategory || topics[0]?.value,
             task: lessonTask,
             taskValue: parseInt(lessonTaskValue) || 5,
+            youtubeVideos: lessonYoutubeVideos,
         });
     }
 
@@ -72,6 +75,7 @@ function LessonEditForm({ onSubmit, name, alias, text, task, video, topics, topi
         <Form onSubmit={handleSubmit}>
             <Input required onChange={setLessonName} label="Название" value={lessonName}/>
             <Select options={topics} label="Категория" onChange={setLessonCategory} value={lessonCategory} />
+            <YoutubeVideoManager videos={lessonYoutubeVideos} onChange={setLessonYoutubeVideos}/>
             {video?.length && video.map(v => videoEdition(v, () => onClickDeleteFile(v)))}
             <FileUpload name="file" onChange={handleVideoUpload} label={video?.length ? 'Ещё видео' : 'Видео'} accept="video/*"/>
             <Textarea onChange={setLessonDescription} label="Описание" value={lessonDescription || ''}/>

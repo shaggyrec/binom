@@ -4,6 +4,7 @@ import Video from './Video';
 import { SERVER_REQUESTS_BASE } from '../functions';
 import Paddingable from './Paddingable';
 import MathsText from './MathsText';
+import YoutubeVideo from './YoutubeVideo';
 
 function renderTaskFiles(taskFiles) {
     if (!taskFiles) {
@@ -26,6 +27,11 @@ function Lesson(props: Lesson): ReactElement {
         <div>
             <div className="container">
                 <h1>{props.name}</h1>
+                {props.youtubeVideos && props.youtubeVideos.map((v, i) => (
+                    <div key={v} style={{ marginTop: i > 0 ? 50 : 0 }}>
+                        <YoutubeVideo video={v} />
+                    </div>
+                ))}
                 {props.video && props.video.map(
                     (v, i) => (
                         <div key={v} className="video-container" style={{ marginTop: i > 0 ? 50 : 0 }}>

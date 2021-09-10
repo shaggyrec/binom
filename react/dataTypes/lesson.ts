@@ -5,6 +5,7 @@ export interface Lesson {
     task: string;
     taskFiles: string[];
     video: string[];
+    youtubeVideos: string[];
     topicId: string;
     alias: string;
     taskValue: number;

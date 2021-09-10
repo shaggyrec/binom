@@ -172,7 +172,7 @@ button {
     line-height: 1.5;
 }
 
-button:hover, button.hover, .neomorphic, .badge {
+button:hover, button.hover, .neomorphic, .badge, .youtube-video {
     box-shadow: -2px -2px 5px #FFF, 2px 2px 5px #BABECC;
 }
 .neomorphic, .badge {
@@ -212,6 +212,10 @@ button:active {
 
 .h-100 {
     height: 100%;
+}
+
+.w-100 {
+    width: 100%;
 }
 
 .py-20 {
@@ -539,6 +543,13 @@ button:active {
     height: 70vh;
     min-height: 300px;
     display: block;
+}
+
+.youtube-video {
+    border-radius: 8px;
+    width: 100%;
+    height: 70vh;
+    min-height: 300px;
 }
 
 .outline-background {

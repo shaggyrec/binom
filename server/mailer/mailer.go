@@ -2,19 +2,31 @@ package mailer
 
 import (
 	"binom/server/functions"
+	"bytes"
 	"github.com/shaggyrec/sendmail"
 	"html/template"
 	"log"
 	"net/mail"
+	"net/smtp"
 	"path/filepath"
 	"runtime"
+	"strings"
 )
 
 const domain = "binom.school"
 var from = &mail.Address{Name: "Binom", Address: "notify@" + domain}
 
+var smptMailConfig = struct {
+	addr string
+	from string
+	pwd string
+} {
+	"smtp.yandex.ru:25",
+	"notify@binom.school",
+	"I47119111",
+}
 
-func Mail(to []string, subject string, body interface{}, emailType EmailType) error {
+func SendMail(to []string, subject string, body interface{}, emailType EmailType) error {
 	var toAddresses []*mail.Address
 
 	for _, email := range to {
@@ -45,6 +57,34 @@ func Mail(to []string, subject string, body interface{}, emailType EmailType) er
 	}
 
 	return nil
+}
+
+func SmtpMail(to []string, subject string, body interface{}, emailType EmailType, tries int) error {
+	var messageBody bytes.Buffer
+	tpl := messageTemplate(emailType)
+	err := tpl.Execute(&messageBody, body)
+
+	if err != nil {
+		log.Panic(err)
+	}
+
+	auth := smtp.PlainAuth("", smptMailConfig.from, smptMailConfig.pwd , "smtp.yandex.ru")
+
+	msg := []byte("To: " + strings.Join(to, ",") + "\r\n" +
+		"Subject: " + subject +"\r\n" +
+		"Content-Type: text/html; charset=\"UTF-8\"\r\n" +
+		"Content-Transfer-Encoding: base64\r\n" +
+		"\r\n" +
+		messageBody.String() + "\r\n")
+
+	err = smtp.SendMail(smptMailConfig.addr, auth, smptMailConfig.from, to, msg)
+
+	if err != nil && tries > 0 {
+		log.Println(tries)
+		return SmtpMail(to, subject, body, emailType, tries - 1)
+	}
+
+	return err
 }
 
 func messageTemplate(emailType EmailType) *template.Template {

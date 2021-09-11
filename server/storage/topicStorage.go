@@ -2,10 +2,12 @@ package storage
 
 import (
 	"binom/server/dataType"
+	"binom/server/functions"
 	"database/sql"
 	"errors"
 	"github.com/go-pg/pg"
 	"github.com/go-pg/pg/orm"
+	"github.com/mitchellh/mapstructure"
 	"gopkg.in/guregu/null.v4"
 )
 
@@ -23,13 +25,16 @@ func (s *TopicStorage) Create(topic *dataType.Topic) (*dataType.Topic, error) {
 	return topic, err
 }
 
-func (s *TopicStorage) Update(topic *dataType.Topic) (*dataType.Topic, error) {
-	r, err := s.db.Model(topic).WherePK().Update()
+func (s *TopicStorage) Update(id string, topicMap map[string]interface{}) error {
+	r, err := s.db.Model(s.mapDbRow(topicMap)).
+		Column(functions.ArrayToSnakeCase(functions.MapKeys(topicMap))...).
+		Where("id = ?", id).
+		Update()
 
 	if r != nil && r.RowsAffected() == 0 {
 		err = errors.New("nothing affected")
 	}
-	return topic, err
+	return err
 }
 
 func (s *TopicStorage) List(limit int, offset int, withLessons bool, userId string) (*[]dataType.Topic, error) {
@@ -69,7 +74,7 @@ func (s *TopicStorage) GetByAlias(alias string) (*dataType.Topic, error) {
 	return topic, err
 }
 
-func (s *TopicStorage) Delete(id string) (error) {
+func (s *TopicStorage) Delete(id string) error {
 	topic := &dataType.Topic{Id: id}
 	r, err := s.db.Model(topic).WherePK().Delete()
 
@@ -88,4 +93,31 @@ func (s *TopicStorage) Count() int {
 		return 0
 	}
 	return amount
+}
+
+func (s *TopicStorage) mapDbRow(data map[string]interface{}) *dataType.Topic {
+	var topic dataType.Topic
+	mapstructure.Decode(data, &topic)
+
+	if val, ok := data["name"]; ok {
+		topic.Name.String = val.(string)
+		topic.Name.Valid = true
+	}
+
+	if val, ok := data["text"]; ok {
+		topic.Text.String = val.(string)
+		topic.Text.Valid = true
+	}
+
+	if val, ok := data["alias"]; ok {
+		topic.Alias.String = val.(string)
+		topic.Alias.Valid = true
+	}
+
+	if val, ok := data["openDate"]; ok {
+		topic.OpenDate.String = val.(string)
+		topic.OpenDate.Valid = true
+	}
+
+	return &topic
 }

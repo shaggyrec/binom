@@ -8,6 +8,8 @@ import (
 	"binom/server/service"
 	"binom/server/storage"
 	"github.com/go-chi/render"
+	"github.com/google/uuid"
+	"log"
 	"net/http"
 )
 
@@ -38,17 +40,18 @@ func (c *AuthController) Email(w http.ResponseWriter, r *http.Request) {
 
 	authCode := c.authCodeService.Generate(b.Email)
 
-	err := mailer.Mail(
+	err := mailer.SendMail(
 		[]string{ b.Email },
 		"Verification code",
 		struct {
 			Code string
 			Id string
 		}{authCode.Code, authCode.Id},
-		mailer.TypeVerificationCode,
+		mailer.TypeVerificationCode
 	)
 
 	if err != nil {
+		log.Println(err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -66,6 +69,11 @@ func (c *AuthController) CheckCodeAndAuth(w http.ResponseWriter, r *http.Request
 		exceptions.BadRequestError(w, r, "`code` and `id` are mandatory", exceptions.ErrorFieldIsMandatory)
 		return
 	}
+	if _, err := uuid.Parse(b.Id); err != nil {
+		exceptions.BadRequestError(w, r, "Invalid code id", exceptions.ErrorFieldIsMandatory)
+		return
+	}
+
 	recipient, err := c.authCodeService.Check(b.Id, b.Code)
 	if err != nil {
 		exceptions.BadRequestError(w, r, err.Error(), exceptions.ErrorInvalidAuthCode)

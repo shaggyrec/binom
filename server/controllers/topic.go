@@ -8,6 +8,7 @@ import (
 	"binom/server/storage"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
+	"github.com/go-pg/pg"
 	"log"
 	"net/http"
 	"strconv"
@@ -46,18 +47,21 @@ func (c *TopicController) Create(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *TopicController) Update(w http.ResponseWriter, r *http.Request) {
-	var topicToUpdate dataType.Topic
+	var topicToUpdate map[string]interface{}
 	if err := functions.ParseRequest(w, r, &topicToUpdate);  err != nil {
 		return
 	}
 
-	topicToUpdate.Id = chi.URLParam(r, "id")
-
-	_, err := c.topicStorage.Update(&topicToUpdate)
+	err := c.topicStorage.Update(chi.URLParam(r, "id"), topicToUpdate)
 
 	if err != nil {
 		log.Print(err)
-		exceptions.BadRequestError(w, r, err.Error(), exceptions.NothingAffected)
+		pgErr, ok := err.(pg.Error)
+		if ok && pgErr.IntegrityViolation() {
+			exceptions.BadRequestError(w, r, "Topic with alias \"" + topicToUpdate["alias"].(string) + "\" already exists", exceptions.AlreadyExists)
+		} else {
+			exceptions.BadRequestError(w, r, err.Error(), exceptions.NothingAffected)
+		}
 		return
 	}
 

@@ -1,0 +1,1 @@
+ALTER TABLE topics DROP COLUMN IF EXISTS open_date;

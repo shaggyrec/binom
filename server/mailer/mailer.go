@@ -10,7 +10,8 @@ import (
 	"runtime"
 )
 
-var from = &mail.Address{Name: "Binom", Address: "i@shagg.ru"}
+const domain = "binom.school"
+var from = &mail.Address{Name: "Binom", Address: "notify@" + domain}
 
 
 func Mail(to []string, subject string, body interface{}, emailType EmailType) error {

@@ -5,11 +5,20 @@ import { Redirect } from 'react-router';
 import Form from '../components/form/Form';
 import Input from '../components/form/Input';
 import Button from '../components/Button';
-import { sendCode, sendEmail, setCode, setEmail } from '../ducks/auth';
+import { sendCode, sendEmail, setCode, setCodeId, setEmail } from '../ducks/auth';
 import CodeInput from '../components/form/CodeInput';
+import useQueryString from '../hooks/useQueryString';
 
-function Auth({ me, from, setEmail, email, code, sendEmail, sendCode, setCode, error, codeId, history }): ReactElement {
+function Auth({ me, from, setEmail, email, code, sendEmail, sendCode, setCode, error, codeId, history, setCodeId }): ReactElement {
     const [formError, setFormError] = useState(error);
+    const queryString = useQueryString();
+
+    useEffect(() => {
+        if (queryString.has('id') && queryString.has('code')) {
+            setCodeId(queryString.get('id'));
+            setCode(queryString.get('code'));
+        }
+    } ,[]);
 
     useEffect(() => {
         if (me) {
@@ -43,7 +52,7 @@ function Auth({ me, from, setEmail, email, code, sendEmail, sendCode, setCode, e
     return (
         <div className="container w-600 py-20">
             <h1 className="mb-0">Вход</h1>
-            <h3 className="mt-0">Введите {codeId ? `код, отправленный на ${email}` :'email'}</h3>
+            <h3 className="mt-0">Введите {codeId ? `код, отправленный на ${email || 'email'}` :'email'}</h3>
             <Form onSubmit={handleSubmit}>
                 {
                     codeId
@@ -69,6 +78,7 @@ export default connect(
     dispatch => ({
         setEmail: email => dispatch(setEmail(email)),
         setCode: code => dispatch(setCode(code)),
+        setCodeId: id => dispatch(setCodeId(id)),
         sendEmail: email => dispatch(sendEmail(email)),
         sendCode: code => dispatch(sendCode(code)),
     })

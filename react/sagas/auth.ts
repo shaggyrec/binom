@@ -1,4 +1,5 @@
 import { ForkEffect, takeEvery, select, call, put } from '@redux-saga/core/effects';
+import { validate as uuidValidate } from 'uuid';
 import * as authActions from '../ducks/auth';
 import * as usersActions from '../ducks/users';
 import * as notificationsActions from '../ducks/notifications';
@@ -11,7 +12,7 @@ import { push } from 'connected-react-router';
 function* sendEmailProcess(): IterableIterator<any> {
     const email = yield select(authActions.email);
     try {
-        const { data }: AxiosResponse = yield call(serverRequest, '/api/auth/email', 'post', {email});
+        const { data }: AxiosResponse = yield call(serverRequest, '/api/auth/email', 'post', { email });
         yield put(authActions.setCodeId(data.id));
     } catch (e) {
         yield put(authActions.error(e.message));
@@ -21,12 +22,15 @@ function* sendEmailProcess(): IterableIterator<any> {
 function* sendCodeProcess(): IterableIterator<any> {
     const codeId = yield select(authActions.codeId);
     const code: string = yield select(authActions.code);
-
+    if (!uuidValidate(codeId)) {
+        location.href = '/auth';
+        return
+    }
     if (!code || code.length !== 6) {
         return;
     }
     try {
-        const { data: { tokens: {accessToken, refreshToken}, user } }: AxiosResponse = yield call(serverRequest, '/api/auth/code', 'post', {id: codeId, code});
+        const { data: { tokens: { accessToken, refreshToken }, user } }: AxiosResponse = yield call(serverRequest, '/api/auth/code', 'post', { id: codeId, code });
         storeTokens(accessToken, refreshToken);
         yield put(usersActions.setMe(user));
         yield put(notificationsActions.requestList());

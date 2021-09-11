@@ -47,7 +47,7 @@ func (c *AuthController) Email(w http.ResponseWriter, r *http.Request) {
 			Code string
 			Id string
 		}{authCode.Code, authCode.Id},
-		mailer.TypeVerificationCode
+		mailer.TypeVerificationCode,
 	)
 
 	if err != nil {

@@ -17,13 +17,15 @@ const domain = "binom.school"
 var from = &mail.Address{Name: "Binom", Address: "notify@" + domain}
 
 var smptMailConfig = struct {
-	addr string
+	host string
+	port string
 	from string
 	pwd string
 } {
-	"smtp.yandex.ru:25",
+	"smtp.mail.ru",
+	"25",
 	"notify@binom.school",
-	"I47119111",
+	"ei&UVTpro9T4",
 }
 
 func SendMail(to []string, subject string, body interface{}, emailType EmailType) error {
@@ -44,7 +46,8 @@ func SendMail(to []string, subject string, body interface{}, emailType EmailType
 	err := tpl.Execute(&sm.Text, body)
 
 	if err != nil {
-		log.Panic(err)
+		log.Println(err)
+		return err
 	}
 
 	sm.Header.Set("MIME-Version", "1.0")
@@ -52,7 +55,6 @@ func SendMail(to []string, subject string, body interface{}, emailType EmailType
 
 
 	if err := sm.Send(); err != nil {
-		panic(err)
 		return err
 	}
 
@@ -68,16 +70,16 @@ func SmtpMail(to []string, subject string, body interface{}, emailType EmailType
 		log.Panic(err)
 	}
 
-	auth := smtp.PlainAuth("", smptMailConfig.from, smptMailConfig.pwd , "smtp.yandex.ru")
+	auth := smtp.PlainAuth("", smptMailConfig.from, smptMailConfig.pwd , smptMailConfig.host)
 
 	msg := []byte("To: " + strings.Join(to, ",") + "\r\n" +
 		"Subject: " + subject +"\r\n" +
 		"Content-Type: text/html; charset=\"UTF-8\"\r\n" +
-		"Content-Transfer-Encoding: base64\r\n" +
+		"MIME-Version: 1.0\r\n" +
 		"\r\n" +
 		messageBody.String() + "\r\n")
 
-	err = smtp.SendMail(smptMailConfig.addr, auth, smptMailConfig.from, to, msg)
+	err = smtp.SendMail(smptMailConfig.host + ":" + smptMailConfig.port, auth, smptMailConfig.from, to, msg)
 
 	if err != nil && tries > 0 {
 		log.Println(tries)

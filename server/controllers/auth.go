@@ -40,7 +40,7 @@ func (c *AuthController) Email(w http.ResponseWriter, r *http.Request) {
 
 	authCode := c.authCodeService.Generate(b.Email)
 
-	err := mailer.SendMail(
+	err := mailer.SmtpMail(
 		[]string{ b.Email },
 		"Verification code",
 		struct {
@@ -48,6 +48,7 @@ func (c *AuthController) Email(w http.ResponseWriter, r *http.Request) {
 			Id string
 		}{authCode.Code, authCode.Id},
 		mailer.TypeVerificationCode,
+		2,
 	)
 
 	if err != nil {

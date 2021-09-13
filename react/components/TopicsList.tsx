@@ -126,56 +126,56 @@ function TopicsList(
     }
 
     return listContainer(topics.map((t, index) => (
-            <div key={t.id} ref={openTopics[0] === t.id ? activeTheme : null}>
-                <Paddingable padding={[30,0,0]}>
-                    <div className={`card transition3 ${openTopics.indexOf(t.id) === -1 ? ' pointer' : ''} ${topicStatusClass(t.status)}`}>
-                        <div className="flex flex-vertical-top outline-background" onClick={() => handleClickTopic(t.id)}>
-                            <div>
-                                {renderIcon(t.status, !(topics[index-1] && topics[index-1].status?.finished))}
+        <div key={t.id} ref={openTopics[0] === t.id ? activeTheme : null}>
+            <Paddingable padding={[30,0,0]}>
+                <div className={`card transition3 ${openTopics.indexOf(t.id) === -1 ? ' pointer' : ''} ${topicStatusClass(t.status)}`}>
+                    <div className="flex flex-vertical-top outline-background" onClick={() => handleClickTopic(t.id)}>
+                        <div>
+                            {renderIcon(t.status, !(topics[index-1] && topics[index-1].status?.finished))}
+                        </div>
+                        <div>
+                            <div className="card-title">{t.name}</div>
+                            <div className="card-info">
+                                {t.lessons && <span>{t.lessons.length} уроков</span>}
                             </div>
-                            <div>
-                                <div className="card-title">{t.name}</div>
-                                <div className="card-info">
-                                    {t.lessons && <span>{t.lessons.length} уроков</span>}
-                                </div>
+                        </div>
+                        {!isAdmin && (!t.status || !t.status.finished) && t.lessons?.length > 0 && (
+                            <div style={{ flexGrow: 1, textAlign: 'right' }}>
+                                <Link to={`/lesson/${t?.status ? t.lessons.find(l => l.id === t.status.lessonId).alias : t.lessons[0].alias}`}>
+                                    <Button green>{t.status ? 'Продолжить' : 'Начать'}</Button>
+                                </Link>
                             </div>
-                            {!isAdmin && (!t.status || !t.status.finished) && t.lessons?.length > 0 && (
-                                <div style={{ flexGrow: 1, textAlign: 'right' }}>
-                                    <Link to={`/lesson/${t?.status ? t.lessons.find(l => l.id === t.status.lessonId).alias : t.lessons[0].alias}`}>
-                                        <Button green>{t.status ? 'Продолжить' : 'Начать'}</Button>
-                                    </Link>
-                                </div>
-                            )}
-                            {t.status?.finished && (
-                                <Paddingable padding={[5,0,0,10]}>
-                                    <span className="badge">Зачёт</span>
-                                </Paddingable>
-                            )}
-                            {isAdmin &&
+                        )}
+                        {t.status?.finished && (
+                            <Paddingable padding={[5,0,0,10]}>
+                                <span className="badge">Зачёт</span>
+                            </Paddingable>
+                        )}
+                        {isAdmin &&
                                 <div style={{ flexGrow: 1, textAlign: 'right' }}>
                                     <Link to={`/topic/${t.alias}`}>
                                         <Button small>
                                             <Edit size={20}/>
                                         </Button>
-                                   </Link>
+                                    </Link>
                                 </div>
-                            }
-                        </div>
-                        {t.lessons && t.lessons.length > 0 && (
-                            <Sublist
-                                items={t.lessons}
-                                open={openTopics.indexOf(t.id) !== -1}
-                                onMove={onMoveLesson}
-                                isAdmin={isAdmin}
-                                active={t.status?.lessonId}
-                                isFinished={t.status?.finished}
-                            />)}
+                        }
                     </div>
-                </Paddingable>
-            </div>
-        )),
-        (i, at) => onMoveTopic(topics[i].id, at),
-        isAdmin
+                    {t.lessons && t.lessons.length > 0 && (
+                        <Sublist
+                            items={t.lessons}
+                            open={openTopics.indexOf(t.id) !== -1}
+                            onMove={onMoveLesson}
+                            isAdmin={isAdmin}
+                            active={t.status?.lessonId}
+                            isFinished={t.status?.finished}
+                        />)}
+                </div>
+            </Paddingable>
+        </div>
+    )),
+    (i, at) => onMoveTopic(topics[i].id, at),
+    isAdmin
     );
 }
 

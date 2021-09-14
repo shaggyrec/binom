@@ -809,6 +809,10 @@ code {
     line-height: 2;
 }
 
+.text-red {
+    color: #ad1100;
+}
+
 @media (min-width:1024px) {
     .w-33 {
         width: 33.3%;

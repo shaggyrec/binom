@@ -44,8 +44,7 @@ function* createProcess({ payload: { name, alias } }): IterableIterator<any> {
 function* updateProcess({ payload: { id, topic } }): IterableIterator<any> {
     try {
         yield call(apiRequest, '/api/topic/' + id, 'put', topic);
-        yield put(topicsActions.requestList());
-        const currentTopic: {} = yield select(topicsActions.currentTopic);
+        const currentTopic: any = yield select(topicsActions.currentTopic);
         yield put(topicsActions.topic({ ...currentTopic, ...topic }));
     } catch (e) {
         console.log(e);

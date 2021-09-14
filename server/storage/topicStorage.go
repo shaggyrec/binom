@@ -104,7 +104,7 @@ func (s *TopicStorage) mapDbRow(data map[string]interface{}) *dataType.Topic {
 		topic.Name.Valid = true
 	}
 
-	if val, ok := data["text"]; ok {
+	if val, ok := data["text"]; ok && val != nil {
 		topic.Text.String = val.(string)
 		topic.Text.Valid = true
 	}

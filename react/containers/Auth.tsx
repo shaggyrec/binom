@@ -8,8 +8,9 @@ import Button from '../components/Button';
 import { sendCode, sendEmail, setCode, setCodeId, setEmail } from '../ducks/auth';
 import CodeInput from '../components/form/CodeInput';
 import useQueryString from '../hooks/useQueryString';
+import Loader from '../components/Loader';
 
-function Auth({ me, from, setEmail, email, code, sendEmail, sendCode, setCode, error, codeId, history, setCodeId }): ReactElement {
+function Auth({ me, from, setEmail, email, code, sendEmail, sendCode, setCode, error, codeId, history, setCodeId, loading }): ReactElement {
     const [formError, setFormError] = useState(error);
     const queryString = useQueryString();
 
@@ -60,8 +61,9 @@ function Auth({ me, from, setEmail, email, code, sendEmail, sendCode, setCode, e
                         : <Input required={true} name="email" type="email" value={email || ''} label="Email" onChange={setEmail}/>
                 }
 
-                {!codeId && <Button className="block">Войти</Button>}
+                {!codeId && !loading && <Button className="block">Войти</Button>}
             </Form>
+            <Loader show={loading} />
         </div>
     );
 }
@@ -74,6 +76,7 @@ export default connect(
         email: state.auth.email,
         code: state.auth.code,
         codeId: state.auth.codeId,
+        loading: state.auth.loading,
     }),
     dispatch => ({
         setEmail: email => dispatch(setEmail(email)),

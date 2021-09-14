@@ -1,7 +1,9 @@
 package controllers
 
 import (
+	"binom/server/exceptions"
 	"binom/server/storage"
+	"fmt"
 	"html/template"
 	"net/http"
 	"os"
@@ -11,20 +13,23 @@ type PageController struct {
 	viewsPath string
 	topicStorage *storage.TopicStorage
 	lessonStorage *storage.LessonStorage
+	host string
 }
 
-func (c *PageController) Init(topicStorage *storage.TopicStorage, lessonStorage *storage.LessonStorage) {
+func (c *PageController) Init(topicStorage *storage.TopicStorage, lessonStorage *storage.LessonStorage, host string) {
 	pwd, _ := os.Getwd()
 
 	c.viewsPath = pwd + "/server/views"
 	c.topicStorage = topicStorage
 	c.lessonStorage = lessonStorage
+	c.host = host
 }
 
 func (c *PageController) Main (w http.ResponseWriter, r *http.Request)  {
-	tmpl := template.Must(template.ParseFiles(c.viewsPath + "/index.html"))
-	tmpl.Execute(
+	c.renderTemplate(
+		"index",
 		w,
+		r,
 		map[string]interface{}{
 			"TopicsCount": c.topicStorage.Count(),
 			"LessonsCount": c.topicStorage.Count(),
@@ -33,11 +38,26 @@ func (c *PageController) Main (w http.ResponseWriter, r *http.Request)  {
 }
 
 func (c *PageController) App (w http.ResponseWriter, r *http.Request)  {
-	tmpl := template.Must(template.ParseFiles(c.viewsPath + "/react.html"))
-	tmpl.Execute(w, nil)
+	c.renderTemplate("react", w, r, nil)
 }
 
 func (c *PageController) MiniLanding (w http.ResponseWriter, r *http.Request)  {
-	tmpl := template.Must(template.ParseFiles(c.viewsPath + "/mini-landing.html"))
-	tmpl.Execute(w, nil)
+	c.renderTemplate("mini-landing", w, r, nil)
+}
+
+func (c *PageController) renderTemplate(name string, w http.ResponseWriter, r *http.Request, data map[string]interface{}) {
+	if data != nil {
+		data["Host"] = c.host
+	} else {
+		data = map[string]interface{}{"Host": c.host}
+	}
+	err := template.Must(template.ParseFiles(
+		c.viewsPath + "/" + name + ".html",
+		c.viewsPath + "/parts/footer.html",
+		c.viewsPath + "/parts/counters.html",
+	)).Execute(w, data)
+	if err != nil {
+		fmt.Println(err)
+		exceptions.ServerError(w, r)
+	}
 }

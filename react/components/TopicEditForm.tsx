@@ -22,7 +22,7 @@ function TopicEditForm({ onSubmit, name, alias, text, openDate }): ReactElement 
             name: topicName,
             alias: topicAlias,
             text: topicDescription,
-            openDate: moment(topicOpenDate).format('DD-MM'),
+            openDate: topicOpenDate && moment(topicOpenDate).format('DD-MM'),
         });
     }
 

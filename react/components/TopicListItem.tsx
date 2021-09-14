@@ -83,17 +83,18 @@ function renderTopicButtonsBlock(isAdmin, topic, isPreviousFinished) {
 function getOpenDate(openDate): Date {
     const currentMonth = new Date().getMonth();
     const monthOfOpenDate = parseInt(openDate.split('-')[1]) - 1
-    let date;
+    let date = new Date((new Date()).getFullYear() + '-' + openDate.split('-').reverse().join('-'));
     if (currentMonth < 5 && monthOfOpenDate > 5) {
-        date = new Date(moment().subtract(-1,'year').toDate().getFullYear() + '-' + openDate.split('-').reverse().join('-'));
-    }
-    if (currentMonth > 5 && monthOfOpenDate < 5) {
         date = new Date(moment().subtract(1,'year').toDate().getFullYear() + '-' + openDate.split('-').reverse().join('-'));
     }
+    if (currentMonth > 5 && monthOfOpenDate < 5) {
+        date = new Date(moment().subtract(-1,'year').toDate().getFullYear() + '-' + openDate.split('-').reverse().join('-'));
+    }
+
     return date;
 }
 
-function checkOpenDate(openDate: string) {
+function checkOpenDate(openDate: string): boolean {
     return openDate ? +new Date() < +getOpenDate(openDate) : false;
 }
 

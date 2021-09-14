@@ -59,7 +59,7 @@ function TopicsList(
                         <TopicListItem
                             isOpen={openTopics.indexOf(t.id) === -1}
                             topic={t}
-                            isPreviousFinished={topics[index-1] && topics[index-1].status?.finished}
+                            isPreviousFinished={topics[index-1] ? topics[index-1].status?.finished : true}
                             onClick={() => handleClickTopic(t.id)}
                             isAdmin={isAdmin}
                         >

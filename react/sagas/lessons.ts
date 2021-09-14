@@ -31,6 +31,7 @@ function* requestProcess({ payload: alias }): IterableIterator<any> {
             yield put(push('/404'));
         }
         if (e.response.status === 403) {
+            yield put(applicationActions.error(getApiErrorMessage(e)));
             yield put(push('/app'));
         }
         yield put(lessonsActions.error(e.message));

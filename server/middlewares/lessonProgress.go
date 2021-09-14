@@ -44,11 +44,15 @@ func LessonProgress(learningProgressService *service.LearningProgressService, le
 							if isPrevTopicFinished || i == 0 {
 								break
 							} else {
-								exceptions.Forbidden(w, r, "You must to pass previous Theme")
+								exceptions.Forbidden(w, r, "Необходимо пройти предыдущую тему")
 								return
 							}
 						}
-						isPrevTopicFinished = topic.Status.Finished != ""
+						if topic.Status == nil {
+							isPrevTopicFinished = false
+						} else {
+							isPrevTopicFinished = topic.Status.Finished != ""
+						}
 					}
 
 					_, err = learningProgressService.Save(lessonAlias, userId)

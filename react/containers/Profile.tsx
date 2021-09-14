@@ -10,9 +10,17 @@ import * as tariffsActions from '../ducks/tariffs';
 import Loader from '../components/Loader';
 import TariffsList from '../components/TariffsList';
 import ReactMoment from 'react-moment';
+import { useScroll } from '../hooks/useScroll';
+import { useLocation } from 'react-router';
 
 function Profile ({ logout, me, resetBackLink, user, match: { params: { username } }, requestUser, requestTariffs, tariffs, onBuyTariff, loading }): ReactElement {
+    const [buy, scrollToBuy] = useScroll<HTMLDivElement>();
+    const l = useLocation();
+
     useEffect(() => {
+        if (l.hash === '#buy') {
+            scrollToBuy();
+        }
         resetBackLink();
         if (!user) {
             requestUser(username);
@@ -36,7 +44,7 @@ function Profile ({ logout, me, resetBackLink, user, match: { params: { username
                             {user.username === me.username && <Button small onClick={logout}><small>Выйти</small></Button>}
                         </div>
                     </Paddingable>
-                    {user.username === me.username && !me.subscription && <TariffsList tariffs={tariffs} onBuy={onBuyTariff}/>}
+                    {user.username === me.username && !me.subscription && <div ref={buy}><TariffsList tariffs={tariffs} onBuy={onBuyTariff}/></div>}
                     <Loader show={loading}/>
                 </div>
             )

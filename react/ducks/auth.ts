@@ -1,4 +1,6 @@
 import { handleActions, createAction } from 'redux-actions';
+import { characterEntitiesHtml4 } from 'character-entities-html4';
+import nu = characterEntitiesHtml4.nu;
 
 const SET_EMAIL = 'auth/SET_EMAIL';
 const SET_CODE = 'auth/SET_CODE';
@@ -22,9 +24,9 @@ export const initialState = {
 export default handleActions({
     [SET_EMAIL]: (state, { payload }) => ({ ...state, email: payload }),
     [SET_CODE]: (state, { payload }) => ({ ...state, code: payload }),
-    [SEND_EMAIL]: state => ({ ...state, loading: true }),
+    [SEND_EMAIL]: state => ({ ...state, loading: true, error: null }),
     [SET_CODE_ID]: (state, { payload }) => ({ ...state, codeId: payload, loading: false }),
-    [SEND_CODE]: state => ({ ...state, loading: true }),
+    [SEND_CODE]: state => ({ ...state, loading: true, error: null }),
     [ERROR]: (state, { payload }) => ({ ...state, error: payload, loading: false }),
     [SET_FROM]: (state, { payload }) => ({ ...state, from: payload }),
 }, initialState);

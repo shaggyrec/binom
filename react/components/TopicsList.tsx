@@ -12,10 +12,6 @@ import TopicListItem from './TopicListItem';
 import LessonsList from './LessonsList';
 import ListContainer from './ListContainer';
 
-function listContainer (items, onMove, isAdmin) {
-    return isAdmin ?  <SortableList onMove={onMove} items={items}/> : <>{items}</>;
-}
-
 function TopicsList(
     { topics, isAdmin, onMoveTopic, onMoveLesson }: { topics: Topic[], isAdmin?: boolean, onMoveTopic: (id: string, moveAt: number) => any, onMoveLesson: (id: string, moveAt: number) => any }
 ): ReactElement {

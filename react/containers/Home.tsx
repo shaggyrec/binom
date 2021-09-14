@@ -12,7 +12,7 @@ import { Link } from 'react-router-dom';
 import Button from '../components/Button';
 import { Redirect } from 'react-router';
 
-function Home({ topics, requestTopics, isAdmin, moveTopicAtPosition, moveLessonAtPosition, loading, currentLesson }): ReactElement {
+function Home({ topics, requestTopics, isAdmin, moveTopicAtPosition, moveLessonAtPosition, loading, currentLesson, subscription, me }): ReactElement {
     useEffect(() => {
         if (!topics || topics.length === 0) {
             requestTopics();
@@ -29,18 +29,6 @@ function Home({ topics, requestTopics, isAdmin, moveTopicAtPosition, moveLessonA
 
     function handleMoveLesson(id: string, moveToIndex: number) {
         moveLessonAtPosition(id, moveToIndex + 1);
-    }
-
-    if (!isAdmin) {
-        return (
-            <div className="container w-600 centered">
-                <h1>Обучение начнётся совсем скоро</h1>
-                <p>
-                    Скоро мы пришлем вам письмо о начале обучения.
-                    <br/>Не пропустите!
-                </p>
-            </div>
-        );
     }
 
     return topics
@@ -68,6 +56,14 @@ function Home({ topics, requestTopics, isAdmin, moveTopicAtPosition, moveLessonA
                     </TopBar>
                 }
                 <div className="container">
+                    {!isAdmin && !subscription && (
+                        <Paddingable padding={[20, 0, 0]}>
+                            <Paddingable padding={[20, 10]} className="badge badge-red">
+                                Демо-версия. Доступны только две темы и недоступны домашние задания обратная связь.&nbsp;
+                                <Link to={`/@${me.username}#buy`} className="text-white">Оформите подписку, чтобы получить полный доступ.</Link>
+                            </Paddingable>
+                        </Paddingable>
+                    )}
                     <Paddingable padding={[10, 0, 20]}>
                         <TopicsList topics={topics} isAdmin={isAdmin} onMoveTopic={handleMoveTopic} onMoveLesson={handleMoveLesson}/>
                     </Paddingable>
@@ -83,7 +79,9 @@ export default connect(
         topics: state.topics.list,
         currentLesson: state.lessons.current,
         loading: state.topics.loading || state.lessons.loading,
-        isAdmin: state.users.me?.role === UserRole.admin
+        isAdmin: state.users.me?.role === UserRole.admin,
+        me: state.users.me,
+        subscription: state.users.me?.subscription,
     }),
     dispatch => ({
         requestTopics: () => dispatch(topicsActions.requestList()),

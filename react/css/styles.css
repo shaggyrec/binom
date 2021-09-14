@@ -186,6 +186,9 @@ button:hover, button.hover, .neomorphic, .badge, .youtube-video {
     padding: 5px 10px;
     font-size: 12px;
 }
+.badge-red {
+    background: #ad1100;
+}
 button:active {
     box-shadow: inset 1px 1px 2px #BABECC, inset -1px -1px 2px #FFF;
 }
@@ -811,6 +814,9 @@ code {
 
 .text-red {
     color: #ad1100;
+}
+.text-white {
+    color: #ffffff;
 }
 
 @media (min-width:1024px) {

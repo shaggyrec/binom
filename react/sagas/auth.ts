@@ -3,10 +3,11 @@ import { validate as uuidValidate } from 'uuid';
 import * as authActions from '../ducks/auth';
 import * as usersActions from '../ducks/users';
 import * as notificationsActions from '../ducks/notifications';
-import { serverRequest } from '../functions';
+import { getApiErrorMessage, serverRequest } from '../functions';
 import { AxiosResponse } from 'axios';
 import { eraseTokens, getTokens, storeTokens } from '../tokens';
 import { push } from 'connected-react-router';
+import { ApiErrors } from '../ApiErrors';
 
 
 function* sendEmailProcess(): IterableIterator<any> {
@@ -36,7 +37,7 @@ function* sendCodeProcess(): IterableIterator<any> {
         yield put(notificationsActions.requestList());
         yield put(push(yield select(authActions.from)));
     } catch (e) {
-        yield put(authActions.error(e.message));
+        yield put(authActions.error(e.response?.data?.code === ApiErrors.ErrorInvalidAuthCode ? 'Неверный код' : getApiErrorMessage(e)));
     }
 }
 

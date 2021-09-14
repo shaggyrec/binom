@@ -9,6 +9,8 @@ import { sendCode, sendEmail, setCode, setCodeId, setEmail } from '../ducks/auth
 import CodeInput from '../components/form/CodeInput';
 import useQueryString from '../hooks/useQueryString';
 import Loader from '../components/Loader';
+import Paddingable from '../components/Paddingable';
+import { Back } from '../components/Icons';
 
 function Auth({ me, from, setEmail, email, code, sendEmail, sendCode, setCode, error, codeId, history, setCodeId, loading }): ReactElement {
     const [formError, setFormError] = useState(error);
@@ -60,9 +62,14 @@ function Auth({ me, from, setEmail, email, code, sendEmail, sendCode, setCode, e
                         ? <CodeInput error={formError} value={code || ''} onChange={handleCodeChange}/>
                         : <Input required={true} name="email" type="email" value={email || ''} label="Email" onChange={setEmail}/>
                 }
-
+                {error && <div className="text-red">{ error }</div>}
                 {!codeId && !loading && <Button className="block">Войти</Button>}
             </Form>
+            {codeId &&
+                <Paddingable padding={[40, 0]}>
+                    <a href="/auth"><Back size={15} fill="#039151"/> Ввести email заново</a>
+                </Paddingable>
+            }
             <Loader show={loading} />
         </div>
     );

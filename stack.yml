@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   pg:
-    image: $CI_REGISTRY/binom.study/binom/pg:${CI_COMMIT_BRANCH}
+    image: $CI_REGISTRY/binom.school/binom/pg:${CI_COMMIT_BRANCH}
     command: postgres
     ports:
       - "5432:5432"
@@ -16,7 +16,7 @@ services:
       POSTGRES_DB_NAME_TEST: postgres_test
       PGDATA: /data/postgres
   nginx:
-    image: $CI_REGISTRY/binom.study/binom/nginx:${CI_COMMIT_BRANCH}
+    image: $CI_REGISTRY/binom.school/binom/nginx:${CI_COMMIT_BRANCH}
     ports:
       - "80:80"
       - "443:443"
@@ -35,7 +35,7 @@ services:
         max-size: "10m"
         max-file: "1000"
   golang:
-    image: $CI_REGISTRY/binom.study/binom/golang:${CI_COMMIT_BRANCH}
+    image: $CI_REGISTRY/binom.school/binom/golang:${CI_COMMIT_BRANCH}
     command: ["./scripts/wait-for-it.sh", "pg:5432", "--", "/goapp/main"]
     ports:
       - ${APP_PORT}:${APP_PORT}

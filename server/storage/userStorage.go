@@ -53,7 +53,11 @@ func (u *UserStorage) GetByEmail(email string) (*dataType.User, error) {
 
 func (u *UserStorage) GetByUsername(username string) (*dataType.User, error)  {
 	user := &dataType.User{}
-	err := u.db.Model(user).Where("username = ?", username).Select()
+	err := u.db.Model(user).
+		Relation("Subscription", func(q *orm.Query) (*orm.Query, error) {
+			return q.JoinOn("status = ? AND expired > NOW()", dataType.StatusLive).Order("expired DESC"), nil
+		}).
+		Where("username = ?", username).Select()
 	if err != nil {
 		return user, err
 	}

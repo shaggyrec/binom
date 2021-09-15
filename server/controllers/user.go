@@ -45,6 +45,8 @@ func (u *UserController) ByUsername(w http.ResponseWriter, r *http.Request)  {
 
 	if userId != user.Id && userRole != dataType.UserRoleAdmin {
 		user.Email = null.String{}
+		user.Subscription = nil
+		user.Points = 0
 	}
 
 	functions.RenderJSON(w, r, user)

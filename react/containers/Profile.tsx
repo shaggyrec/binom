@@ -1,5 +1,6 @@
 import React, { ReactElement, useEffect } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import * as authAction from '../ducks/auth'
 import Button from '../components/Button';
 import Paddingable from '../components/Paddingable';
@@ -12,6 +13,7 @@ import TariffsList from '../components/TariffsList';
 import ReactMoment from 'react-moment';
 import { useScroll } from '../hooks/useScroll';
 import { useLocation } from 'react-router';
+import { StarIcon } from '../components/Icons';
 
 function Profile ({ logout, me, resetBackLink, user, match: { params: { username } }, requestUser, requestTariffs, tariffs, onBuyTariff, loading }): ReactElement {
     const [buy, scrollToBuy] = useScroll<HTMLDivElement>();
@@ -35,11 +37,12 @@ function Profile ({ logout, me, resetBackLink, user, match: { params: { username
                     <Paddingable padding={[20, 0]}>
                         <div className="flex flex-between">
                             <div>
-                                <div className="flex">
+                                <div className="flex gap-10">
                                     <h1 className="mb-0">{user.name || user.username}</h1>
-                                    {user.username === me.username && <h3 className="mb-0">&nbsp;(это вы)</h3>}
+                                    <Link to="/rating"><h2 className="text-green"><StarIcon size={22} fill="#069668"/>{user.score}</h2></Link>
+                                    {user.username === me.username && <h3 className="mb-0">(это вы)</h3>}
                                 </div>
-                                {user.username === me.username && me.subscription && <h5 className="mt-0">&nbsp;{me.subscription.name} до <ReactMoment format="D.MM.YYYY" locale="ru">{me.subscription.expired}</ReactMoment></h5>}
+                                {user && user.subscription && <h5 className="mt-0">&nbsp;{user.subscription.name} до <ReactMoment format="D.MM.YYYY" locale="ru">{user.subscription.expired}</ReactMoment></h5>}
                             </div>
                             {user.username === me.username && <Button small onClick={logout}><small>Выйти</small></Button>}
                         </div>

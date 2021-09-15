@@ -2,6 +2,7 @@ package service
 
 import (
 	"binom/server/dataType"
+	"binom/server/mailer"
 	"binom/server/storage"
 	"database/sql"
 	"errors"
@@ -30,7 +31,19 @@ func (s *NotificationService) Create(notification *dataType.Notification, userId
 			return err
 		}
 	}
-	return nil
+	for _, user := range s.userStorage.GetUsersByIds(userIds) {
+		err = mailer.Mail(
+			[]string{user.Email.String},
+			"Binom.school: " + dataType.NotificationTypeDescMap[notification.Type.Int64],
+			struct {
+				Message string
+				User dataType.User
+				Subject string
+			}{Message: notification.Message, User: user, Subject: dataType.NotificationTypeDescMap[notification.Type.Int64],},
+			mailer.TypeNotification,
+		)
+	}
+	return err
 }
 
 func (s *NotificationService) CreateForAdmins(notification *dataType.Notification) error {

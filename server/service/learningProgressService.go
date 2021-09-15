@@ -3,7 +3,6 @@ package service
 import (
 	"binom/server/functions"
 	"github.com/go-pg/pg"
-	"log"
 	"time"
 )
 
@@ -21,6 +20,7 @@ type ProgressLevel struct {
 	Finished pg.NullTime
 	LessonsAliases []string
 	PassedLessonsAliases []string
+	LessonScore map[string]struct{PassedTasks int; MaxTasks int}
 }
 
 type UserProgress struct {
@@ -92,12 +92,10 @@ func (s *LearningProgressService) IsLessonPassed(lessonAlias string, userId stri
 		return false, err
 	}
 
-	log.Print(currentProgress)
-
 	return functions.IndexOf(currentProgress.PassedLessonsAliases, lessonAlias) != -1, nil
 }
 
-func (s *LearningProgressService) Pass(lessonAlias string, userId string) (*ProgressLevel, error) {
+func (s *LearningProgressService) Pass(lessonAlias string, userId string, passedTasks, maxTasks int) (*ProgressLevel, error) {
 	currentProgress, err := s.ProgressLevelByLessonAlias(lessonAlias, userId)
 
 	if err != nil {
@@ -106,12 +104,24 @@ func (s *LearningProgressService) Pass(lessonAlias string, userId string) (*Prog
 
 	indexOfTheNextLesson := functions.IndexOf(currentProgress.LessonsAliases, lessonAlias) + 1
 
+	if currentProgress.LessonScore == nil {
+		currentProgress.LessonScore = map[string]struct {
+			PassedTasks int
+			MaxTasks    int
+		}{}
+	}
+	currentProgress.LessonScore[currentProgress.LessonId] = struct {
+		PassedTasks int
+		MaxTasks    int
+	}{PassedTasks: passedTasks, MaxTasks: maxTasks}
+
 	if indexOfTheNextLesson == len(currentProgress.Lessons) {
 		currentProgress.Finished = pg.NullTime{Time: time.Now()}
 	} else {
 		lessonAlias = currentProgress.LessonsAliases[indexOfTheNextLesson]
 		currentProgress.LessonId = currentProgress.Lessons[indexOfTheNextLesson]
 	}
+
 	err = s.save(currentProgress, lessonAlias, userId)
 	return currentProgress, err
 }
@@ -134,16 +144,18 @@ func (s *LearningProgressService) save(currentProgress *ProgressLevel, lessonAli
 	var err error
 	if currentProgress.LessonId == "" {
 		_, err = s.db.Exec(
-			"INSERT INTO user_topics (topic_id, user_id, lesson_id) VALUES (?,?, (SELECT id FROM lessons WHERE alias = ?))",
+			"INSERT INTO user_topics (topic_id, user_id, lesson_id, lessons_score) VALUES (?,?, (SELECT id FROM lessons WHERE alias = ?), ?)",
 			currentProgress.TopicId,
 			userId,
 			lessonAlias,
+			currentProgress.LessonScore,
 		)
 	}  else {
 		_, err = s.db.Exec(
-			"UPDATE user_topics SET lesson_id = (SELECT id FROM lessons WHERE alias = ?), finished = ? WHERE user_id = ? AND topic_id = ?",
+			"UPDATE user_topics SET lesson_id = (SELECT id FROM lessons WHERE alias = ?), finished = ?, lessons_score = ? WHERE user_id = ? AND topic_id = ?",
 			lessonAlias,
 			currentProgress.Finished,
+			currentProgress.LessonScore,
 			userId,
 			currentProgress.TopicId,
 		)

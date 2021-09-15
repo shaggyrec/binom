@@ -69,7 +69,7 @@ function LessonOverview ({ requestLesson, lesson, loading, match: { params, url 
                 <LessonComments comments={comments} onLeaveComment={handleLeaveComment} />
                 <div>
                     {isAdmin && params.username && (
-                        <PassLessonBlock isLessonPassed={isLessonPassed} onClickPass={() => toggleLessonPassed(lesson.alias, user.id, !isLessonPassed)}/>
+                        <PassLessonBlock isLessonPassed={isLessonPassed} onClickPass={(passTasks, maxTask) => toggleLessonPassed(lesson.alias, user.id, true, passTasks, maxTask)}/>
                     )}
                 </div>
             </div>
@@ -97,7 +97,7 @@ export default connect(
         addComment: (lessonId, userId, text, files) => dispatch(lessonCommentsActions.add(lessonId, userId, text, files)),
         requestUser: alias => dispatch(usersActions.requestUser(alias)),
         requestLessonPassedInfo: (lessonAlias, userId) => dispatch(learningProgressActions.requestProgressForLesson(lessonAlias, userId)),
-        toggleLessonPassed: (lessonAlias, userId, passed) => dispatch(learningProgressActions.save(lessonAlias, userId, passed)),
+        toggleLessonPassed: (lessonAlias, userId, passed, passedTasks, maxTasks) => dispatch(learningProgressActions.save(lessonAlias, userId, passed, passedTasks, maxTasks)),
         resetLesson: () => dispatch(lessonsActions.lesson(null)),
     })
 )(LessonOverview);

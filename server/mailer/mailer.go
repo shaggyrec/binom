@@ -27,7 +27,11 @@ var smptMailConfig = struct {
 	"ei&UVTpro9T4",
 }
 
-func Mail(to []string, subject string, body interface{}, emailType EmailType, tries int) error {
+func Mail(to []string, subject string, body interface{}, emailType EmailType) error {
+	return send(to, subject, body, emailType, 2)
+}
+
+func send(to []string, subject string, body interface{}, emailType EmailType, tries int) error {
 	var messageBody bytes.Buffer
 	tpl := messageTemplate(emailType)
 	err := tpl.Execute(&messageBody, body)
@@ -49,7 +53,7 @@ func Mail(to []string, subject string, body interface{}, emailType EmailType, tr
 
 	if err != nil && tries > 0 {
 		log.Println(tries)
-		return Mail(to, subject, body, emailType, tries - 1)
+		return send(to, subject, body, emailType, tries - 1)
 	}
 
 	return err

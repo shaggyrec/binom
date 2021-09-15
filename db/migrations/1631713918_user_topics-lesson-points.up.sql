@@ -1,0 +1,1 @@
+ALTER TABLE user_topics ADD COLUMN IF NOT EXISTS lessons_score jsonb;

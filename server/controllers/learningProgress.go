@@ -47,40 +47,43 @@ func (c *LearningProgressController) UpdateUsersProgressByLesson(w http.Response
 
 	var request requests.UpdateUsersProgressByLessonRequest
 
-	err := functions.ParseRequest(w, r, &request)
-
-	if err != nil {
-		exceptions.BadRequestError(w, r, err.Error(), exceptions.ErrorBadParam)
+	if err := functions.ParseRequest(w, r, &request); err != nil {
 		return
 	}
 
 	var notificationText string
 	var p *service.ProgressLevel
+	var err error
 	if request.Passed {
-		p, err = c.lessonProgressService.Pass(lessonAlias, userId)
-		if p != nil && p.Finished.String() == "" {
+		if request.PassedTasks == 0 || request.MaxTasks == 0 {
+			exceptions.BadRequestError(w, r, "Нужно указать сколько заданий выполнено", exceptions.ErrorBadParam)
+			return
+		}
+		p, err = c.lessonProgressService.Pass(lessonAlias, userId, request.PassedTasks, request.MaxTasks)
+
+		if err != nil {
+			log.Print(err)
+			exceptions.ServerError(w, r)
+			return
+		}
+		if p != nil && (p.Finished.String() == "" || p.Finished.IsZero()) {
 			notificationText = fmt.Sprintf("Зачёт за урок «%s» можно переходить к следующему", p.LessonsNames[functions.IndexOf(p.LessonsAliases, lessonAlias)])
 		} else {
 			notificationText = fmt.Sprintf("Тема «%s» пройдена!", p.TopicName)
 		}
-	} else {
-		p, err = c.lessonProgressService.Save(lessonAlias, userId)
-		notificationText = fmt.Sprintf("Преподаватель отменил зачёт и вернул на урок «%s»", p.LessonsNames[functions.IndexOf(p.LessonsAliases, lessonAlias)])
-	}
-
-	if err != nil {
-		log.Print(err)
-		exceptions.ServerError(w, r)
-		return
 	}
 
 	n := &dataType.Notification{
 		Type: null.Int{NullInt64: sql.NullInt64{Int64: dataType.NotificationLessonProgressChanged}},
 		Message: notificationText,
-		Meta: dataType.Meta{ Lesson: p.LessonId },
+		Meta: dataType.NotificationMeta{ Lesson: p.LessonId },
 		AuthorId: changerId,
 	}
-	err = c.notificationService.Create(n, []string{userId})
+	if err := c.notificationService.Create(n, []string{userId}); err != nil {
+		log.Print(err)
+		exceptions.ServerError(w, r)
+		return
+	}
 
 	functions.RenderJSON(w, r, "Ok")
 }

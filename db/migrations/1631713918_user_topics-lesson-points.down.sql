@@ -1,0 +1,1 @@
+ALTER TABLE user_topics DROP COLUMN IF EXISTS lessons_score;

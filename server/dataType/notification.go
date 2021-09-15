@@ -11,7 +11,15 @@ const NotificationFeedComment = 3
 const NotificationLessonProgressChanged = 4
 const NotificationSubscriptionActivate =  5
 
-type Meta struct {
+var NotificationTypeDescMap = map[int64]string{
+	NotificationInfo: "Оповещение",
+	NotificationLessonComment: "Комментарий к уроку",
+	NotificationFeedComment: "Комментарий к посту",
+	NotificationLessonProgressChanged: "Получен зачёт",
+	NotificationSubscriptionActivate: "Подписка активирована",
+}
+
+type NotificationMeta struct {
 	Lesson string `json:"lesson"`
 	Post string `json:"post"`
 	Comment string `json:"comment"`
@@ -21,8 +29,8 @@ type Notification struct {
 	Id string `json:"id"`
 	Message string `json:"message"`
 	Type null.Int `json:"type"`
-	Created pg.NullTime `json:"created"`
-	Meta Meta `json:"meta"`
-	AuthorId string `json:"-"`
+	Created  pg.NullTime      `json:"created"`
+	Meta     NotificationMeta `json:"meta"`
+	AuthorId string           `json:"-"`
 	Author *User `pg:"rel:has-one" json:"author"`
 }

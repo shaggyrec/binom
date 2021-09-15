@@ -42,13 +42,12 @@ func (c *AuthController) Email(w http.ResponseWriter, r *http.Request) {
 
 	err := mailer.Mail(
 		[]string{ b.Email },
-		"Verification code",
+		"Код для входа на сайт",
 		struct {
 			Code string
 			Id string
 		}{authCode.Code, authCode.Id},
 		mailer.TypeVerificationCode,
-		2,
 	)
 
 	if err != nil {

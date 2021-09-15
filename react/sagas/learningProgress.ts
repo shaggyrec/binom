@@ -5,13 +5,13 @@ import * as applicationActions from '../ducks/application';
 import { getApiErrorMessage } from '../functions';
 import { apiRequest } from './index';
 
-function* saveProcess({ payload: { lessonAlias, userId, passed } }): IterableIterator<any> {
+function* saveProcess({ payload: { lessonAlias, userId, passed, passedTasks, maxTasks } }): IterableIterator<any> {
     try {
         yield call(
             apiRequest,
             `/api/progress/${userId}/${lessonAlias}`,
             'PUT',
-            { passed }
+            { passed, passedTasks, maxTasks }
         );
         yield put(learningProgressActions.progressForLesson(lessonAlias, userId, passed));
     } catch (e) {

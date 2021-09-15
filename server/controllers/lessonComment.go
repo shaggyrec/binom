@@ -96,7 +96,7 @@ func (c *LessonCommentController) Add(w http.ResponseWriter, r *http.Request)  {
 	n := &dataType.Notification{
 		Type: null.Int{NullInt64: sql.NullInt64{Int64: dataType.NotificationLessonComment}},
 		Message: notificationText,
-		Meta: dataType.Meta{ Lesson: lessonId, Comment: newLessonComment.Id },
+		Meta: dataType.NotificationMeta{ Lesson: lessonId, Comment: newLessonComment.Id },
 		AuthorId: comment.AuthorId,
 	}
 

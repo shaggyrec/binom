@@ -77,3 +77,10 @@ func (u *UserStorage) GetAdminsIds() ([]string, error) {
 
 	return usersIds, err
 }
+
+func (u *UserStorage) GetUsersByIds(ids []string) []dataType.User {
+	var users []dataType.User
+	u.db.Model(&users).Where("id IN (?)", pg.In(ids)).Select()
+
+	return users
+}

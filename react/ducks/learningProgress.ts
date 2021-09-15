@@ -9,9 +9,9 @@ export const initialState = {
 }
 
 export default handleActions({
-    [PROGRESS_FOR_LESSON]: (state, { payload }) => ({ ...state, list: { ...state.list, ...payload }})
+    [PROGRESS_FOR_LESSON]: (state, { payload }) => ({ ...state, list: { ...state.list, ...payload } })
 }, initialState);
 
-export const save = createAction(SAVE, (lessonAlias, userId, passed) => ({ lessonAlias, userId, passed }));
+export const save = createAction(SAVE, (lessonAlias, userId, passed, passedTasks, maxTasks) => ({ lessonAlias, userId, passed, passedTasks, maxTasks }));
 export const requestProgressForLesson = createAction(REQUEST_FOR_LESSON, (lessonAlias, userId) => ({ lessonAlias, userId }));
 export const progressForLesson = createAction(PROGRESS_FOR_LESSON, (lessonId, userId, passed) => ({ [userId]: { [lessonId]: passed } }));

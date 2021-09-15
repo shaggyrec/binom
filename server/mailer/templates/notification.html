@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="ru">
+<head>
+    <title> {{ .Subject }} | Binom</title>
+    <meta http–equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http–equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body>
+<div style="display: none; opacity: 0">{{ .Message }}</div>
+<div style="border-radius: 4px; border: 1px solid #069668">
+    <div style="background:#069668;">
+        <div style="text-align: center">
+            <div style="display: inline-block; padding: 15px">
+                <img style="padding-left: 8px" width="145" height="40" src="https://i.ibb.co/92bKGSQ/binom-white-l-m.png" alt="binom" border="0"/>
+                <div style="font-size: 11px; line-height: 1; color: #fff; padding-left: 9px">онлайн-школа математики<br/><b style="font-size: 13px">Ростислава Докучаева</b></div>
+            </div>
+        </div>
+    </div>
+    <div style="padding: 15px">
+        <p>Привет, {{ .User.Name.String }}. Обновление на <a href="https://binom.school">binom.school</a></p>
+        <p>{{ .Message }}</p>
+        <div style="padding:10px 0;">
+            <a style="background: #069668; color: #fff; padding: 10px 30px; font-size: 18px; text-decoration: none; font-weight: bold; border-radius: 8px" href="https://binom.school/notifications">Перейти в приложение</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -58,7 +58,8 @@ GROUP BY tl.topic_id, t.name, ut.lesson_id, ut.finished
 )
 
 	indexOFCurrentLesson := functions.IndexOf(pl.Lessons, pl.LessonId)
-	if pl.Finished.String() != "" {
+
+	if pl.Finished.String() != "" && !pl.Finished.IsZero() {
 		pl.PassedLessons = pl.Lessons
 		pl.PassedLessonsAliases = pl.LessonsAliases
 	} else if indexOFCurrentLesson > 0 {

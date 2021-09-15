@@ -11,7 +11,7 @@ function DemoUserMessage({ user }): ReactElement {
             : (
                 <Paddingable padding={[10, 0]}>
                     <Paddingable padding={[20, 10]} className="badge badge-red">
-                            Демо-версия. Доступны только две темы и недоступны домашние задания обратная связь.&nbsp;
+                            Демо-версия. Доступны только две темы и недоступны домашние задания, обратная связь, рейтинг.&nbsp;
                         <Link to={`/@${user.username}#buy`} className="text-white">Оформите подписку, чтобы получить полный доступ.</Link>
                     </Paddingable>
                 </Paddingable>

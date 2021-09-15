@@ -13,7 +13,7 @@ import Button from '../components/Button';
 import { Redirect } from 'react-router';
 import DemoUserMessage from '../components/DemoUserMessage';
 
-function Home({ topics, requestTopics, isAdmin, moveTopicAtPosition, moveLessonAtPosition, loading, currentLesson, me }): ReactElement {
+function Home({ topics, requestTopics, isAdmin, moveTopicAtPosition, moveLessonAtPosition, loading, currentLesson, me, isDemo }): ReactElement {
     useEffect(() => {
         if (!topics || topics.length === 0) {
             requestTopics();
@@ -59,7 +59,13 @@ function Home({ topics, requestTopics, isAdmin, moveTopicAtPosition, moveLessonA
                 <div className="container">
                     <DemoUserMessage user={me}/>
                     <Paddingable padding={[10, 0, 20]}>
-                        <TopicsList topics={topics} isAdmin={isAdmin} onMoveTopic={handleMoveTopic} onMoveLesson={handleMoveLesson}/>
+                        <TopicsList
+                            topics={topics}
+                            isAdmin={isAdmin}
+                            onMoveTopic={handleMoveTopic}
+                            onMoveLesson={handleMoveLesson}
+                            isDemo={isDemo}
+                        />
                     </Paddingable>
                 </div>
                 <Loader show={loading} />
@@ -76,6 +82,7 @@ export default connect(
         isAdmin: state.users.me?.role === UserRole.admin,
         me: state.users.me,
         subscription: state.users.me?.subscription,
+        isDemo: state.users.me?.role !== UserRole.admin && !state.users.me?.subscription
     }),
     dispatch => ({
         requestTopics: () => dispatch(topicsActions.requestList()),

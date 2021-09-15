@@ -25,7 +25,7 @@ function renderLessonItem(lesson, type) {
     );
 }
 
-function LessonsList ({ items, onMove, isAdmin, active, isFinished }) {
+function LessonsList ({ items, onMove, isAdmin, active, isFinished, allAllowed }) {
     let isActive = true;
     return (
         <ListContainer
@@ -45,6 +45,9 @@ function LessonsList ({ items, onMove, isAdmin, active, isFinished }) {
                 }
                 if (isFinished) {
                     itemType = 'passed';
+                }
+                if (allAllowed) {
+                    itemType = 'allowed';
                 }
                 return (
                     <div key={`sub-list${item.id}${i}`} className="sub-list-item">

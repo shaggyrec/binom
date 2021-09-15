@@ -18,7 +18,9 @@ func LessonProgress(learningProgressService *service.LearningProgressService, le
 
 			userRole :=r.Context().Value("userRole")
 
-			if userRole != dataType.UserRoleAdmin {
+			isDemo := r.Context().Value("demo").(bool)
+
+			if userRole != dataType.UserRoleAdmin && !isDemo {
 				lessonAlias := chi.URLParam(r, "alias")
 				_, err := uuid.Parse(lessonAlias)
 				if err == nil {

@@ -13,7 +13,7 @@ import LessonsList from './LessonsList';
 import ListContainer from './ListContainer';
 
 function TopicsList(
-    { topics, isAdmin, onMoveTopic, onMoveLesson }: { topics: Topic[], isAdmin?: boolean, onMoveTopic: (id: string, moveAt: number) => any, onMoveLesson: (id: string, moveAt: number) => any }
+    { topics, isAdmin, onMoveTopic, onMoveLesson, isDemo }: { topics: Topic[], isAdmin?: boolean, onMoveTopic: (id: string, moveAt: number) => any, onMoveLesson: (id: string, moveAt: number) => any, isDemo: boolean }
 ): ReactElement {
     const [openTopics, setOpenTopics] = useState(topics.filter(t => t.status && !t.status.finished).map(t => t.id));
     const [scrolled, setScrolled] = useState(false);
@@ -62,6 +62,7 @@ function TopicsList(
                             {t.lessons && t.lessons.length > 0 && (
                                 <div className={`sub-list ${openTopics.indexOf(t.id) !== -1 ? 'opened' : 'closed'}`}>
                                     <LessonsList
+                                        allAllowed={isAdmin || (isDemo && index < 2)}
                                         items={t.lessons}
                                         onMove={onMoveLesson}
                                         isAdmin={isAdmin}

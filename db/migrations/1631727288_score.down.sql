@@ -1,0 +1,8 @@
+ALTER TABLE user_topics DROP COLUMN IF EXISTS updated;
+
+DROP TABLE IF EXISTS points_movement;
+
+ALTER TABLE users DROP COLUMN IF EXISTS score;
+ALTER TABLE users DROP COLUMN IF EXISTS points;
+
+ALTER TABLE lessons DROP COLUMN IF EXISTS deadline;

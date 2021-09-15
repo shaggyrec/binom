@@ -21,6 +21,7 @@ type ProgressLevel struct {
 	LessonsAliases []string
 	PassedLessonsAliases []string
 	LessonScore map[string]struct{PassedTasks int; MaxTasks int}
+	Updated pg.NullTime
 }
 
 type UserProgress struct {
@@ -46,13 +47,14 @@ func (s *LearningProgressService) ProgressLevelByLessonAlias(lessonAlias string,
 	jsonb_agg(tl.alias order by tl.pos ASC, tl.created ASC) lessons_aliases,
 	jsonb_agg(tl.name order by tl.pos ASC, tl.created ASC) lessons_names,
 	ut.lesson_id,
-	ut.finished
+	ut.finished,
+	ut.updated
 FROM lessons l
 LEFT JOIN lessons tl ON tl.topic_id = l.topic_id
 LEFT JOIN user_topics ut ON ut.topic_id = l.topic_id AND ut.user_id = ?
 LEFT JOIN topics t ON l.topic_id = t.id
 WHERE l.alias = ?
-GROUP BY tl.topic_id, t.name, ut.lesson_id, ut.finished
+GROUP BY tl.topic_id, t.name, ut.lesson_id, ut.finished, ut.updated
 `,
 	userId, lessonAlias,
 )
@@ -95,13 +97,7 @@ func (s *LearningProgressService) IsLessonPassed(lessonAlias string, userId stri
 	return functions.IndexOf(currentProgress.PassedLessonsAliases, lessonAlias) != -1, nil
 }
 
-func (s *LearningProgressService) Pass(lessonAlias string, userId string, passedTasks, maxTasks int) (*ProgressLevel, error) {
-	currentProgress, err := s.ProgressLevelByLessonAlias(lessonAlias, userId)
-
-	if err != nil {
-		return &ProgressLevel{}, err
-	}
-
+func (s *LearningProgressService) Pass(currentProgress *ProgressLevel, lessonAlias, userId string, passedTasks, maxTasks int) (*ProgressLevel, error) {
 	indexOfTheNextLesson := functions.IndexOf(currentProgress.LessonsAliases, lessonAlias) + 1
 
 	if currentProgress.LessonScore == nil {
@@ -122,7 +118,7 @@ func (s *LearningProgressService) Pass(lessonAlias string, userId string, passed
 		currentProgress.LessonId = currentProgress.Lessons[indexOfTheNextLesson]
 	}
 
-	err = s.save(currentProgress, lessonAlias, userId)
+	err := s.save(currentProgress, lessonAlias, userId)
 	return currentProgress, err
 }
 
@@ -152,7 +148,7 @@ func (s *LearningProgressService) save(currentProgress *ProgressLevel, lessonAli
 		)
 	}  else {
 		_, err = s.db.Exec(
-			"UPDATE user_topics SET lesson_id = (SELECT id FROM lessons WHERE alias = ?), finished = ?, lessons_score = ? WHERE user_id = ? AND topic_id = ?",
+			"UPDATE user_topics SET lesson_id = (SELECT id FROM lessons WHERE alias = ?), finished = ?, lessons_score = ?, updated = NOW() WHERE user_id = ? AND topic_id = ?",
 			lessonAlias,
 			currentProgress.Finished,
 			currentProgress.LessonScore,

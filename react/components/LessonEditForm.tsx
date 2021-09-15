@@ -36,14 +36,17 @@ function fileEdition(fileId, onClickDelete): ReactElement {
     );
 }
 
-function LessonEditForm({ onSubmit, name, alias, text, task, video, youtubeVideos, topics, topicId, taskFiles, taskValue, onVideoUpload, onTaskUpload, loading = false, onClickDeleteFile }): ReactElement {
+function LessonEditForm({ onSubmit, name, alias, text, task, video, youtubeVideos, topics, topicId, taskFiles, taskValue,
+    deadline, onVideoUpload, onTaskUpload, loading = false, onClickDeleteFile }
+): ReactElement {
     const [lessonName, setLessonName] = useState(name);
     const [lessonAlias, setLessonAlias] = useState(alias);
     const [lessonDescription, setLessonDescription] = useState(text);
     const [lessonTask, setLessonTask] = useState(task);
     const [lessonCategory, setLessonCategory] = useState(topicId);
-    const [lessonTaskValue, setLessonTaskValue] = useState(taskValue || 5);
-    const [lessonYoutubeVideos, setLessonYoutubeVideos] = useState(youtubeVideos || [])
+    const [lessonTaskValue, setLessonTaskValue] = useState(taskValue || 10);
+    const [lessonYoutubeVideos, setLessonYoutubeVideos] = useState(youtubeVideos || []);
+    const [lessonDeadline, setLessonDeadline] = useState(deadline || 3)
 
     useEffect(() => {
         setLessonAlias(slugify(lessonName));
@@ -58,6 +61,7 @@ function LessonEditForm({ onSubmit, name, alias, text, task, video, youtubeVideo
             task: lessonTask,
             taskValue: parseInt(lessonTaskValue) || 5,
             youtubeVideos: lessonYoutubeVideos,
+            deadline: parseInt(lessonDeadline) || 3,
         });
     }
 
@@ -84,7 +88,8 @@ function LessonEditForm({ onSubmit, name, alias, text, task, video, youtubeVideo
             <div style={{ marginTop: 20 }}>
                 <FileUpload name="taskFile" onChange={handleTaskUpload} label={taskFiles?.length ? 'Ещё файл задания' : 'Файл задания'} accept="*"/>
             </div>
-            <Input required type="number" label="Баллов за домашнюю работу" value={lessonTaskValue} onChange={setLessonTaskValue}/>
+            <Input min={1} required type="number" label="Дней на урок (дедлайн)" value={lessonDeadline} onChange={setLessonDeadline}/>
+            <Input min={0} required type="number" label="Баллов за домашнюю работу" value={lessonTaskValue} onChange={setLessonTaskValue}/>
             <Input required onChange={setLessonAlias} label="Alias" value={lessonAlias}/>
             <Button block green disabled={loading}>Сохранить</Button>
         </Form>

@@ -48,3 +48,9 @@ func (f *Factory) Yoomoney(host string) *YoomoneyService {
 	s.Init(host)
 	return &s
 }
+
+func (f *Factory) UserScore(lessonStorage *storage.LessonStorage, userStorage *storage.UserStorage, pointsMovementStorage *storage.PointsMovementStorage) *UserScoreService {
+	s := UserScoreService{}
+	s.Init(lessonStorage, userStorage, pointsMovementStorage)
+	return &s
+}

@@ -19,11 +19,13 @@ import (
 type LearningProgressController struct {
 	lessonProgressService *service.LearningProgressService
 	notificationService *service.NotificationService
+	userScoreService *service.UserScoreService
 }
 
-func (c *LearningProgressController) Init(lessonProgressService *service.LearningProgressService, notificationService *service.NotificationService) {
+func (c *LearningProgressController) Init(lessonProgressService *service.LearningProgressService, notificationService *service.NotificationService, userScoreService *service.UserScoreService) {
 	c.lessonProgressService = lessonProgressService
 	c.notificationService = notificationService
+	c.userScoreService = userScoreService
 }
 
 func (c *LearningProgressController) UsersProgressByLesson(w http.ResponseWriter, r *http.Request) {
@@ -52,25 +54,31 @@ func (c *LearningProgressController) UpdateUsersProgressByLesson(w http.Response
 	}
 
 	var notificationText string
-	var p *service.ProgressLevel
-	var err error
+	p, err := c.lessonProgressService.ProgressLevelByLessonAlias(lessonAlias, userId)
+	lessonId := p.LessonId
+	lessonStartedDate := p.Updated.Time
+
 	if request.Passed {
 		if request.PassedTasks == 0 || request.MaxTasks == 0 {
 			exceptions.BadRequestError(w, r, "Нужно указать сколько заданий выполнено", exceptions.ErrorBadParam)
 			return
 		}
-		p, err = c.lessonProgressService.Pass(lessonAlias, userId, request.PassedTasks, request.MaxTasks)
+		p, err = c.lessonProgressService.Pass(p, lessonAlias, userId, request.PassedTasks, request.MaxTasks)
 
 		if err != nil {
 			log.Print(err)
 			exceptions.ServerError(w, r)
 			return
 		}
+		addedPoints := c.userScoreService.AddScoreForTheLesson(lessonId, userId, float64(request.PassedTasks)/float64(request.MaxTasks), lessonStartedDate)
 		if p != nil && (p.Finished.String() == "" || p.Finished.IsZero()) {
-			notificationText = fmt.Sprintf("Зачёт за урок «%s» можно переходить к следующему", p.LessonsNames[functions.IndexOf(p.LessonsAliases, lessonAlias)])
+			notificationText = fmt.Sprintf("Зачёт за урок «%s». Mожно переходить к следующему. Начисленно %d баллов", p.LessonsNames[functions.IndexOf(p.LessonsAliases, lessonAlias)], addedPoints)
 		} else {
-			notificationText = fmt.Sprintf("Тема «%s» пройдена!", p.TopicName)
+			notificationText = fmt.Sprintf("Тема «%s» пройдена! Начисленно %d баллов", p.TopicName, addedPoints)
 		}
+	} else {
+		exceptions.BadRequestError(w, r, "Обновить можно только Passed = true", exceptions.ErrorBadParam)
+		return
 	}
 
 	n := &dataType.Notification{

@@ -64,7 +64,7 @@ func (c *LessonController) Update(w http.ResponseWriter, r *http.Request) {
 		log.Print(err)
 		pgErr, ok := err.(pg.Error)
 		if ok && pgErr.IntegrityViolation() {
-			exceptions.BadRequestError(w, r, "Lesson with alias \"" + lessonToUpdate["alias"].(string) + "\" already exists", exceptions.AlreadyExists)
+			exceptions.BadRequestError(w, r, err.Error(), exceptions.AlreadyExists)
 		} else {
 			exceptions.BadRequestError(w, r, err.Error(), exceptions.NothingAffected)
 		}

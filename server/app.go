@@ -27,6 +27,8 @@ func Init(db *pg.DB, jwtSecret, uploadPath, host string) *chi.Mux {
 	tariffPriceStorage := storageFactory.TariffPrice(db)
 	userSubscriptionStorage := storageFactory.UserSubscription(db)
 	transactionStorage := storageFactory.Transaction(db)
+	pointsMovementStorage := storageFactory.PointsMovement(db)
+
 	// services
 	serviceFactory := service.Factory{}
 	tokenService := serviceFactory.TokenService(jwtSecret, tokenStorage)
@@ -36,6 +38,7 @@ func Init(db *pg.DB, jwtSecret, uploadPath, host string) *chi.Mux {
 	notificationService := serviceFactory.Notification(notificationStorage, userStorage)
 	lessonProgressService := serviceFactory.LessonProgress(db)
 	yooMoneyService := serviceFactory.Yoomoney(host)
+	userScoreService := serviceFactory.UserScore(lessonStorage, userStorage, pointsMovementStorage)
 
 	// controllers
 	authController := controllers.AuthController{}
@@ -55,7 +58,7 @@ func Init(db *pg.DB, jwtSecret, uploadPath, host string) *chi.Mux {
 	notificationController := controllers.NotificationController{}
 	notificationController.Init(notificationService)
 	learningProgressController := controllers.LearningProgressController{}
-	learningProgressController.Init(lessonProgressService, notificationService)
+	learningProgressController.Init(lessonProgressService, notificationService, userScoreService)
 	tariffController := controllers.TariffController{}
 	tariffController.Init(tariffStorage, tariffPriceStorage, userSubscriptionStorage, yooMoneyService)
 	paymentController := controllers.PaymentController{}

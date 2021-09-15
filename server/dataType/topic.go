@@ -23,4 +23,5 @@ type UserTopic struct {
 	LessonId string `json:"lessonId"`
 	Created string `json:"created"`
 	Finished string `json:"finished"`
+	Updated string `json:"updated"`
 }

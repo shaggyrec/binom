@@ -11,8 +11,9 @@ import TopBar from '../components/TopBar';
 import { Link } from 'react-router-dom';
 import Button from '../components/Button';
 import { Redirect } from 'react-router';
+import DemoUserMessage from '../components/DemoUserMessage';
 
-function Home({ topics, requestTopics, isAdmin, moveTopicAtPosition, moveLessonAtPosition, loading, currentLesson, subscription, me }): ReactElement {
+function Home({ topics, requestTopics, isAdmin, moveTopicAtPosition, moveLessonAtPosition, loading, currentLesson, me }): ReactElement {
     useEffect(() => {
         if (!topics || topics.length === 0) {
             requestTopics();
@@ -56,14 +57,7 @@ function Home({ topics, requestTopics, isAdmin, moveTopicAtPosition, moveLessonA
                     </TopBar>
                 }
                 <div className="container">
-                    {!isAdmin && !subscription && (
-                        <Paddingable padding={[20, 0, 0]}>
-                            <Paddingable padding={[20, 10]} className="badge badge-red">
-                                Демо-версия. Доступны только две темы и недоступны домашние задания обратная связь.&nbsp;
-                                <Link to={`/@${me.username}#buy`} className="text-white">Оформите подписку, чтобы получить полный доступ.</Link>
-                            </Paddingable>
-                        </Paddingable>
-                    )}
+                    <DemoUserMessage user={me}/>
                     <Paddingable padding={[10, 0, 20]}>
                         <TopicsList topics={topics} isAdmin={isAdmin} onMoveTopic={handleMoveTopic} onMoveLesson={handleMoveLesson}/>
                     </Paddingable>

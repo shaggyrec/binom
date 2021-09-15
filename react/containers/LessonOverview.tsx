@@ -16,11 +16,12 @@ import TopBar from '../components/TopBar';
 import { UserRole } from '../dataTypes/user';
 import { BackLink } from '../dataTypes/backLink';
 import LessonComments from '../components/LessonsComments';
+import PassLessonBlock from '../components/PassLessonBlock';
 
 function LessonOverview ({ requestLesson, lesson, loading, match: { params, url }, me, resetCurrentLesson, setBackLink,
-                             requestComments, comments, addComment, requestUser, user, isAdmin, isLessonPassed, requestLessonPassedInfo,
-                             toggleLessonPassed
-                        }): ReactElement {
+    requestComments, comments, addComment, requestUser, user, isAdmin, isLessonPassed, requestLessonPassedInfo,
+    toggleLessonPassed
+}): ReactElement {
     useEffect(() => {
         requestLesson(params.alias);
         if (params.username) {
@@ -63,17 +64,12 @@ function LessonOverview ({ requestLesson, lesson, loading, match: { params, url 
                     </Link>
                 </TopBar>
             }
-            <Lesson {...lesson} name={lesson.name + (params.username ? ` (${params.username})` : '')}/>
+            <Lesson {...lesson} user={me} name={lesson.name + (params.username ? ` (${params.username})` : '')}/>
             <div className="container">
                 <LessonComments comments={comments} onLeaveComment={handleLeaveComment} />
                 <div>
                     {isAdmin && params.username && (
-                        <Button green onClick={() => toggleLessonPassed(lesson.alias, user.id, !isLessonPassed)}>
-                            {isLessonPassed
-                                ? 'Отменить зачёт'
-                                : 'Зачесть урок'
-                            }
-                        </Button>
+                        <PassLessonBlock isLessonPassed={isLessonPassed} onClickPass={() => toggleLessonPassed(lesson.alias, user.id, !isLessonPassed)}/>
                     )}
                 </div>
             </div>

@@ -1,3 +1,5 @@
+import { User } from './user';
+
 export interface Lesson {
     id: string
     name: string;
@@ -9,4 +11,5 @@ export interface Lesson {
     topicId: string;
     alias: string;
     taskValue: number;
+    user?: User;
 }

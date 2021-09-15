@@ -5,17 +5,25 @@ import { SERVER_REQUESTS_BASE } from '../functions';
 import Paddingable from './Paddingable';
 import MathsText from './MathsText';
 import YoutubeVideo from './YoutubeVideo';
+import { FileIcon } from './Icons';
+import { UserRole } from '../dataTypes/user';
+import DemoUserMessage from './DemoUserMessage';
 
-function renderTaskFiles(taskFiles) {
+function renderTaskFiles(taskFiles, user): ReactElement {
     if (!taskFiles) {
         return null;
     }
     return (
         <Paddingable padding={[10, 0, 30]}>
             <h2>Ссылка на домашнее задание</h2>
+            <DemoUserMessage user={user}/>
             {taskFiles.map((f, i) => (
                 <div className="link-to-task" key={f} >
-                    <a href={`${SERVER_REQUESTS_BASE}/file/${f}`} target="_blank" rel="noreferrer">Домашнее задание {taskFiles.length > 1 ? (i + 1) : ''}</a>
+                    <a className="flex flex-vertical-centered" href={user.role !== UserRole.admin && !user.subscription ? undefined : `${SERVER_REQUESTS_BASE}/file/${f}`}
+                        target="_blank" rel="noreferrer">
+                        <FileIcon size={24} fill="#039151"/>&nbsp;
+                        <span>Домашнее задание {taskFiles.length > 1 ? (i + 1) : ''}</span>
+                    </a>
                 </div>
             ))}
         </Paddingable>
@@ -47,7 +55,7 @@ function Lesson(props: Lesson): ReactElement {
                         <MathsText>{props.task}</MathsText>
                     </Paddingable>
                 )}
-                {renderTaskFiles(props.taskFiles)}
+                {renderTaskFiles(props.taskFiles, props.user)}
             </div>
         </div>
     );

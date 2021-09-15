@@ -12,7 +12,7 @@ import (
 	"net/http"
 )
 
-func Init(db *pg.DB, jwtSecret, uploadPath, host string) *chi.Mux {
+func Init(db *pg.DB, jwtSecret, uploadPath, host, version string) *chi.Mux {
 	// storages
 	storageFactory := &storage.Factory{}
 	authCodeStorage := storageFactory.AuthCode(db)
@@ -44,7 +44,7 @@ func Init(db *pg.DB, jwtSecret, uploadPath, host string) *chi.Mux {
 	authController := controllers.AuthController{}
 	authController.Init(authCodeService, authService, tokenService, userStorage)
 	pageController := controllers.PageController{}
-	pageController.Init(topicStorage, lessonStorage, host)
+	pageController.Init(topicStorage, lessonStorage, host, version)
 	userController := controllers.UserController{}
 	userController.Init(userStorage)
 	topicController := controllers.TopicController{}

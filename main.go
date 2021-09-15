@@ -29,6 +29,7 @@ func main() {
 			db, os.Getenv("JWT_SECRET"),
 			os.Getenv("UPLOAD_PATH"),
 			os.Getenv("HOST"),
+			os.Getenv("GIT_COMMIT"),
 		),
 	)
 	if err != nil {

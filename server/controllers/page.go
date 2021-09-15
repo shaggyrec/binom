@@ -14,15 +14,17 @@ type PageController struct {
 	topicStorage *storage.TopicStorage
 	lessonStorage *storage.LessonStorage
 	host string
+	version string
 }
 
-func (c *PageController) Init(topicStorage *storage.TopicStorage, lessonStorage *storage.LessonStorage, host string) {
+func (c *PageController) Init(topicStorage *storage.TopicStorage, lessonStorage *storage.LessonStorage, host, version string) {
 	pwd, _ := os.Getwd()
 
 	c.viewsPath = pwd + "/server/views"
 	c.topicStorage = topicStorage
 	c.lessonStorage = lessonStorage
 	c.host = host
+	c.version = version
 }
 
 func (c *PageController) Main (w http.ResponseWriter, r *http.Request)  {
@@ -48,8 +50,9 @@ func (c *PageController) MiniLanding (w http.ResponseWriter, r *http.Request)  {
 func (c *PageController) renderTemplate(name string, w http.ResponseWriter, r *http.Request, data map[string]interface{}) {
 	if data != nil {
 		data["Host"] = c.host
-	} else {
-		data = map[string]interface{}{"Host": c.host}
+		data["Version"] = c.version
+ 	} else {
+		data = map[string]interface{}{"Host": c.host, "Version": c.version}
 	}
 	err := template.Must(template.ParseFiles(
 		c.viewsPath + "/" + name + ".html",

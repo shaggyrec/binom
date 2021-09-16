@@ -1,12 +1,16 @@
-import React from 'react';
+import React, { forwardRef, RefObject } from 'react';
 
-function Input({ type = 'text', onChange, label, value, name = undefined, required = false, autocomplete = true, error = null, placeholder = undefined, min = undefined }) {
+
+// eslint-disable-next-line react/display-name
+const Input = forwardRef(({ type = 'text', onChange, label, value, name = undefined, required = false, autocomplete = true,
+    error = null, placeholder = undefined, min = undefined }: any, ref: RefObject<any>) => {
     const handleChange = ({ target: { value } }) => onChange(value);
     return (
         <div className="input-raw">
             <label>
                 <span className="input-label text">{label}</span>
                 <input
+                    ref={ref}
                     className={error ? 'invalid' : ''}
                     type={type}
                     value={value}
@@ -22,6 +26,6 @@ function Input({ type = 'text', onChange, label, value, name = undefined, requir
             </label>
         </div>
     );
-}
+});
 
-export default Input;
+export default Input

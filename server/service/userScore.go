@@ -36,10 +36,7 @@ func (s *UserScoreService) AddScoreForTheLesson(lessonId, userId string, percent
 		fmt.Sprintf("Баллы за урок %s", lesson.Name.String),
 	)
 
-	user.Score = user.Score + pointsToAdd
-	user.Points = user.Points + pointsToAdd
-
-	s.userStorage.Update(user)
+	s.userStorage.Update(userId, map[string]interface{}{"score": user.Score + pointsToAdd, "points": user.Points + pointsToAdd})
 
 	return pointsToAdd
 }

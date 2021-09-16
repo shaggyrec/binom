@@ -2,8 +2,11 @@ package storage
 
 import (
 	"binom/server/dataType"
+	"binom/server/functions"
+	"errors"
 	"github.com/go-pg/pg"
 	"github.com/go-pg/pg/orm"
+	"github.com/mitchellh/mapstructure"
 )
 
 type UserStorage struct {
@@ -20,10 +23,17 @@ func (u *UserStorage) Create(user *dataType.User) (*dataType.User, error) {
 	return user, err
 }
 
-func (u *UserStorage) Update(user *dataType.User) (*dataType.User, error) {
-	_, err := u.db.Model(user).WherePK().Update()
+func (u *UserStorage) Update(id string, userDataToUpdate map[string]interface{}) error {
+	r, err := u.db.Model(u.mapDbRow(userDataToUpdate)).
+		Column(functions.ArrayToSnakeCase(functions.MapKeys(userDataToUpdate))...).
+		Where("id = ?", id).
+		Update()
 
-	return user, err
+	if r != nil && r.RowsAffected() == 0 {
+		err = errors.New("nothing affected")
+	}
+
+	return err
 }
 
 func (u *UserStorage) Delete() {
@@ -87,4 +97,20 @@ func (u *UserStorage) GetUsersByIds(ids []string) []dataType.User {
 	u.db.Model(&users).Where("id IN (?)", pg.In(ids)).Select()
 
 	return users
+}
+
+func (u *UserStorage) mapDbRow(data map[string]interface{}) *dataType.User {
+	var user dataType.User
+	mapstructure.Decode(data, &user)
+
+	if val, ok := data["name"]; ok {
+		user.Name.String = val.(string)
+		user.Name.Valid = true
+	}
+
+	if val, ok := data["username"]; ok {
+		user.Username.String = val.(string)
+		user.Username.Valid = true
+	}
+	return &user
 }

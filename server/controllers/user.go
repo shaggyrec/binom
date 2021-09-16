@@ -4,16 +4,14 @@ import (
 	"binom/server/dataType"
 	"binom/server/exceptions"
 	"binom/server/functions"
-	"binom/server/requests"
 	"binom/server/storage"
-	"database/sql"
-	"fmt"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
 	"github.com/go-pg/pg"
 	"gopkg.in/guregu/null.v4"
 	"log"
 	"net/http"
+	"strings"
 )
 
 type UserController struct {
@@ -53,34 +51,26 @@ func (u *UserController) ByUsername(w http.ResponseWriter, r *http.Request)  {
 }
 
 func (u *UserController) Update(w http.ResponseWriter, r * http.Request)  {
-	var dataToUpdate requests.UserUpdate
+	var dataToUpdate  map[string]interface{}
 	userId := chi.URLParam(r, "userId")
+	currentUserId := r.Context().Value("userId").(string)
+	userRole := r.Context().Value("userRole").(int)
 
-	if err := functions.ParseRequest(w, r, &dataToUpdate); err != nil {
-		exceptions.BadRequestError(w, r, err.Error(), exceptions.ErrorBadParam)
-	}
-
-	user, err := u.storage.Get(userId)
-
-	if err != nil {
-		exceptions.NotFoundError(w, r, "User #" +userId + "not found")
+	if currentUserId != userId && userRole != dataType.UserRoleAdmin {
+		exceptions.Forbidden(w, r, "Нет доступа")
 		return
 	}
 
-	if dataToUpdate.Username != "" {
-		user.Username = null.String{sql.NullString{dataToUpdate.Username, true}}
-	}
-	if dataToUpdate.Name != "" {
-		user.Name = null.String{sql.NullString{dataToUpdate.Name, true}}
+	if err := functions.ParseRequest(w, r, &dataToUpdate); err != nil {
+		exceptions.BadRequestError(w, r, err.Error(), exceptions.ErrorBadParam)
+		return
 	}
 
-	fmt.Println(user)
-
-	if _, err := u.storage.Update(user); err != nil {
+	if err := u.storage.Update(userId, dataToUpdate); err != nil {
 		log.Print(err)
 		pgErr, ok := err.(pg.Error)
-		if ok && pgErr.IntegrityViolation() {
-			exceptions.BadRequestError(w, r, "Username \"" + user.Username.String + "\" is taken", exceptions.AlreadyExists)
+		if ok && pgErr.IntegrityViolation() && strings.Index(err.Error(), "username") > -1 {
+			exceptions.BadRequestError(w, r, "Username \"" + dataToUpdate["username"].(string) + "\" занят другим пользователем. Придумай другой.", exceptions.AlreadyExists)
 		} else {
 			exceptions.BadRequestError(w, r, err.Error(), exceptions.NothingAffected)
 		}

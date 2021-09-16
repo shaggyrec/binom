@@ -14,6 +14,7 @@ import { notifications } from './notifications';
 import { learningProgress } from './learningProgress';
 import { tariffs } from './tariffs';
 import * as applicationActions from '../ducks/application';
+import { usersRating } from './usersRating';
 
 const MAX_REQUEST_TRIES = 10;
 let tries = 0;
@@ -60,5 +61,6 @@ export default function* rootSaga(): any {
         notifications(),
         learningProgress(),
         tariffs(),
+        usersRating(),
     ]);
 }

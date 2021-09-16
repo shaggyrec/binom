@@ -38,7 +38,7 @@ func Init(db *pg.DB, jwtSecret, uploadPath, host, version string) *chi.Mux {
 	notificationService := serviceFactory.Notification(notificationStorage, userStorage)
 	lessonProgressService := serviceFactory.LessonProgress(db)
 	yooMoneyService := serviceFactory.Yoomoney(host)
-	userScoreService := serviceFactory.UserScore(lessonStorage, userStorage, pointsMovementStorage)
+	userScoreService := serviceFactory.UserScore(lessonStorage, userStorage, pointsMovementStorage, db)
 
 	// controllers
 	authController := controllers.AuthController{}
@@ -63,6 +63,8 @@ func Init(db *pg.DB, jwtSecret, uploadPath, host, version string) *chi.Mux {
 	tariffController.Init(tariffStorage, tariffPriceStorage, userSubscriptionStorage, yooMoneyService)
 	paymentController := controllers.PaymentController{}
 	paymentController.Init(yooMoneyService, transactionStorage, userSubscriptionStorage, notificationService)
+	usersRatingController := controllers.UsersRatingController{}
+	usersRatingController.Init(userScoreService)
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
@@ -170,6 +172,9 @@ func Init(db *pg.DB, jwtSecret, uploadPath, host, version string) *chi.Mux {
 						r.Delete("/{id}", tariffController.DeletePrice)
 					})
 				})
+			})
+			r.Route("/rating", func(r chi.Router) {
+				r.Get("/{year}", usersRatingController.ByYear)
 			})
 		})
 	})

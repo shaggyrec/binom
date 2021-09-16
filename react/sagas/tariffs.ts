@@ -4,7 +4,6 @@ import * as applicationActions from '../ducks/application';
 import { apiRequest } from './index';
 import { getApiErrorMessage, goToYoomoney } from '../functions';
 import { characterEntitiesHtml4 } from 'character-entities-html4';
-import Lambda = characterEntitiesHtml4.Lambda;
 
 function* requestListProcess(): IterableIterator<any> {
     try {
@@ -125,7 +124,9 @@ function* requestSpecialProcess(): IterableIterator<any> {
     try {
         const t = yield call(apiRequest, '/api/tariff/special');
         yield put(tariffsActions.setSpecial(t));
-    } catch (e) {}
+    } catch (e) {
+        yield put(tariffsActions.setSpecial(false));
+    }
 }
 
 function* buySpecialProcess(): IterableIterator<any> {

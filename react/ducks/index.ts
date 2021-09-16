@@ -9,6 +9,7 @@ import lessonComments, { initialState as lessonCommentsState } from './lessonCom
 import notifications, { initialState as notificationsState } from './notifications';
 import learningProgress, { initialState as learningProgressState } from './learningProgress';
 import tariffs, { initialState as tariffsState } from './tariffs';
+import usersRating, { initialState as usersRatingState } from './usersRating';
 
 export const initialState = {
     topics: topicsState,
@@ -21,6 +22,7 @@ export const initialState = {
     notifications: notificationsState,
     learningProgress: learningProgressState,
     tariffs: tariffsState,
+    usersRating: usersRatingState,
 };
 
 export default (router: any = null): Reducer => combineReducers({
@@ -35,4 +37,5 @@ export default (router: any = null): Reducer => combineReducers({
     notifications,
     learningProgress,
     tariffs,
+    usersRating,
 });

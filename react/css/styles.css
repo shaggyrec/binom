@@ -848,6 +848,24 @@ code {
 .text-white {
     color: #ffffff;
 }
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th {
+    font-size: 14px;
+}
+
+.table tr {
+}
+.table td, .table th {
+    padding: 10px 0;
+    border-bottom: 1px solid #ccc;
+}
+.table .active {
+    background: rgba(0,0,0,.05);
+}
 
 @media (min-width:1024px) {
     .w-33 {

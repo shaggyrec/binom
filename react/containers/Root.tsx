@@ -27,6 +27,7 @@ import NotFoundPage from '../components/NotFoundPage';
 import Notifications from './Notifications';
 import SubscriptionsManager from './TariffsManager';
 import Feed from './Feed';
+import UsersRating from './UsersRating';
 
 function Root({ history, me, requestMe, setFrom, loading, setLoading, hideModal, message }): ReactElement {
     useEffect(() => {
@@ -61,6 +62,7 @@ function Root({ history, me, requestMe, setFrom, loading, setLoading, hideModal,
                     <ProtectedRoute component={Notifications} isAuthorized={!!me} path="/notifications" exact authPath="/auth" />
                     <ProtectedRoute component={SubscriptionsManager} isAuthorized={me?.role === UserRole.admin} path="/tariffs/edit" exact authPath="/auth" />
                     <ProtectedRoute component={Feed} isAuthorized={me} path="/feed" exact authPath="/auth" />
+                    <ProtectedRoute component={UsersRating} isAuthorized={me} path="/rating" exact authPath="/auth" />
                     <Route path="*" component={NotFoundPage} />
                 </Switch>
                 <BottomMenu />

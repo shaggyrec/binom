@@ -49,8 +49,8 @@ func (f *Factory) Yoomoney(host string) *YoomoneyService {
 	return &s
 }
 
-func (f *Factory) UserScore(lessonStorage *storage.LessonStorage, userStorage *storage.UserStorage, pointsMovementStorage *storage.PointsMovementStorage) *UserScoreService {
+func (f *Factory) UserScore(lessonStorage *storage.LessonStorage, userStorage *storage.UserStorage, pointsMovementStorage *storage.PointsMovementStorage, db *pg.DB) *UserScoreService {
 	s := UserScoreService{}
-	s.Init(lessonStorage, userStorage, pointsMovementStorage)
+	s.Init(lessonStorage, userStorage, pointsMovementStorage, db)
 	return &s
 }

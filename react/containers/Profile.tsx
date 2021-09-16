@@ -29,13 +29,13 @@ function Profile ({ logout, me, resetBackLink, user, match: { params: { username
         if (!user) {
             requestUser(username);
         }
-        requestTariffs();
 
     }, []);
 
     useEffect(() => {
-        if (user.username === me.username && !me.subscription && !specialTariff) {
-            requestSpecialTariff();
+        if (user && me && user.username === me.username && !me.subscription) {
+            tariffs.length === 0 && requestTariffs();
+            specialTariff === null && requestSpecialTariff();
         }
     }, [user])
 

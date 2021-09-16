@@ -57,6 +57,8 @@ function* removeProcess({ payload }): IterableIterator<any> {
     try {
         yield call(apiRequest, '/api/topic/' + payload, 'delete');
         yield put(topicsActions.requestList());
+        yield put(topicsActions.topic(null));
+        yield put(push('/app'));
     } catch (e) {
         yield put(applicationActions.error(getApiErrorMessage(e)));
         yield put(topicsActions.error(getApiErrorMessage(e)));

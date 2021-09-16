@@ -32,8 +32,8 @@ export default handleActions({
 }, initialState);
 
 export const requestList = createAction(REQUEST_LIST, () => {});
-export const lessons = createAction(LESSONS, topics => topics);
-export const lesson = createAction(LESSON, topic => topic);
+export const lessons = createAction(LESSONS, lessons => lessons);
+export const lesson = createAction(LESSON, lesson => lesson);
 export const error = createAction(ERROR, error => error);
 export const create = createAction(CREATE, (name: string, alias: string, topic: string) => ({ name, alias, topic }));
 export const request = createAction(REQUEST, alias => alias);

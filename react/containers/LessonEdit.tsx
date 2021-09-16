@@ -7,15 +7,16 @@ import React, { ReactElement, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Loader from '../components/Loader';
 import LessonEditForm from '../components/LessonEditForm';
-import { Back } from '../components/Icons';
+import { Back, Bin } from '../components/Icons';
 import TopBar from '../components/TopBar';
 import Modal from '../components/Modal';
+import Button from '../components/Button';
 
 const WAITING_VIDEO = 'WAITING_VIDEO';
 const WAITING_TASK = 'WAITING_TASK';
 
 function LessonEdit({ requestLesson, lesson, loading, match: { params }, updateLesson, requestTopics, topics, uploadFile,
-    uploadedFile, resetUploadedFile, removeFile, removedFile, resetURemovedFile }): ReactElement {
+    uploadedFile, resetUploadedFile, removeFile, removedFile, resetURemovedFile, removeLesson }): ReactElement {
     const [showDeletingModal, setShowDeletingModal] = useState(false);
     const [waitFile, setWaitFile] = useState(null);
 
@@ -74,12 +75,22 @@ function LessonEdit({ requestLesson, lesson, loading, match: { params }, updateL
         setWaitFile(WAITING_TASK);
         uploadFile(f);
     }
+
+    function handleClickDelete() {
+        if (confirm(`Точно удалить урок "${lesson.name}"?`)) {
+            removeLesson(lesson.id);
+        }
+    }
+
     return (
         <>
             <TopBar>
                 <Link to={`/lesson/${params.alias}`}>
                     <Back size={25}/>
                 </Link>
+                <div className="ml-auto">
+                    <Button red onClick={handleClickDelete}><Bin size={13} fill="#fff"/> Удалить</Button>
+                </div>
             </TopBar>
             <div className="w-600 centered">
                 <LessonEditForm
@@ -113,5 +124,6 @@ export default connect(
         resetUploadedFile: () => dispatch(filesActions.lastUploadedFile(null)),
         resetURemovedFile: () => dispatch(filesActions.lastRemovedFile(null)),
         removeFile: id => dispatch(filesActions.remove(id)),
+        removeLesson: id => dispatch(lessonsActions.remove(id))
     })
 )(LessonEdit)

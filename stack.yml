@@ -51,6 +51,7 @@ services:
       POSTGRES_DB_NAME: postgres
       POSTGRES_DB_NAME_TEST: postgres_test
       HOST: binom.school
+      GIT_COMMIT: ${GIT_COMMIT}
     logging:
       driver: "json-file"
       options:

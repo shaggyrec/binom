@@ -3,6 +3,8 @@ import * as tariffsActions from '../ducks/tariffs';
 import * as applicationActions from '../ducks/application';
 import { apiRequest } from './index';
 import { getApiErrorMessage, goToYoomoney } from '../functions';
+import { characterEntitiesHtml4 } from 'character-entities-html4';
+import Lambda = characterEntitiesHtml4.Lambda;
 
 function* requestListProcess(): IterableIterator<any> {
     try {
@@ -119,6 +121,23 @@ function* subscribeProcess({ payload: { tariffId, priceId } }): IterableIterator
     }
 }
 
+function* requestSpecialProcess(): IterableIterator<any> {
+    try {
+        const t = yield call(apiRequest, '/api/tariff/special');
+        yield put(tariffsActions.setSpecial(t));
+    } catch (e) {}
+}
+
+function* buySpecialProcess(): IterableIterator<any> {
+    try {
+        goToYoomoney(yield call(apiRequest, '/api/tariff/special/buy'));
+    } catch (e) {
+        const error = getApiErrorMessage(e);
+        yield put(tariffsActions.error(error));
+        yield put(applicationActions.error(error));
+    }
+}
+
 export function* tariffs(): IterableIterator<ForkEffect> {
     yield takeEvery(tariffsActions.requestList, requestListProcess);
     yield takeEvery(tariffsActions.create, createProcess);
@@ -127,5 +146,8 @@ export function* tariffs(): IterableIterator<ForkEffect> {
     yield takeEvery(tariffsActions.createPrice, createPriceProcess);
     yield takeLatest(tariffsActions.updatePrice, updatePriceProcess);
     yield takeEvery(tariffsActions.removePrice, removePriceProcess);
-    yield takeLatest(tariffsActions.subscribe, subscribeProcess)
+    yield takeLatest(tariffsActions.subscribe, subscribeProcess);
+    yield takeLatest(tariffsActions.requestSpecial, requestSpecialProcess);
+    yield takeLatest(tariffsActions.buySpecial, buySpecialProcess);
+
 }

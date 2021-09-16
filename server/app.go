@@ -156,7 +156,9 @@ func Init(db *pg.DB, jwtSecret, uploadPath, host, version string) *chi.Mux {
 			})
 			r.Route("/tariff", func(r chi.Router) {
 				r.Get("/", tariffController.List)
+				r.Get("/special", tariffController.SpecialTariff)
 				r.Get("/{tariffId}/price/{priceId}/buy", tariffController.Buy)
+				r.Get("/special/buy", tariffController.BuySpecialTariff)
 				r.Group(func(r chi.Router) {
 					r.Use(middlewares.OnlyForAdmin)
 					r.Post("/", tariffController.Create)

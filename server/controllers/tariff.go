@@ -13,6 +13,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 type TariffController struct {
@@ -41,7 +42,23 @@ func (c *TariffController) List(w http.ResponseWriter, r *http.Request) {
 		exceptions.ServerError(w, r)
 		return
 	}
+
 	functions.RenderJSON(w, r, *list)
+}
+
+func (c *TariffController) SpecialTariff(w http.ResponseWriter, r *http.Request) {
+	userId := r.Context().Value("userId").(string)
+	lastSubscription := c.userSubscriptionStorage.LastByUserId(userId)
+
+	if lastSubscription != nil {
+		lastSubscription.Expired = lastSubscription.Expired.AddDate(0, 0, 7)
+		if lastSubscription.Expired.After(time.Now()) {
+			functions.RenderJSON(w, r, lastSubscription)
+			return
+		}
+	}
+
+	exceptions.NotFoundError(w, r, "Special price not found")
 }
 
 func (c *TariffController) Create(w http.ResponseWriter, r *http.Request)  {
@@ -206,6 +223,38 @@ func (c *TariffController) Buy(w http.ResponseWriter, r *http.Request) {
 			PaidPrice: price.Price,
 			UserId: userId,
 			Status: null.Int{NullInt64: sql.NullInt64{Int64: dataType.StatusDraft, Valid: true}},
+		}
+		subscription, err = c.userSubscriptionStorage.Create(subscription)
+		if err != nil {
+			log.Print(err)
+			exceptions.ServerError(w, r)
+			return
+		}
+	}
+
+	functions.RenderJSON(w, r, c.yooMoneyService.GetPaymentParams(subscription))
+}
+
+func (c *TariffController) BuySpecialTariff(w http.ResponseWriter, r *http.Request) {
+	userId := r.Context().Value("userId").(string)
+	lastSubscription := c.userSubscriptionStorage.LastByUserId(userId)
+
+	if lastSubscription == nil || lastSubscription.Expired.AddDate(0, 0, 7).Before(time.Now()) {
+		exceptions.NotFoundError(w, r, "Special price not found")
+		return
+	}
+
+	subscription, _ := c.userSubscriptionStorage.ByTariffPrice(lastSubscription.TariffId, lastSubscription.PaidPrice, userId, []int{dataType.StatusDraft})
+	var err error
+
+	if subscription == nil {
+		subscription = &dataType.UserSubscription{
+			TariffId:  lastSubscription.TariffId,
+			Duration:  lastSubscription.Duration,
+			Name:      lastSubscription.Name,
+			PaidPrice: lastSubscription.PaidPrice,
+			UserId:    userId,
+			Status:    null.IntFrom(dataType.StatusDraft),
 		}
 		subscription, err = c.userSubscriptionStorage.Create(subscription)
 		if err != nil {

@@ -63,3 +63,14 @@ func (u *UserSubscriptionStorage) ByUserId(userId string, status []int) *[]dataT
 
 	return &s
 }
+
+func (u *UserSubscriptionStorage) LastByUserId(userId string) *dataType.UserSubscription {
+	var s dataType.UserSubscription
+
+	u.db.Model(&s).
+		Where("user_id = ? AND status IN (?)", userId, pg.In([]int{1, 2})).
+		Order("expired DESC").
+		Select()
+
+	return &s
+}

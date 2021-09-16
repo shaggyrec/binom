@@ -1,6 +1,8 @@
 import { handleActions, createAction } from 'redux-actions';
 
 const REQUEST_LIST = 'tariffs/REQUEST_LIST';
+const REQUEST_SPECIAL_TARIFF = 'tariffs/REQUEST_SPECIAL_TARIFF';
+const SPECIAL_TARIFF = 'tariffs/SPECIAL_TARIFF';
 const LIST = 'tariffs/LIST';
 const CREATE = 'tariffs/CREATE';
 const UPDATE = 'tariffs/UPDATE';
@@ -11,9 +13,11 @@ const CREATE_PRICE = 'tariffs/CREATE_PRICE';
 const UPDATE_PRICE = 'tariffs/UPDATE_PRICE';
 const REMOVE_PRICE = 'tariffs/REMOVE_PRICE';
 const SUBSCRIBE = 'tariffs/SUBSCRIBE';
+const BUY_SPECIAL = 'tariffs/BUY_SPECIAL';
 
 export const initialState = {
     list: [],
+    special: null,
     loading: false,
     error: null
 };
@@ -28,6 +32,7 @@ export default handleActions({
     [SUCCESS]: (state) => ({ ...state, loading: false }),
     [SUBSCRIBE]: (state) => ({ ...state, loading: true }),
     [ERROR]: (state, { payload }) => ({ ...state, loading: false, error: payload }),
+    [SPECIAL_TARIFF]: (state, { payload }) => ({ ...state, loading: false, special: payload }),
 }, initialState);
 
 export const requestList = createAction(REQUEST_LIST, () => ({}));
@@ -41,6 +46,9 @@ export const createPrice = createAction(CREATE_PRICE, (tariffId, price) => ({ ta
 export const updatePrice = createAction(UPDATE_PRICE, (tariffId, id, price) => ({ tariffId, id, price }));
 export const removePrice = createAction(REMOVE_PRICE, (tariffId, id) => ({ tariffId, id }));
 export const subscribe = createAction(SUBSCRIBE, (tariffId, priceId) => ({ tariffId, priceId }));
+export const requestSpecial = createAction(REQUEST_SPECIAL_TARIFF, () => ({}));
+export const setSpecial = createAction(SPECIAL_TARIFF, t => t);
+export const buySpecial = createAction(BUY_SPECIAL, () => ({}));
 
 
 export const tariffsList = state => state.tariffs.list;

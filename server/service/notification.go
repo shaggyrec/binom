@@ -39,7 +39,7 @@ func (s *NotificationService) Create(notification *dataType.Notification, userId
 				Message string
 				User dataType.User
 				Subject string
-			}{Message: notification.Message, User: user, Subject: dataType.NotificationTypeDescMap[notification.Type.Int64],},
+			}{Message: notification.Message, User: user, Subject: dataType.NotificationTypeDescMap[notification.Type.Int64]},
 			mailer.TypeNotification,
 		)
 	}

@@ -7,7 +7,6 @@ import (
 	"binom/server/requests"
 	"binom/server/responses"
 	"binom/server/service"
-	"database/sql"
 	"fmt"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
@@ -82,7 +81,7 @@ func (c *LearningProgressController) UpdateUsersProgressByLesson(w http.Response
 	}
 
 	n := &dataType.Notification{
-		Type: null.Int{NullInt64: sql.NullInt64{Int64: dataType.NotificationLessonProgressChanged}},
+		Type: null.IntFrom(dataType.NotificationLessonProgressChanged),
 		Message: notificationText,
 		Meta: dataType.NotificationMeta{ Lesson: p.LessonId },
 		AuthorId: changerId,

@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"binom/server/dataType"
 	"binom/server/exceptions"
 	"binom/server/storage"
 	"fmt"
@@ -15,9 +16,10 @@ type PageController struct {
 	lessonStorage *storage.LessonStorage
 	host string
 	version string
+	tariffStorage *storage.TariffStorage
 }
 
-func (c *PageController) Init(topicStorage *storage.TopicStorage, lessonStorage *storage.LessonStorage, host, version string) {
+func (c *PageController) Init(topicStorage *storage.TopicStorage, lessonStorage *storage.LessonStorage, tariffStorage *storage.TariffStorage, host, version string) {
 	pwd, _ := os.Getwd()
 
 	c.viewsPath = pwd + "/server/views"
@@ -25,9 +27,11 @@ func (c *PageController) Init(topicStorage *storage.TopicStorage, lessonStorage 
 	c.lessonStorage = lessonStorage
 	c.host = host
 	c.version = version
+	c.tariffStorage = tariffStorage
 }
 
 func (c *PageController) Main (w http.ResponseWriter, r *http.Request)  {
+	tariffs, _ := c.tariffStorage.List([]int{dataType.StatusLive})
 	c.renderTemplate(
 		"index",
 		w,
@@ -35,6 +39,7 @@ func (c *PageController) Main (w http.ResponseWriter, r *http.Request)  {
 		map[string]interface{}{
 			"TopicsCount": c.topicStorage.Count(),
 			"LessonsCount": c.topicStorage.Count(),
+			"Tariffs": tariffs,
 		},
 	)
 }

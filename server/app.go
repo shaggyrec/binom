@@ -44,7 +44,7 @@ func Init(db *pg.DB, jwtSecret, uploadPath, host, version string) *chi.Mux {
 	authController := controllers.AuthController{}
 	authController.Init(authCodeService, authService, tokenService, userStorage)
 	pageController := controllers.PageController{}
-	pageController.Init(topicStorage, lessonStorage, host, version)
+	pageController.Init(topicStorage, lessonStorage, tariffStorage, host, version)
 	userController := controllers.UserController{}
 	userController.Init(userStorage)
 	topicController := controllers.TopicController{}

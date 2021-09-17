@@ -46,10 +46,10 @@ function Profile ({ logout, me, resetBackLink, user, match: { params: { username
                     <Paddingable padding={[20, 0]}>
                         <div className="flex flex-between">
                             <div>
-                                <div className="flex gap-10">
+                                <div className="lg:flex gap-10">
                                     <h1 className="mb-0">{user.name || user.username}</h1>
-                                    <Link to="/rating"><h2 className="text-green"><StarIcon size={22} fill="#069668"/>{user.score}</h2></Link>
-                                    {user.username === me.username && <h3 className="mb-0">(это вы)</h3>}
+                                    <Link to="/rating"><h2 className="text-green my-0"><StarIcon size={22} fill="#069668"/>{user.score}</h2></Link>
+                                    {user.username === me.username && <h3 className="my-0">(это вы)</h3>}
                                 </div>
                                 {user && user.subscription && <h5 className="mt-0">&nbsp;{user.subscription.name} до <ReactMoment format="D.MM.YYYY" locale="ru">{user.subscription.expired}</ReactMoment></h5>}
                             </div>

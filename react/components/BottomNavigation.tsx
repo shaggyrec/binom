@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
 import { Link } from 'react-router-dom';
-import { Comments, Learning, Profile, Notification } from './Icons';
+import { Comments, Learning, Profile, Notification, StarIcon } from './Icons';
 
 function BottomNavigation({ username, notificationsAmount }): ReactElement {
     return (
@@ -8,8 +8,9 @@ function BottomNavigation({ username, notificationsAmount }): ReactElement {
             <div className="container">
                 <footer>
                     <nav className="bottom-menu-nav">
-                        <Link className="bottom-menu-nav-link transition3" to="/app"><Learning /></Link>
-                        <Link className="bottom-menu-nav-link transition3" to="/feed"><Comments /></Link>
+                        <Link className="bottom-menu-nav-link transition3" to="/app"><Learning size={33}/></Link>
+                        {/*<Link className="bottom-menu-nav-link transition3" to="/feed"><Comments /></Link>*/}
+                        <Link className="bottom-menu-nav-link transition3" to="/rating"><StarIcon /></Link>
                         <Link className="bottom-menu-nav-link transition3" to="/notifications">
                             <Notification />
                             {notificationsAmount > 0 && <div className="bottom-menu-nav-link-badge">

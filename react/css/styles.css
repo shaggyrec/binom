@@ -52,12 +52,20 @@ a, .a {
 
 header {
     border-bottom: 1px solid #ccc;
-    padding: 10px 0 15px;
+    padding: 10px 15px 15px;
     display: flex;
+    margin: 0 -15px;
 }
 
 footer {
     border-top: 1px solid #ccc;
+    margin: 0 -15px;
+}
+
+@media (min-width: 900px) {
+    header, footer {
+        margin: 0;
+    }
 }
 
 button, input, textarea, select, .file-input {
@@ -246,6 +254,10 @@ button:active {
     padding-right: 30px!important;
 }
 
+.pr-5 {
+    padding-right: 5px;
+}
+
 .text-center {
     text-align: center;
 }
@@ -260,6 +272,13 @@ button:active {
 .flex {
     display: flex;
     align-items: baseline;
+}
+
+@media (min-width: 1024px) {
+    .lg\:flex {
+        display: flex;
+        align-items: baseline;
+    }
 }
 
 .flex-col {

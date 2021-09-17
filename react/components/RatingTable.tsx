@@ -18,7 +18,7 @@ function RatingTable({ rating, username }: { rating: UsersRating[], username: st
                         <td>{r.name}</td>
                         <td>@{r.username}</td>
                         <td align="right">{r.topicsPassed}</td>
-                        <td align="right">{r.score}</td>
+                        <td align="right"><b className="pr-5">{r.score}</b></td>
                     </tr>
                 ))}
             </tbody>

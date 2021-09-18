@@ -23,14 +23,8 @@
             line-height: 1.2;
             color: #2D3A41;
         }
-        .logo, .logo-svg, .logo-svg svg {
+        .logo-svg, .logo-svg svg {
             width: 145px;
-        }
-        .logo {
-            display: block;
-            background: url('/binom_green.svg') no-repeat;
-            background-size: contain;
-            height: 40px;
         }
         .logo-svg svg {
             height: 40px;
@@ -112,9 +106,10 @@
             color: #fff;
         }
 
-        .platform-description {
-            background: url('/i/binom_platform_user.jpg') no-repeat;
-            background-size: cover;
+        .platform-description-image {
+            background: url('/i/mockup.png') no-repeat left;
+            background-size: contain;
+            min-height: 300px;
         }
 
         .ege-class {
@@ -197,11 +192,6 @@
     </style>
 </head>
 <body>
-<header class="fixed w-full top-0 z-40 bg-opacity-25 bg-white">
-    <div class="max-w-screen-2xl mx-auto px-5 py-2">
-        <div class="logo"></div>
-    </div>
-</header>
 <header class="relative w-full top-0 z-50 bg-green-600">
     <div class="max-w-screen-2xl mx-auto px-5 xl:px-48 py-2">
         <div class="logo-svg">
@@ -236,116 +226,115 @@
         </div>
     </div>
 </div>
-<div>
-    <div class="max-w-screen-2xl py-12 px-5 m-auto">
-        <h2 class="text-2xl pb-4 font-bold text-center">Почему стоит готовиться к ЕГЭ по математике на <b class="text-green-600">binom.school?</b></h2>
-        <ul class="py-5 text-xs m-auto justify-around lg:w-1/2">
-            <li class="flex flex-col md:flex-row lg:justify-center py-3 benefit gap-4">
-                <div class="p-3">
-                    <div class="border-4 border-green-600 w-36 h-36 rounded-full pt-4 px-4 overflow-hidden shadow md:ml-auto">
-                        <svg class="benefit-svg" viewBox="0 0 119.301 119.3" style="enable-background:new 0 0 119.301 119.3;" xml:space="preserve"><g><path d="M77.721,95.552c0,1.094-0.174,2.156-0.514,3.141c-1.746,7.879-17.54,17.806-17.54,17.806s-15.805-9.927-17.56-17.806 c-0.33-0.984-0.516-2.035-0.516-3.141c0-3.853,2.136-7.201,5.278-8.941c1.464-0.81,3.149-1.27,4.933-1.27 c3.154,0,5.978,1.434,7.855,3.688c1.864-2.254,4.69-3.688,7.843-3.688c1.783,0,3.458,0.46,4.925,1.27 C75.593,88.351,77.721,91.71,77.721,95.552z M111.839,88.936v27.562c0,1.544-1.262,2.802-2.802,2.802 c-1.548,0-2.802-1.258-2.802-2.802V88.936c0-18.117-7.976-27.189-26.396-30.191c-5.258,7.341-12.262,12.697-20.19,12.697 c-7.927,0-14.921-5.356-20.188-12.697c-18.429,2.991-26.397,12.052-26.397,30.191v27.562c0,1.544-1.256,2.802-2.802,2.802 c-1.541,0-2.801-1.258-2.801-2.802V88.936c0-25.636,15.408-32.785,28.717-35.352c-4.192-7.625-6.658-16.383-6.658-23.466 C29.521,13.51,43.031,0,59.64,0c16.604,0,30.122,13.51,30.122,30.118c0,7.083-2.459,15.835-6.662,23.466 C96.49,56.151,111.839,63.344,111.839,88.936z M84.178,30.112c0-13.516-10.996-24.514-24.517-24.514 c-13.516,0-24.514,10.999-24.514,24.514c0,13.778,11.217,35.721,24.514,35.721C72.963,65.833,84.178,43.891,84.178,30.112z M30.121,90.813c-1.541,0-2.801,1.259-2.801,2.802v22.878c0,1.538,1.26,2.802,2.801,2.802c1.546,0,2.802-1.264,2.802-2.802V93.615 C32.922,92.06,31.678,90.813,30.121,90.813z M89.196,90.813c-1.549,0-2.802,1.259-2.802,2.802v22.878 c0,1.538,1.253,2.802,2.802,2.802c1.537,0,2.802-1.264,2.802-2.802V93.615C91.998,92.06,90.747,90.813,89.196,90.813z"/></g></svg>
-                    </div>
-                </div>
-                <div class="p-3 pl-6 border-l border-green-600">
-                    <h3 class="text-lg text-green-800 font-bold">Это не бездушная программа.</h3>
-                    <p class="py-2 leading-4">
-                        Просто немного автоматизированная программа обучения.<br/>
-                        Я лично проверяю домашние работы, отвечаю на вопросы и даю обратную связь
-                    </p>
-                </div>
-            </li>
-            <li class="flex flex-col md:flex-row lg:justify-center py-3 benefit gap-4">
-                <div class="p-3">
-                    <div class="border-4 border-green-600 w-36 h-36 rounded-full p-8 overflow-hidden shadow md:ml-auto">
-                        <svg class="benefit-svg" viewBox="0 0 24 24"xmlns="http://www.w3.org/2000/svg"><path d="m19.5 18c-2.481 0-4.5-2.019-4.5-4.5s2.019-4.5 4.5-4.5h2.5v-2c0-1.103-.897-2-2-2h-1v-2c0-1.103-.897-2-2-2h-14c-1.483 0-2.709 1.084-2.949 2.499-.022.082-.051.162-.051.251v15.25c0 1.654 1.346 3 3 3h17c1.103 0 2-.897 2-2v-2zm-17.5-14c0-.551.448-1 1-1h14v2h-14c-.552 0-1-.449-1-1z"/><path d="m23.25 10.5h-3.75c-1.654 0-3 1.346-3 3s1.346 3 3 3h3.75c.414 0 .75-.336.75-.75v-4.5c0-.414-.336-.75-.75-.75zm-3.75 4c-.552 0-1-.448-1-1s.448-1 1-1 1 .448 1 1-.448 1-1 1z"/></svg>
-                    </div>
-                </div>
-                <div class="p-3 pl-6 border-l border-green-600">
-                    <h3 class="text-lg text-green-800 font-bold">Это дешевле чем нанимать репетитора.</h3>
-                    <p class="py-2 leading-6">
-                        Репетитор стоит около 2000 за час.
-                        В месяц это <b>16 000</b>.<br/>
-                        Месячная подписка на binom.school стоит <b>от 2 999</b>.
-                        Всего от <b>373 рублей в час</b> за преподавателя, набравшего <b>100 баллов</b> на ЕГЭ по математике.
-                    </p>
-                </div>
-            </li>
-            <li class="flex flex-col md:flex-row lg:justify-center py-3 benefit gap-4">
-                <div class="p-3">
-                    <div class="border-4 border-green-600 w-36 h-36 rounded-full p-4 overflow-hidden shadow md:ml-auto">
-                        <svg class="benefit-svg" viewBox="0 0 510.677 510.677" xmlns="http://www.w3.org/2000/svg"><g><path d="m96.527 96.527c82.153-82.153 212.552-87.369 300.837-15.654l-27.266 10.81 11.057 27.889 57.408-22.76 11.811-63.439-29.494-5.49-5.407 29.046c-206.955-163.841-495.618 53.973-394.655 298.267l27.623-11.703c-35.951-84.862-17.076-181.802 48.086-246.966z"/><path d="m490.435 156.058-27.623 11.703c89.726 217.209-167.73 407.698-348.931 262.623l27.274-10.812-11.057-27.889-57.407 22.76-11.811 63.438 29.493 5.491 5.408-29.047c99.755 80.562 246.757 75.015 340.157-18.387 74.505-74.502 94.506-185.442 54.497-279.88z"/><path d="m165.627 240.627v90h75v-30h-45v-30h45v-90h-75v30h45v30z"/><path d="m360.627 180.627h-30v60h-30v-60h-30v90h60v60h30z"/><path d="m432.704 337.355c23.508-50.933 24.243-110.932 0-163.457l-27.238 12.571c19.847 43.005 20.547 93.792 0 138.313z"/><path d="m105.788 324.784c-19.807-42.918-20.587-93.706 0-138.314l-27.239-12.57c-23.459 50.832-24.288 110.829 0 163.455z"/><path d="m324.784 105.788 12.57-27.239c-50.835-23.46-110.823-24.289-163.455 0l12.57 27.239c43.007-19.847 93.79-20.547 138.315 0z"/><path d="m337.356 432.704-12.572-27.238c-43 19.846-93.794 20.546-138.313 0l-12.57 27.238c50.83 23.461 110.829 24.289 163.455 0z"/></g></svg>
-                    </div>
-                </div>
-                <div class="p-3 pl-6 border-l border-green-600">
-                    <h3 class="text-lg text-green-800 font-bold">Учиться можно в любое время.</h3>
-                    <p class="py-2 leading-6">
-                        Не нужно подстраиваться по расписание преподавателя.<br/><br/>
-                        Платформа замечательно работает даже на смартфонах. Видеоуроки можно смотреть в любое время.
-                    </p>
-                </div>
-            </li>
-            <li class="flex flex-col md:flex-row lg:justify-center py-3 benefit gap-4">
-                <div class="p-3">
-                    <div class="border-4 border-green-600 w-36 h-36 rounded-full p-4 overflow-hidden shadow md:ml-auto">
-                        <svg class="benefit-svg" viewBox="0 0 31.381 31.381" style="enable-background:new 0 0 31.381 31.381;" xml:space="preserve"><g><g><circle cx="5.2" cy="25.988" r="3.638"/><circle cx="15.767" cy="25.988" r="3.638"/><circle cx="26.158" cy="25.988" r="3.638"/><rect x="24.253" y="18.292" width="0.769" height="1.57"/><path d="M0,1.754v18.107h22.064v-1.57v-0.514v-0.695h-0.193l-0.287-5.589h-5.256V9.987h5.179h0.776h1.266l1.165,1.352l1.128-1.352 l2.475,0.325l0.16,5.629h-1.05l-0.057,1.141h-0.16v0.695v0.514v1.57h4.171V1.754H0z M24.661,9.527 c-1.688,0-3.058-1.369-3.058-3.057s1.369-3.057,3.058-3.057s3.057,1.369,3.057,3.057S26.348,9.527,24.661,9.527z"/></g></g></svg>
-                    </div>
-                </div>
-                <div class="p-3 pl-6 border-l border-green-600">
-                    <h3 class="text-xl text-green-800 font-bold">Проверенный временем учебный план</h3>
-                    <p class="py-2 leading-6">
-                        Я преподаю и занимаюсь репетиторством уже более 10 лет.<br/>
-                        Я в курсе всех нововведений и особенностей Единого Государственного Экзамена.<br/>
-                        Программа составлена с учетом моего опыта. Я даю рекомендации, обратную связь и отвечаю на вопросы.
-                    </p>
-                </div>
-            </li>
-            <li class="flex flex-col md:flex-row lg:justify-center py-3 benefit gap-4">
-                <div class="p-3">
-                    <div class="border-4 border-green-600 w-36 h-36 rounded-full p-4 overflow-hidden shadow md:ml-auto">
-                        <svg class="benefit-svg"  viewBox="0 0 510 510"  xmlns="http://www.w3.org/2000/svg"><g><path d="m50 107 27-36-24-18-51.75 69 51.75 69 24-18-27-36h430v290h-450v-215h-30v245h510v-350z"/><path d="m60 367h30v30h-30z"/><path d="m420 167h30v30h-30z"/><path d="m420 367h30v30h-30z"/><g><circle cx="255" cy="282" r="25"/><path d="m435 227c-24.813 0-45-20.187-45-45v-15h-270v15c0 24.813-20.187 45-45 45h-15v110h15c24.813 0 45 20.187 45 45v15h270v-15c0-24.813 20.187-45 45-45h15v-110zm-180 110c-30.327 0-55-24.673-55-55s24.673-55 55-55 55 24.673 55 55-24.673 55-55 55z"/></g></g></svg>
-                    </div>
-                </div>
-                <div class="p-3 pl-6 border-l border-green-600">
-                    <h3 class="text-xl text-green-800 font-bold">Возможность вернуть деньги за обучение</h3>
-                    <p class="py-2 leading-6">
-                        Вернем деньги за годовое обучение ученику, набравшему на нашей платформе больше всего баллов по итогам
-                        годового зачета.
-                    </p>
-                </div>
-            </li>
-        </ul>
-        <div class="pt-8 lg:w-2/3 m-auto text-center">
-            <a
-                    class="text-center text-lg text-white hover:text-green-600 rounded bg-green-600 hover:bg-transparent border-2 border-green-600 py-2 px-12 shadow transition"
-                    href="/app"
-            >
-                Попробовать
-            </a>
-        </div>
-    </div>
-</div>
-<div class="platform-description">
-    <div class="max-w-screen-2xl py-24 px-5 m-auto">
-        <div class="bg-green-600 text-white bg-opacity-90 lg:w-1/2 px-6 py-12 rounded shadow">
-            <h1 class="text-2xl font-bold">Онлайн-платформа для подготовки к ЕГЭ по математике</h1>
-            <ul class="py-12 font-thin marker list-decimal px-6">
-                <li class="py-2">Смотри видео</li>
-                <li class="py-2">Решай домашнее задание</li>
-                <li class="py-2">Задавай вопросы</li>
-                <li class="py-2">Получай зачёт и переходи к следующему уроку</li>
-                <li class="py-2">Проходи весь курс</li>
-                <li class="py-2">Сдавай ЕГЭ на 100 балов</li>
-                <li class="py-2 font-bold">PROFIT!!!1</li>
+<div class="max-w-screen-lg py-12 md:py-24 px-5 m-auto border-b border-gray-300">
+    <h1 class="text-2xl font-bold text-center">Онлайн-платформа для подготовки к ЕГЭ по математике</h1>
+    <div class="lg:flex pt-10">
+        <div class="lg:w-1/3 px-6 py-6">
+            <ul class="pb-8 font-thin marker list-decimal px-6">
+                <li class="py-1.5">Смотри видео</li>
+                <li class="py-1.5">Выполняй домашнее задание</li>
+                <li class="py-1.5">Задавай вопросы</li>
+                <li class="py-1.5">Получай зачёт и переходи к следующему уроку</li>
+                <li class="py-1.5">Проходи весь курс</li>
+                <li class="py-1.5">Сдавай ЕГЭ на 100 балов</li>
+                <li class="py-1.5 font-bold">PROFIT!!!1</li>
             </ul>
             <div>
                 <a
-                        class="inline-block text-lg rounded bg-transparent border border-white py-2 px-10 shadow hover:bg-white hover:text-green-600 transition text-white"
+                        class="inline-block rounded bg-green-600 border-2 border-green-600 py-2 px-10 shadow hover:bg-white hover:text-green-600 transition text-white"
                         href="/app"
                 >
                     Зарегистрироваться
                 </a>
             </div>
         </div>
+        <div class="w-full lg:w-2/3 platform-description-image"></div>
+    </div>
+</div>
+<div class="max-w-screen-2xl py-12 md:py-24 px-5 m-auto">
+    <h2 class="text-2xl pb-4 font-bold text-center">Почему стоит готовиться к ЕГЭ по математике на <b class="text-green-600">binom.school?</b></h2>
+    <ul class="py-5 text-xs m-auto justify-around lg:w-1/2">
+        <li class="flex flex-col md:flex-row lg:justify-center py-3 benefit gap-4">
+            <div class="p-3">
+                <div class="border-4 border-green-600 w-36 h-36 rounded-full pt-4 px-4 overflow-hidden shadow md:ml-auto">
+                    <svg class="benefit-svg" viewBox="0 0 119.301 119.3" style="enable-background:new 0 0 119.301 119.3;" xml:space="preserve"><g><path d="M77.721,95.552c0,1.094-0.174,2.156-0.514,3.141c-1.746,7.879-17.54,17.806-17.54,17.806s-15.805-9.927-17.56-17.806 c-0.33-0.984-0.516-2.035-0.516-3.141c0-3.853,2.136-7.201,5.278-8.941c1.464-0.81,3.149-1.27,4.933-1.27 c3.154,0,5.978,1.434,7.855,3.688c1.864-2.254,4.69-3.688,7.843-3.688c1.783,0,3.458,0.46,4.925,1.27 C75.593,88.351,77.721,91.71,77.721,95.552z M111.839,88.936v27.562c0,1.544-1.262,2.802-2.802,2.802 c-1.548,0-2.802-1.258-2.802-2.802V88.936c0-18.117-7.976-27.189-26.396-30.191c-5.258,7.341-12.262,12.697-20.19,12.697 c-7.927,0-14.921-5.356-20.188-12.697c-18.429,2.991-26.397,12.052-26.397,30.191v27.562c0,1.544-1.256,2.802-2.802,2.802 c-1.541,0-2.801-1.258-2.801-2.802V88.936c0-25.636,15.408-32.785,28.717-35.352c-4.192-7.625-6.658-16.383-6.658-23.466 C29.521,13.51,43.031,0,59.64,0c16.604,0,30.122,13.51,30.122,30.118c0,7.083-2.459,15.835-6.662,23.466 C96.49,56.151,111.839,63.344,111.839,88.936z M84.178,30.112c0-13.516-10.996-24.514-24.517-24.514 c-13.516,0-24.514,10.999-24.514,24.514c0,13.778,11.217,35.721,24.514,35.721C72.963,65.833,84.178,43.891,84.178,30.112z M30.121,90.813c-1.541,0-2.801,1.259-2.801,2.802v22.878c0,1.538,1.26,2.802,2.801,2.802c1.546,0,2.802-1.264,2.802-2.802V93.615 C32.922,92.06,31.678,90.813,30.121,90.813z M89.196,90.813c-1.549,0-2.802,1.259-2.802,2.802v22.878 c0,1.538,1.253,2.802,2.802,2.802c1.537,0,2.802-1.264,2.802-2.802V93.615C91.998,92.06,90.747,90.813,89.196,90.813z"/></g></svg>
+                </div>
+            </div>
+            <div class="p-3 pl-6 border-l border-green-600">
+                <h3 class="text-lg text-green-800 font-bold">Это не бездушная программа.</h3>
+                <p class="py-2 leading-4">
+                    Просто немного автоматизированная программа обучения.<br/>
+                    Я лично проверяю домашние работы, отвечаю на вопросы и даю обратную связь
+                </p>
+            </div>
+        </li>
+        <li class="flex flex-col md:flex-row lg:justify-center py-3 benefit gap-4">
+            <div class="p-3">
+                <div class="border-4 border-green-600 w-36 h-36 rounded-full p-8 overflow-hidden shadow md:ml-auto">
+                    <svg class="benefit-svg" viewBox="0 0 24 24"xmlns="http://www.w3.org/2000/svg"><path d="m19.5 18c-2.481 0-4.5-2.019-4.5-4.5s2.019-4.5 4.5-4.5h2.5v-2c0-1.103-.897-2-2-2h-1v-2c0-1.103-.897-2-2-2h-14c-1.483 0-2.709 1.084-2.949 2.499-.022.082-.051.162-.051.251v15.25c0 1.654 1.346 3 3 3h17c1.103 0 2-.897 2-2v-2zm-17.5-14c0-.551.448-1 1-1h14v2h-14c-.552 0-1-.449-1-1z"/><path d="m23.25 10.5h-3.75c-1.654 0-3 1.346-3 3s1.346 3 3 3h3.75c.414 0 .75-.336.75-.75v-4.5c0-.414-.336-.75-.75-.75zm-3.75 4c-.552 0-1-.448-1-1s.448-1 1-1 1 .448 1 1-.448 1-1 1z"/></svg>
+                </div>
+            </div>
+            <div class="p-3 pl-6 border-l border-green-600">
+                <h3 class="text-lg text-green-800 font-bold">Это дешевле чем нанимать репетитора.</h3>
+                <p class="py-2 leading-6">
+                    Репетитор стоит около 2000 за час.
+                    В месяц это <b>16 000</b>.<br/>
+                    Месячная подписка на binom.school стоит <b>от 2 999</b>.
+                    Всего от <b>373 рублей в час</b> за преподавателя, набравшего <b>100 баллов</b> на ЕГЭ по математике.
+                </p>
+            </div>
+        </li>
+        <li class="flex flex-col md:flex-row lg:justify-center py-3 benefit gap-4">
+            <div class="p-3">
+                <div class="border-4 border-green-600 w-36 h-36 rounded-full p-4 overflow-hidden shadow md:ml-auto">
+                    <svg class="benefit-svg" viewBox="0 0 510.677 510.677" xmlns="http://www.w3.org/2000/svg"><g><path d="m96.527 96.527c82.153-82.153 212.552-87.369 300.837-15.654l-27.266 10.81 11.057 27.889 57.408-22.76 11.811-63.439-29.494-5.49-5.407 29.046c-206.955-163.841-495.618 53.973-394.655 298.267l27.623-11.703c-35.951-84.862-17.076-181.802 48.086-246.966z"/><path d="m490.435 156.058-27.623 11.703c89.726 217.209-167.73 407.698-348.931 262.623l27.274-10.812-11.057-27.889-57.407 22.76-11.811 63.438 29.493 5.491 5.408-29.047c99.755 80.562 246.757 75.015 340.157-18.387 74.505-74.502 94.506-185.442 54.497-279.88z"/><path d="m165.627 240.627v90h75v-30h-45v-30h45v-90h-75v30h45v30z"/><path d="m360.627 180.627h-30v60h-30v-60h-30v90h60v60h30z"/><path d="m432.704 337.355c23.508-50.933 24.243-110.932 0-163.457l-27.238 12.571c19.847 43.005 20.547 93.792 0 138.313z"/><path d="m105.788 324.784c-19.807-42.918-20.587-93.706 0-138.314l-27.239-12.57c-23.459 50.832-24.288 110.829 0 163.455z"/><path d="m324.784 105.788 12.57-27.239c-50.835-23.46-110.823-24.289-163.455 0l12.57 27.239c43.007-19.847 93.79-20.547 138.315 0z"/><path d="m337.356 432.704-12.572-27.238c-43 19.846-93.794 20.546-138.313 0l-12.57 27.238c50.83 23.461 110.829 24.289 163.455 0z"/></g></svg>
+                </div>
+            </div>
+            <div class="p-3 pl-6 border-l border-green-600">
+                <h3 class="text-lg text-green-800 font-bold">Учиться можно в любое время.</h3>
+                <p class="py-2 leading-6">
+                    Не нужно подстраиваться по расписание преподавателя.<br/><br/>
+                    Платформа замечательно работает даже на смартфонах. Видеоуроки можно смотреть в любое время.
+                </p>
+            </div>
+        </li>
+        <li class="flex flex-col md:flex-row lg:justify-center py-3 benefit gap-4">
+            <div class="p-3">
+                <div class="border-4 border-green-600 w-36 h-36 rounded-full p-4 overflow-hidden shadow md:ml-auto">
+                    <svg class="benefit-svg" viewBox="0 0 31.381 31.381" style="enable-background:new 0 0 31.381 31.381;" xml:space="preserve"><g><g><circle cx="5.2" cy="25.988" r="3.638"/><circle cx="15.767" cy="25.988" r="3.638"/><circle cx="26.158" cy="25.988" r="3.638"/><rect x="24.253" y="18.292" width="0.769" height="1.57"/><path d="M0,1.754v18.107h22.064v-1.57v-0.514v-0.695h-0.193l-0.287-5.589h-5.256V9.987h5.179h0.776h1.266l1.165,1.352l1.128-1.352 l2.475,0.325l0.16,5.629h-1.05l-0.057,1.141h-0.16v0.695v0.514v1.57h4.171V1.754H0z M24.661,9.527 c-1.688,0-3.058-1.369-3.058-3.057s1.369-3.057,3.058-3.057s3.057,1.369,3.057,3.057S26.348,9.527,24.661,9.527z"/></g></g></svg>
+                </div>
+            </div>
+            <div class="p-3 pl-6 border-l border-green-600">
+                <h3 class="text-xl text-green-800 font-bold">Проверенный временем учебный план</h3>
+                <p class="py-2 leading-6">
+                    Я преподаю и занимаюсь репетиторством уже более 10 лет.<br/>
+                    Я в курсе всех нововведений и особенностей Единого Государственного Экзамена.<br/>
+                    Программа составлена с учетом моего опыта. Я даю рекомендации, обратную связь и отвечаю на вопросы.
+                </p>
+            </div>
+        </li>
+        <li class="flex flex-col md:flex-row lg:justify-center py-3 benefit gap-4">
+            <div class="p-3">
+                <div class="border-4 border-green-600 w-36 h-36 rounded-full p-4 overflow-hidden shadow md:ml-auto">
+                    <svg class="benefit-svg"  viewBox="0 0 510 510"  xmlns="http://www.w3.org/2000/svg"><g><path d="m50 107 27-36-24-18-51.75 69 51.75 69 24-18-27-36h430v290h-450v-215h-30v245h510v-350z"/><path d="m60 367h30v30h-30z"/><path d="m420 167h30v30h-30z"/><path d="m420 367h30v30h-30z"/><g><circle cx="255" cy="282" r="25"/><path d="m435 227c-24.813 0-45-20.187-45-45v-15h-270v15c0 24.813-20.187 45-45 45h-15v110h15c24.813 0 45 20.187 45 45v15h270v-15c0-24.813 20.187-45 45-45h15v-110zm-180 110c-30.327 0-55-24.673-55-55s24.673-55 55-55 55 24.673 55 55-24.673 55-55 55z"/></g></g></svg>
+                </div>
+            </div>
+            <div class="p-3 pl-6 border-l border-green-600">
+                <h3 class="text-xl text-green-800 font-bold">Возможность вернуть деньги за обучение</h3>
+                <p class="py-2 leading-6">
+                    Вернем деньги за годовое обучение ученику, набравшему на нашей платформе больше всего баллов по итогам
+                    годового зачета.
+                </p>
+            </div>
+        </li>
+    </ul>
+    <div class="pt-8 lg:w-2/3 m-auto text-center">
+        <a
+                class="text-center text-lg text-white hover:text-green-600 rounded bg-green-600 hover:bg-transparent border-2 border-green-600 py-2 px-12 shadow transition"
+                href="/app"
+        >
+            Попробовать
+        </a>
     </div>
 </div>
 <div class="ege-class m-auto">
@@ -373,7 +362,7 @@
         </div>
     </div>
 </div>
-<div class="max-w-screen-2xl py-12 px-5">
+<div class="max-w-screen-2xl py-12 px-5 mx-auto">
     <div class="lg:flex">
         <div class="lg:w-1/2 lg:px-20">
             <h2 class="text-2xl font-bold pb-2">Я сам сдал ЕГЭ на 100 баллов и могу научить тебя</h2>
@@ -394,28 +383,33 @@
             </div>
         </div>
         <div class="lg:w-1/2">
-            <div class="cert-container">
+            <div class="cert-container shadow">
                 <img class="w-full" src="/i/ege-cert.jpg" alt="Сертификат по математике егэ 100 баллов Докучаев Ростислав"/>
             </div>
         </div>
     </div>
 </div>
-<div class="max-w-screen-2xl py-12 px-5">
+<div class="max-w-screen-2xl py-12 px-5 mx-auto">
     <h2 class="text-2xl font-bold">Цены</h2>
-    <div class="py-8">
-        Цены
-    </div>
     <div class="md:flex gap-2">
         {{ range .Tariffs }}
-        <div class="shadow rounded p-4 pb-8 md:w-1/3 bg-white bg-opacity-50">
-            <div class="text-lg text-green-600">{{ .Name }}</div>
-            <div class="text-gray-500 whitespace-pre-wrap leading-6 text-sm py-4">{{ .Description }}</div>
-            {{ range .Prices }}
-            <div class="flex gap-4 py-2 border-b border-gray-300">
-                <div class="font-bold text-green-600 text-right w-1/2">{{.Price}}₽</div>
-                <div class="text-left w-1/2 text-gray-700">на {{ .Duration }} мес</div>
+        <div class="shadow rounded pt-4 px-5 pb-8 md:w-1/3 bg-white bg-opacity-50 flex flex-col justify-between">
+            <div>
+                <div class="text-lg text-green-600">{{ .Name }}</div>
+                <div class="text-gray-500 whitespace-pre-wrap leading-6 text-sm py-4">{{ .Description }}</div>
+                {{ range .Prices }}
+                <div class="flex gap-4 py-2 border-b border-gray-300">
+                    <div class="font-bold text-green-600 text-right w-1/2">{{.Price}}₽</div>
+                    <div class="text-left w-1/2 text-gray-700">на {{ .Duration }} мес</div>
+                </div>
+                {{ end }}
             </div>
-            {{ end }}
+            <div class="text-center pt-5">
+                <a
+                        class="inline-block rounded bg-green-600 py-2 px-10 border-2 border-green-600 shadow hover:bg-transparent hover:text-green-600 transition text-white"
+                        href="/app"
+                >Регистрация</a>
+            </div>
         </div>
         {{ end }}
     </div>

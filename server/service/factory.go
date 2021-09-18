@@ -2,6 +2,7 @@ package service
 
 import (
 	"binom/server/storage"
+	"binom/server/telegramBot"
 	"github.com/go-pg/pg"
 )
 
@@ -20,9 +21,9 @@ func (f *Factory) TokenService(jwtSecret string, storage *storage.TokenStorage) 
 	return &tokenService
 }
 
-func (f *Factory) AuthService(userStorage *storage.UserStorage, tokenService *TokenService) *AuthService {
+func (f *Factory) AuthService(userStorage *storage.UserStorage, tokenService *TokenService, technicalTelegramBot *telegramBot.BotForChat) *AuthService {
 	service := AuthService{}
-	service.Init(userStorage, tokenService)
+	service.Init(userStorage, tokenService, technicalTelegramBot)
 	return &service
 }
 
@@ -32,9 +33,9 @@ func (f *Factory) MoveAtPosition(db *pg.DB) *MoveAtPositionService {
 	return &service
 }
 
-func (f *Factory) Notification(notificationStorage *storage.NotificationStorage, userStorage *storage.UserStorage) *NotificationService {
+func (f *Factory) Notification(notificationStorage *storage.NotificationStorage, userStorage *storage.UserStorage, technicalTelegramBot *telegramBot.BotForChat) *NotificationService {
 	s := NotificationService{}
-	s.Init(notificationStorage, userStorage)
+	s.Init(notificationStorage, userStorage, technicalTelegramBot)
 	return &s
 }
 

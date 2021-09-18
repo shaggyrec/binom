@@ -3,6 +3,7 @@ package main
 import (
 	"binom/server"
 	"binom/server/functions"
+	"binom/server/telegramBot"
 	"github.com/joho/godotenv"
 	"log"
 	"net/http"
@@ -22,6 +23,7 @@ func main() {
 
 	db := functions.DbConnection(pgUser, pgHost, pgDbName, pgPwd)
 	defer db.Close()
+
 	log.Print("Starting server on port " + appPort)
 	err := http.ListenAndServe(
 		":" + appPort,
@@ -30,6 +32,10 @@ func main() {
 			os.Getenv("UPLOAD_PATH"),
 			os.Getenv("HOST"),
 			os.Getenv("GIT_COMMIT"),
+			telegramBot.InstantiateBotForChat(
+				telegramBot.Instantiate(os.Getenv("TELEGRAM_BOT_TOKEN")),
+				os.Getenv("TELEGRAM_TECHNICAL_CHAT_ID"),
+			),
 		),
 	)
 	if err != nil {

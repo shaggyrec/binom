@@ -5,6 +5,7 @@ import (
 	"binom/server/middlewares"
 	"binom/server/service"
 	"binom/server/storage"
+	"binom/server/telegramBot"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/cors"
@@ -12,7 +13,7 @@ import (
 	"net/http"
 )
 
-func Init(db *pg.DB, jwtSecret, uploadPath, host, version string) *chi.Mux {
+func Init(db *pg.DB, jwtSecret, uploadPath, host, version string, technicalTelegramBot *telegramBot.BotForChat) *chi.Mux {
 	// storages
 	storageFactory := &storage.Factory{}
 	authCodeStorage := storageFactory.AuthCode(db)
@@ -33,9 +34,9 @@ func Init(db *pg.DB, jwtSecret, uploadPath, host, version string) *chi.Mux {
 	serviceFactory := service.Factory{}
 	tokenService := serviceFactory.TokenService(jwtSecret, tokenStorage)
 	authCodeService := serviceFactory.AuthCodeService(authCodeStorage)
-	authService := serviceFactory.AuthService(userStorage, tokenService)
+	authService := serviceFactory.AuthService(userStorage, tokenService, technicalTelegramBot)
 	moveAtPositionService := serviceFactory.MoveAtPosition(db)
-	notificationService := serviceFactory.Notification(notificationStorage, userStorage)
+	notificationService := serviceFactory.Notification(notificationStorage, userStorage, technicalTelegramBot)
 	lessonProgressService := serviceFactory.LessonProgress(db)
 	yooMoneyService := serviceFactory.Yoomoney(host)
 	userScoreService := serviceFactory.UserScore(lessonStorage, userStorage, pointsMovementStorage, db)
@@ -62,7 +63,7 @@ func Init(db *pg.DB, jwtSecret, uploadPath, host, version string) *chi.Mux {
 	tariffController := controllers.TariffController{}
 	tariffController.Init(tariffStorage, tariffPriceStorage, userSubscriptionStorage, yooMoneyService)
 	paymentController := controllers.PaymentController{}
-	paymentController.Init(yooMoneyService, transactionStorage, userSubscriptionStorage, notificationService)
+	paymentController.Init(yooMoneyService, transactionStorage, userSubscriptionStorage)
 	usersRatingController := controllers.UsersRatingController{}
 	usersRatingController.Init(userScoreService)
 

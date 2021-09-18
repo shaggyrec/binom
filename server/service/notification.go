@@ -4,6 +4,7 @@ import (
 	"binom/server/dataType"
 	"binom/server/mailer"
 	"binom/server/storage"
+	"binom/server/telegramBot"
 	"database/sql"
 	"errors"
 	"gopkg.in/guregu/null.v4"
@@ -12,9 +13,10 @@ import (
 type NotificationService struct {
 	notificationStorage *storage.NotificationStorage
 	userStorage *storage.UserStorage
+	technicalTelegramBot *telegramBot.BotForChat
 }
 
-func (s *NotificationService) Init(notificationStorage *storage.NotificationStorage, userStorage *storage.UserStorage) {
+func (s *NotificationService) Init(notificationStorage *storage.NotificationStorage, userStorage *storage.UserStorage, technicalTelegramBot *telegramBot.BotForChat) {
 	s.notificationStorage = notificationStorage
 	s.userStorage = userStorage
 }
@@ -51,6 +53,7 @@ func (s *NotificationService) CreateForAdmins(notification *dataType.Notificatio
 	if err != nil {
 		return err
 	}
+	s.technicalTelegramBot.Message(notification.Message)
 	return s.Create(notification, ids)
 }
 

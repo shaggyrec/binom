@@ -7,7 +7,6 @@ import (
 	"binom/server/requests"
 	"binom/server/service"
 	"binom/server/storage"
-	"database/sql"
 	"fmt"
 	"github.com/go-chi/render"
 	"gopkg.in/guregu/null.v4"
@@ -25,11 +24,10 @@ type PaymentController struct{
 	notificationService *service.NotificationService
 }
 
-func (c *PaymentController) Init(yooMoneyService *service.YoomoneyService, transactionStorage *storage.TransactionStorage, userSubscriptionStorage *storage.UserSubscriptionStorage, notificationService *service.NotificationService) {
+func (c *PaymentController) Init(yooMoneyService *service.YoomoneyService, transactionStorage *storage.TransactionStorage, userSubscriptionStorage *storage.UserSubscriptionStorage) {
 	c.yooMoneyService = yooMoneyService
 	c.transactionStorage = transactionStorage
 	c.userSubscriptionStorage = userSubscriptionStorage
-	c.notificationService = notificationService
 }
 
 func (c *PaymentController) YooMoney(w http.ResponseWriter, r *http.Request) {
@@ -117,14 +115,21 @@ func (c *PaymentController) YooMoney(w http.ResponseWriter, r *http.Request) {
 				subscription.Name,
 				subscription.Expired.Format("02.01.2006"),
 			),
-			Type: null.Int{NullInt64: sql.NullInt64{Int64: dataType.NotificationSubscriptionActivate, Valid: true}},
+			Type: null.IntFrom(dataType.NotificationSubscriptionActivate),
 		}
 		err = c.notificationService.Create(&notification, []string{subscription.UserId})
-
 		if err != nil {
 			log.Println(err)
 			return
 		}
+		c.notificationService.CreateForAdmins(&dataType.Notification{
+			Message: fmt.Sprintf(
+				"Оплачена подписка %s до %s. Пользователь",
+				subscription.Name,
+				subscription.Expired.Format("02.01.2006"),
+			),
+			Type: null.IntFrom(dataType.NotificationSubscriptionActivate),
+		})
 	}
 
 	render.JSON(w, r, "ok")

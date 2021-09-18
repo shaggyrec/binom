@@ -52,6 +52,7 @@ services:
       POSTGRES_DB_NAME_TEST: postgres_test
       HOST: binom.school
       GIT_COMMIT: ${GIT_COMMIT}
+      TELEGRAM_TECHNICAL_CHAT_ID: -413893774
     logging:
       driver: "json-file"
       options:

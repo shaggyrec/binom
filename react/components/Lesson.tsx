@@ -15,7 +15,6 @@ function renderTaskFiles(taskFiles, user): ReactElement {
     }
     return (
         <Paddingable padding={[10, 0, 30]}>
-            <h2>Ссылка на домашнее задание</h2>
             <DemoUserMessage user={user}/>
             {taskFiles.map((f, i) => (
                 <div className="link-to-task" key={f} >
@@ -49,13 +48,14 @@ function Lesson(props: Lesson): ReactElement {
                 )}
                 <p className="text break-spaces">{props.text}</p>
 
-                {props.task && (
+                {(props.task || props.taskFiles) && (
                     <Paddingable padding={[10, 0]}>
-                        <h2>Задание</h2>
-                        <MathsText>{props.task}</MathsText>
+                        <h2 className="mb-0">Домашнее задание</h2>
+                        <h5 className="mt-0">Выполни домашнее задание, прикрепи его к форме ниже и нажми «отправить»</h5>
+                        {props.task && (<MathsText>{props.task}</MathsText>)}
+                        {renderTaskFiles(props.taskFiles, props.user)}
                     </Paddingable>
                 )}
-                {renderTaskFiles(props.taskFiles, props.user)}
             </div>
         </div>
     );

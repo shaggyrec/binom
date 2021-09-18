@@ -66,6 +66,9 @@ footer {
     header, footer {
         margin: 0;
     }
+    header {
+        padding: 10px 0 15px;
+    }
 }
 
 button, input, textarea, select, .file-input {

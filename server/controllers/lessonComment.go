@@ -6,7 +6,6 @@ import (
 	"binom/server/functions"
 	"binom/server/service"
 	"binom/server/storage"
-	"database/sql"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
 	"gopkg.in/guregu/null.v4"
@@ -94,7 +93,7 @@ func (c *LessonCommentController) Add(w http.ResponseWriter, r *http.Request)  {
 	}
 
 	n := &dataType.Notification{
-		Type: null.Int{NullInt64: sql.NullInt64{Int64: dataType.NotificationLessonComment}},
+		Type: null.IntFrom(dataType.NotificationLessonComment),
 		Message: notificationText,
 		Meta: dataType.NotificationMeta{ Lesson: lessonId, Comment: newLessonComment.Id },
 		AuthorId: comment.AuthorId,

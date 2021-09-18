@@ -81,7 +81,7 @@ function LessonOverview ({ requestLesson, lesson, loading, match: { params, url 
 export default connect(
     (state: RootState) => ({
         lesson: state.lessons.current,
-        loading: state.lessons.loading,
+        loading: state.lessons.loading || state.lessonComments.loading,
         me: state.users.me,
         comments: state.lessonComments.list,
         commentsError: state.lessonComments.error,

@@ -63,6 +63,13 @@ function Auth({ me, from, setEmail, email, code, sendEmail, sendCode, setCode, e
                         : <Input required={true} name="email" type="email" value={email || ''} label="Email" onChange={setEmail}/>
                 }
                 {error && <div className="text-red">{ error }</div>}
+                <div style={{ paddingBottom: 10, marginTop: -20 }}>
+                    <a href="/privacy" target="_blank">
+                        <small>
+                            Нажимая кнопку, я соглашаюсь с политикой конфиденциальности и обработкой персональных данных
+                        </small>
+                    </a>
+                </div>
                 {!codeId && !loading && <Button className="block">Войти</Button>}
             </Form>
             {codeId &&

@@ -52,6 +52,10 @@ func (c *PageController) MiniLanding (w http.ResponseWriter, r *http.Request)  {
 	c.renderTemplate("mini-landing", w, r, nil)
 }
 
+func (c *PageController) Privacy(w http.ResponseWriter, r *http.Request)  {
+	c.renderTemplate("privacy", w, r, nil)
+}
+
 func (c *PageController) renderTemplate(name string, w http.ResponseWriter, r *http.Request, data map[string]interface{}) {
 	if data != nil {
 		data["Host"] = c.host

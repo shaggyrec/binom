@@ -85,6 +85,7 @@ func Init(db *pg.DB, jwtSecret, uploadPath, host, version string) *chi.Mux {
 		w.Write([]byte("hello from binom"))
 	})
 	r.Get("/", pageController.Main)
+	r.Get("/privacy", pageController.Privacy)
 	r.Group(func(r chi.Router) {
 		r.Use(middlewares.ParseAuthTokenFromQueryString)
 		r.Use(middlewares.JwtAuth(jwtSecret))

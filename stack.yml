@@ -53,6 +53,7 @@ services:
       HOST: binom.school
       GIT_COMMIT: ${GIT_COMMIT}
       TELEGRAM_TECHNICAL_CHAT_ID: -413893774
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
     logging:
       driver: "json-file"
       options:

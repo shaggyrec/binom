@@ -400,7 +400,13 @@
                 {{ range .Prices }}
                 <div class="flex gap-4 py-2 border-b border-gray-300">
                     <div class="font-bold text-green-600 text-right w-1/2">{{.Price}}₽</div>
-                    <div class="text-left w-1/2 text-gray-700">на {{ .Duration }} мес</div>
+                    <div class="text-left w-1/2 text-gray-700">
+                        {{ if gt .Duration 11 }}
+                            до самого экзамена
+                        {{ else }}
+                            на {{ .Duration }} мес
+                        {{ end }}
+                    </div>
                 </div>
                 {{ end }}
             </div>

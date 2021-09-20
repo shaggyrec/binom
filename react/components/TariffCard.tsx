@@ -4,7 +4,7 @@ import Button from './Button';
 import Select from './form/Select';
 
 function priceTitle(price): string {
-    return price.price + ' на ' + price.duration + ' мес'
+    return price.price + (price.duration > 11 ? ' до самого экзамена' : (' на ' + price.duration + ' мес'))
 }
 
 function TariffCard({ tariff, onBuy }): ReactElement {

@@ -29,6 +29,7 @@ services:
       - ./nginx/ssl:/etc/ssl/
       - ./dist:/golang/static
       - ./public/i:/golang/static/i
+      - ./public/v:/golang/static/v
   golang:
     build: .
     command: ["./scripts/wait-for-it.sh", "pg:5432", "--", "gow", "run", "."]

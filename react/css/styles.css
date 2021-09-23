@@ -482,6 +482,7 @@ button:active {
 
 .list, .sub-list {
     padding: 10px;
+    transition: all .3s;
 }
 
 .card {
@@ -497,12 +498,11 @@ button:active {
 }
 
 .list-item .sub-list, .sub-list.closed {
-    display: none;
+    opacity: 0;
 }
 
 .list-item.open .sub-list, .sub-list.opened {
-    display: block;
-    animation: showFromTop .2s both;
+    opacity: 1;
 }
 
 .sub-list {
@@ -918,4 +918,14 @@ code {
 @keyframes backLinkShow {
     0% {margin-left: -20px; opacity: 0}
     1000% {margin-left: 0; opacity: 1}
+}
+
+@keyframes showFromScale {
+    0% { transform: scale(0); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes hideToScale {
+    0% { transform: scale(1); opacity: 0; }
+    100% { transform: scale(0); opacity: 1; }
 }

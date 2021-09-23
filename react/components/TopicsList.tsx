@@ -1,11 +1,7 @@
-import React, { ReactElement, useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
-
+import React, { ReactElement, useEffect, useState } from 'react';
+import AnimateHeight from 'react-animate-height';
 import { Topic } from '../dataTypes/topic';
-import { ArrowRight, Checked, Edit, Locked, Processing } from './Icons';
-import Button from './Button';
 import Paddingable from './Paddingable';
-import SortableList from './SortableList';
 import { usePrevious } from '../hooks/usePrevious';
 import { useScroll } from '../hooks/useScroll';
 import TopicListItem from './TopicListItem';
@@ -60,16 +56,23 @@ function TopicsList(
                             isAdmin={isAdmin}
                         >
                             {t.lessons && t.lessons.length > 0 && (
-                                <div className={`sub-list ${openTopics.indexOf(t.id) !== -1 ? 'opened' : 'closed'}`}>
-                                    <LessonsList
-                                        allAllowed={isAdmin || (isDemo && index < 2)}
-                                        items={t.lessons}
-                                        onMove={onMoveLesson}
-                                        isAdmin={isAdmin}
-                                        active={t.status?.lessonId}
-                                        isFinished={t.status?.finished}
-                                    />
-                                </div>
+                                <AnimateHeight
+                                    duration={300}
+                                    height={openTopics.indexOf(t.id) !== -1 ? 'auto' : 0}
+                                >
+                                    <div className={`sub-list ${openTopics.indexOf(t.id) !== -1 ? 'opened' : 'closed'}`}>
+
+                                        <LessonsList
+                                            allAllowed={isAdmin || (isDemo && index < 2)}
+                                            items={t.lessons}
+                                            onMove={onMoveLesson}
+                                            isAdmin={isAdmin}
+                                            active={t.status?.lessonId}
+                                            isFinished={t.status?.finished}
+                                        />
+                                    </div>
+                                </AnimateHeight>
+
                             )}
                         </TopicListItem>
                     </Paddingable>

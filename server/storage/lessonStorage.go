@@ -82,7 +82,7 @@ func (s *LessonStorage) mapDbRow(data map[string]interface{}) *dataType.Lesson {
 		lesson.Name.Valid = true
 	}
 
-	if val, ok := data["text"]; ok {
+	if val, ok := data["text"]; ok && val != nil  {
 		lesson.Text.String = val.(string)
 		lesson.Text.Valid = true
 	}

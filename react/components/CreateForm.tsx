@@ -17,7 +17,7 @@ function CreateForm({ onSubmit, categories = [] }: CreateFormInterface): ReactEl
     const [entityCategory, setEntityCategory] = useState(categories[0]?.value || '');
 
     useEffect(() => {
-        setEntityAlias(slugify(entityName));
+        setEntityAlias(slugify(entityName, { replace: { '.': '', ':': '' } }));
     }, [entityName]);
 
     useEffect(() => {

@@ -49,7 +49,7 @@ function LessonEditForm({ onSubmit, name, alias, text, task, video, youtubeVideo
     const [lessonDeadline, setLessonDeadline] = useState(deadline || 3)
 
     useEffect(() => {
-        setLessonAlias(slugify(lessonName));
+        setLessonAlias(slugify(lessonName, { replace: { '.': '', ':': '' } }));
     }, [lessonName]);
 
     function handleSubmit() {

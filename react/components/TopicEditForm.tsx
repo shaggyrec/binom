@@ -14,7 +14,7 @@ function TopicEditForm({ onSubmit, name, alias, text, openDate }): ReactElement 
     const [topicOpenDate, setTopicOpenDate] = useState(openDateValueForInput(openDate));
 
     useEffect(() => {
-        setTopicAlias(slugify(topicName));
+        setTopicAlias(slugify(topicName, { replace: { '.': '', ':': '' } }));
     }, [topicName]);
 
     function handleSubmit(): void {

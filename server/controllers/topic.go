@@ -9,6 +9,7 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
 	"github.com/go-pg/pg"
+	"gopkg.in/guregu/null.v4"
 	"log"
 	"net/http"
 	"strconv"
@@ -33,6 +34,10 @@ func (c *TopicController) Create(w http.ResponseWriter, r *http.Request) {
 	if t.Name.String == "" || t.Alias.String == "" {
 		exceptions.BadRequestError(w, r, "`name` and `alias` are mandatory", exceptions.ErrorFieldIsMandatory)
 		return
+	}
+
+	if !t.Pos.Valid {
+		t.Pos = null.IntFrom(99)
 	}
 
 	_, err := c.topicStorage.Create(&t)

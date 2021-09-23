@@ -10,6 +10,7 @@ import (
 	"github.com/go-chi/render"
 	"github.com/go-pg/pg"
 	"github.com/google/uuid"
+	"gopkg.in/guregu/null.v4"
 	"log"
 	"net/http"
 	"strconv"
@@ -34,6 +35,10 @@ func (c *LessonController) Create(w http.ResponseWriter, r *http.Request) {
 	if l.Name.String == "" || l.Alias.String == "" {
 		exceptions.BadRequestError(w, r, "`name` and `alias` are mandatory", exceptions.ErrorFieldIsMandatory)
 		return
+	}
+
+	if !l.Pos.Valid {
+		l.Pos = null.IntFrom(99)
 	}
 
 	_, err := c.lessonStorage.Create(&l)

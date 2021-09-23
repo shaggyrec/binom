@@ -489,7 +489,7 @@ button:active {
     transition: all .3s;
     padding: 20px 10px;
 }
-.card:hover {
+.card:hover, .card.hover {
     box-shadow: -2px -2px 5px #FFF, 2px 2px 5px #BABECC;
 }
 .list, .card {

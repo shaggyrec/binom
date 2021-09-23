@@ -101,7 +101,7 @@ function checkOpenDate(openDate: string): boolean {
 function TopicListItem({ topic, isOpen, isPreviousFinished, onClick, isAdmin, children }): ReactElement {
     const isBlocked = !isAdmin && checkOpenDate(topic.openDate);
     return (
-        <div className={`card transition3 ${isOpen ? ' pointer' : ''} ${topicStatusClass(topic.status)}`}>
+        <div className={`card hover transition3 ${isOpen ? ' pointer' : ''} ${topicStatusClass(topic.status)}`}>
             <div className="flex flex-vertical-top outline-background gap-10" onClick={onClick}>
                 <div>
                     {renderIcon(topic.status, !isPreviousFinished)}

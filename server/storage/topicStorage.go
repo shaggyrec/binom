@@ -42,7 +42,7 @@ func (s *TopicStorage) List(limit int, offset int, withLessons bool, userId stri
 	stmt := s.db.Model(&topics)
 	if withLessons {
 		stmt.Relation("Lessons", func(q *orm.Query) (*orm.Query, error) {
-			return q.Column("lesson.id", "lesson.name" , "lesson.topic_id", "lesson.alias").Order("lesson.pos ASC"), nil
+			return q.Column("lesson.id", "lesson.name" , "lesson.topic_id", "lesson.alias").Order("lesson.pos ASC, lesson.created ASC"), nil
 		})
 	}
 
@@ -54,7 +54,7 @@ func (s *TopicStorage) List(limit int, offset int, withLessons bool, userId stri
 
 	stmt.Limit(limit).
 		Offset(offset).
-		OrderExpr("pos ASC, created DESC")
+		OrderExpr("pos ASC, created ACS")
 
 	err := stmt.Select()
 	return &topics, err

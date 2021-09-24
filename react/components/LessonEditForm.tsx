@@ -59,7 +59,7 @@ function LessonEditForm({ onSubmit, name, alias, text, task, video, youtubeVideo
             text: lessonDescription,
             topicId: lessonCategory || topics[0]?.value,
             task: lessonTask,
-            taskValue: parseInt(lessonTaskValue) || 5,
+            taskValue: parseInt(lessonTaskValue) || 30,
             youtubeVideos: lessonYoutubeVideos,
             deadline: parseInt(lessonDeadline) || 3,
         });

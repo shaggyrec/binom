@@ -373,9 +373,15 @@ button:active {
 .bottom-menu-nav-link {
     width: 100%;
     text-align: center;
-    padding: 10px 0 0;
+    padding: 10px 0 20px;
     position: relative;
     z-index: 1;
+}
+
+@media (min-width: 900px) {
+    .bottom-menu-nav {
+        padding: 10px 0 0;
+    }
 }
 
 .bottom-menu-nav-link-badge {

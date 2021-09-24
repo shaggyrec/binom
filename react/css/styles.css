@@ -41,8 +41,8 @@ a, .a {
     max-width: 1500px;
     margin-left: auto;
     margin-right: auto;
-    padding-left: 15px;
-    padding-right: 15px;
+    padding-left: 20px;
+    padding-right: 20px;
 }
 
 .centered {
@@ -52,14 +52,14 @@ a, .a {
 
 header {
     border-bottom: 1px solid #ccc;
-    padding: 10px 15px 15px;
+    padding: 10px 20px 15px;
     display: flex;
     margin: 0 -15px;
 }
 
 footer {
     border-top: 1px solid #ccc;
-    margin: 0 -15px;
+    margin: 0 -20px;
 }
 
 @media (min-width: 900px) {
@@ -183,7 +183,7 @@ button {
     line-height: 1.5;
 }
 
-button:hover, button.hover, .neomorphic, .badge, .youtube-video {
+button:hover, button.hover, .neomorphic, .badge {
     box-shadow: -2px -2px 5px #FFF, 2px 2px 5px #BABECC;
 }
 .neomorphic, .badge {
@@ -595,9 +595,17 @@ button:active {
     padding: 5px 20px;
 }
 
+.video-container, .bg-green {
+    background-color: #069668;
+}
+
+.color-white {
+    color: #fff;
+    text-shadow: none;
+}
 
 .video-container {
-    background-color: #069668;
+    padding: 10px 0 30px;
 }
 
 .video-container video {
@@ -610,6 +618,7 @@ button:active {
     border-radius: 8px;
     width: 100%;
     min-height: 300px;
+    box-shadow: -2px -2px 5px #509e84, 2px 2px 5px #116147;
 }
 
 @media (min-width: 764px) {

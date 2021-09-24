@@ -31,21 +31,29 @@ function renderTaskFiles(taskFiles, user): ReactElement {
 
 function Lesson(props: Lesson): ReactElement {
     return (
-        <div>
-            <div className="container">
-                <h1>{props.name}</h1>
-                {props.youtubeVideos && props.youtubeVideos.map((v, i) => (
-                    <div key={v} style={{ marginTop: i > 0 ? 50 : 0 }}>
+        <div className="py-20">
+            <div className="bg-green py-20">
+                <div className="container">
+                    <h1 className="my-0 color-white">{props.name}</h1>
+                </div>
+            </div>
+            {props.youtubeVideos && props.youtubeVideos.map((v) => (
+                <div className="video-container" key={v}>
+                    <div className="container">
                         <YoutubeVideo video={v} />
                     </div>
-                ))}
-                {props.video && props.video.map(
-                    (v, i) => (
-                        <div key={v} className="video-container" style={{ marginTop: i > 0 ? 50 : 0 }}>
+                </div>
+            ))}
+            {props.video && props.video.map(
+                (v) => (
+                    <div key={v} className="video-container">
+                        <div className="container">
                             <Video src={SERVER_REQUESTS_BASE + '/file/' + v}/>
                         </div>
-                    )
-                )}
+                    </div>
+                )
+            )}
+            <div className="container">
                 <p className="text break-spaces">{props.text}</p>
 
                 {(props.task || props.taskFiles) && (

@@ -1,0 +1,1 @@
+ALTER TABLE lessons ALTER COLUMN task_value SET DEFAULT 30;

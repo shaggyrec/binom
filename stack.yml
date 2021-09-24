@@ -54,6 +54,8 @@ services:
       GIT_COMMIT: ${GIT_COMMIT}
       TELEGRAM_TECHNICAL_CHAT_ID: -413893774
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+    volumes:
+      - /etc/upload:/goapp/upload
     logging:
       driver: "json-file"
       options:

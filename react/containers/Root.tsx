@@ -8,7 +8,7 @@ import Home from './Home';
 import Auth from './Auth';
 import { getTokens } from '../tokens';
 import { requestMe } from '../ducks/users';
-import { setFrom } from '../ducks/auth';
+import { checkToken, setFrom } from '../ducks/auth';
 import { removeMessage, setLoading } from '../ducks/application';
 import BottomMenu from './Footer';
 import Header from './Header';
@@ -29,13 +29,14 @@ import SubscriptionsManager from './TariffsManager';
 import Feed from './Feed';
 import UsersRating from './UsersRating';
 
-function Root({ history, me, requestMe, setFrom, loading, setLoading, hideModal, message }): ReactElement {
+function Root({ history, me, requestMe, setFrom, loading, setLoading, hideModal, message, checkToken }): ReactElement {
     useEffect(() => {
         setFrom(history.location.state?.from || '/app');
         const [t, rt] = getTokens()
         if (!me) {
             (t && rt) ? requestMe() : setLoading(false);
         }
+        checkToken()
     }, []);
 
     if (loading) {
@@ -88,6 +89,7 @@ export default connect(
         requestMe: () => dispatch(requestMe()),
         setFrom: from => dispatch(setFrom(from)),
         setLoading: l => dispatch(setLoading(l)),
-        hideModal: () => dispatch(removeMessage())
+        hideModal: () => dispatch(removeMessage()),
+        checkToken: () => dispatch(checkToken())
     })
 )(Root);

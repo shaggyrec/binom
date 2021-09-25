@@ -6,6 +6,7 @@ import (
 	"binom/server/storage"
 	"errors"
 	"github.com/dgrijalva/jwt-go"
+	"strconv"
 	"time"
 )
 
@@ -53,6 +54,7 @@ func (tokenService *TokenService) GenerateTokenPair(user *dataType.User) (map[st
 	return map[string]string{
 		"accessToken":  t,
 		"refreshToken": rt,
+		"accessTokenExpired": strconv.Itoa(int(claims["exp"].(int64))),
 	}, nil
 }
 

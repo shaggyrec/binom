@@ -1,13 +1,14 @@
-import { ForkEffect, takeEvery, select, call, put } from '@redux-saga/core/effects';
+import { ForkEffect, takeEvery, select, call, put, takeLatest, delay } from '@redux-saga/core/effects';
 import { validate as uuidValidate } from 'uuid';
 import * as authActions from '../ducks/auth';
 import * as usersActions from '../ducks/users';
 import * as notificationsActions from '../ducks/notifications';
 import { getApiErrorMessage, serverRequest } from '../functions';
 import { AxiosResponse } from 'axios';
-import { eraseTokens, getTokens, storeTokens } from '../tokens';
+import { eraseTokens, getTokenExpired, getTokens, storeTokens } from '../tokens';
 import { push } from 'connected-react-router';
 import { ApiErrors } from '../ApiErrors';
+import { requestMe } from '../ducks/users';
 
 
 function* sendEmailProcess(): IterableIterator<any> {
@@ -31,8 +32,8 @@ function* sendCodeProcess(): IterableIterator<any> {
         return;
     }
     try {
-        const { data: { tokens: { accessToken, refreshToken }, user } }: AxiosResponse = yield call(serverRequest, '/api/auth/code', 'post', { id: codeId, code });
-        storeTokens(accessToken, refreshToken);
+        const { data: { tokens: { accessToken, refreshToken, accessTokenExpired }, user } }: AxiosResponse = yield call(serverRequest, '/api/auth/code', 'post', { id: codeId, code });
+        storeTokens(accessToken, refreshToken, accessTokenExpired);
         yield put(usersActions.setMe(user));
         yield put(notificationsActions.requestList());
         yield put(push(yield select(authActions.from)));
@@ -51,10 +52,11 @@ export function* refreshTokenProcess(): IterableIterator<any> {
         const {
             data: {
                 accessToken,
-                refreshToken
+                refreshToken,
+                accessTokenExpired
             }
         }: AxiosResponse = yield call(serverRequest, '/api/auth/refresh', 'post', { refreshToken: rt });
-        storeTokens(accessToken, refreshToken);
+        storeTokens(accessToken, refreshToken, accessTokenExpired);
     } catch (e) {
         eraseTokens();
         yield put(authActions.error(e.message));
@@ -67,9 +69,30 @@ function* logoutProcess(): IterableIterator<any> {
     location.href = '/auth';
 }
 
+function* checkTokenProcess(): IterableIterator<any> {
+    const FIVE_MINUTES = 300000;
+    yield delay(2000);
+    const accessTokenExpired = getTokenExpired();
+    if (!accessTokenExpired) {
+        yield delay(FIVE_MINUTES);
+        yield put(authActions.checkToken());
+        return
+    }
+    const fromNow = accessTokenExpired - +new Date();
+    if (fromNow > 0) {
+        yield delay(fromNow)
+        yield put(authActions.checkToken());
+        return
+    }
+    yield put(usersActions.requestMe());
+    yield delay(FIVE_MINUTES);
+    yield put(authActions.checkToken());
+}
+
 export function* auth(): IterableIterator<ForkEffect> {
     yield takeEvery(authActions.sendEmail, sendEmailProcess);
     yield takeEvery(authActions.sendCode, sendCodeProcess);
     yield takeEvery(authActions.refreshTokens, refreshTokenProcess);
     yield takeEvery(authActions.logout, logoutProcess);
+    yield takeLatest(authActions.checkToken, checkTokenProcess);
 }

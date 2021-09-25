@@ -1,6 +1,4 @@
 import { handleActions, createAction } from 'redux-actions';
-import { characterEntitiesHtml4 } from 'character-entities-html4';
-import nu = characterEntitiesHtml4.nu;
 
 const SET_EMAIL = 'auth/SET_EMAIL';
 const SET_CODE = 'auth/SET_CODE';
@@ -11,6 +9,7 @@ const SEND_CODE = 'auth/SEND_CODE';
 const REFRESH_TOKENS = 'auth/REFRESH_TOKENS';
 const ERROR = 'auth/ERROR';
 const LOGOUT = 'auth/LOGOUT';
+const CHECK_TOKEN = 'auth/CHECK_TOKEN';
 
 export const initialState = {
     from: '/app',
@@ -18,7 +17,7 @@ export const initialState = {
     loading: false,
     email: null,
     code: null,
-    codeId: null,
+    codeId: null
 };
 
 export default handleActions({
@@ -40,6 +39,7 @@ export const setCodeId = createAction(SET_CODE_ID, codeId => codeId);
 export const refreshTokens = createAction(REFRESH_TOKENS, (cb = () => {}) => cb);
 export const setFrom = createAction(SET_FROM, from => from);
 export const logout = createAction(LOGOUT, () => {});
+export const checkToken = createAction(CHECK_TOKEN, () => ({}))
 
 export const email = state => state.auth.email;
 export const codeId = state => state.auth.codeId;

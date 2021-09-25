@@ -62,10 +62,11 @@ function Auth({ me, from, setEmail, email, code, sendEmail, sendCode, setCode, e
                         ? <CodeInput error={formError} value={code || ''} onChange={handleCodeChange}/>
                         : <Input required={true} name="email" type="email" value={email || ''} label="Email" onChange={setEmail}/>
                 }
+                <div style={{ marginTop: -20 }}/>
                 {error && <div className="text-red">{ error }</div>}
                 {!codeId && !loading && (
                     <>
-                        <div style={{ paddingBottom: 10, marginTop: -20 }}>
+                        <div style={{ paddingBottom: 10 }}>
                             <a href="/privacy" target="_blank">
                                 <small>
                                     Нажимая кнопку, я соглашаюсь с политикой конфиденциальности и обработкой персональных данных

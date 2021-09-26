@@ -2,10 +2,8 @@ package server
 
 import (
 	"binom/server/controllers"
+	"binom/server/dependencyContainer"
 	"binom/server/middlewares"
-	"binom/server/service"
-	"binom/server/storage"
-	"binom/server/telegramBot"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/cors"
@@ -13,59 +11,32 @@ import (
 	"net/http"
 )
 
-func Init(db *pg.DB, jwtSecret, uploadPath, host, version string, technicalTelegramBot *telegramBot.BotForChat) *chi.Mux {
-	// storages
-	storageFactory := &storage.Factory{}
-	authCodeStorage := storageFactory.AuthCode(db)
-	tokenStorage := storageFactory.Token(db)
-	userStorage := storageFactory.User(db)
-	topicStorage := storageFactory.Topic(db)
-	lessonStorage := storageFactory.Lesson(db)
-	fileStorage := storageFactory.File(db)
-	lessonCommentStorage := storageFactory.LessonComment(db)
-	notificationStorage := storageFactory.Notification(db)
-	tariffStorage := storageFactory.Tariff(db)
-	tariffPriceStorage := storageFactory.TariffPrice(db)
-	userSubscriptionStorage := storageFactory.UserSubscription(db)
-	transactionStorage := storageFactory.Transaction(db)
-	pointsMovementStorage := storageFactory.PointsMovement(db)
-
-	// services
-	serviceFactory := service.Factory{}
-	tokenService := serviceFactory.TokenService(jwtSecret, tokenStorage)
-	authCodeService := serviceFactory.AuthCodeService(authCodeStorage)
-	authService := serviceFactory.AuthService(userStorage, tokenService, technicalTelegramBot)
-	moveAtPositionService := serviceFactory.MoveAtPosition(db)
-	notificationService := serviceFactory.Notification(notificationStorage, userStorage, technicalTelegramBot)
-	lessonProgressService := serviceFactory.LessonProgress(db)
-	yooMoneyService := serviceFactory.Yoomoney(host)
-	userScoreService := serviceFactory.UserScore(lessonStorage, userStorage, pointsMovementStorage, db)
-
+func Init(dc *dependencyContainer.DC, db *pg.DB, jwtSecret, uploadPath, host, version string) *chi.Mux {
 	// controllers
 	authController := controllers.AuthController{}
-	authController.Init(authCodeService, authService, tokenService, userStorage)
+	authController.Init(dc.Services.AuthCode, dc.Services.Auth, dc.Services.Token, dc.Storages.User)
 	pageController := controllers.PageController{}
-	pageController.Init(topicStorage, lessonStorage, tariffStorage, host, version)
+	pageController.Init(dc.Storages.Topic, dc.Storages.Lesson, dc.Storages.Tariff, host, version)
 	userController := controllers.UserController{}
-	userController.Init(userStorage)
+	userController.Init(dc.Storages.User)
 	topicController := controllers.TopicController{}
-	topicController.Init(topicStorage, moveAtPositionService)
+	topicController.Init(dc.Storages.Topic, dc.Services.MoveAtPosition)
 	lessonController := controllers.LessonController{}
-	lessonController.Init(lessonStorage, moveAtPositionService)
+	lessonController.Init(dc.Storages.Lesson, dc.Services.MoveAtPosition)
 	fileController := controllers.FileController{}
-	fileController.Init(uploadPath, fileStorage)
+	fileController.Init(uploadPath, dc.Storages.File)
 	lessonCommentController := controllers.LessonCommentController{}
-	lessonCommentController.Init(lessonCommentStorage, notificationService, userStorage)
+	lessonCommentController.Init(dc.Storages.LessonComment, dc.Services.Notification, dc.Storages.User)
 	notificationController := controllers.NotificationController{}
-	notificationController.Init(notificationService)
+	notificationController.Init(dc.Services.Notification)
 	learningProgressController := controllers.LearningProgressController{}
-	learningProgressController.Init(lessonProgressService, notificationService, userScoreService)
+	learningProgressController.Init(dc.Services.LessonProgress, dc.Services.Notification, dc.Services.UserScore)
 	tariffController := controllers.TariffController{}
-	tariffController.Init(tariffStorage, tariffPriceStorage, userSubscriptionStorage, yooMoneyService)
+	tariffController.Init(dc.Storages.Tariff, dc.Storages.TariffPrice, dc.Storages.UserSubscription, dc.Services.YooMoney)
 	paymentController := controllers.PaymentController{}
-	paymentController.Init(yooMoneyService, transactionStorage, userSubscriptionStorage)
+	paymentController.Init(dc.Services.YooMoney, dc.Storages.Transaction, dc.Storages.UserSubscription)
 	usersRatingController := controllers.UsersRatingController{}
-	usersRatingController.Init(userScoreService)
+	usersRatingController.Init(dc.Services.UserScore)
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
@@ -125,8 +96,8 @@ func Init(db *pg.DB, jwtSecret, uploadPath, host, version string, technicalTeleg
 
 			r.Route("/lesson", func(r chi.Router) {
 				r.Group(func(r chi.Router) {
-					r.Use(middlewares.AccessToLesson(db, userSubscriptionStorage))
-					r.Use(middlewares.LessonProgress(lessonProgressService, lessonStorage, topicStorage))
+					r.Use(middlewares.AccessToLesson(db, dc.Storages.UserSubscription))
+					r.Use(middlewares.LessonProgress(dc.Services.LessonProgress, dc.Storages.Lesson, dc.Storages.Topic))
 					r.Get("/{alias}", lessonController.GetOneLesson)
 				})
 				r.Group(func(r chi.Router) {

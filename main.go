@@ -2,7 +2,9 @@ package main
 
 import (
 	"binom/server"
+	"binom/server/dependencyContainer"
 	"binom/server/functions"
+	"binom/server/scheduler"
 	"binom/server/telegramBot"
 	"github.com/joho/godotenv"
 	"log"
@@ -24,18 +26,24 @@ func main() {
 	db := functions.DbConnection(pgUser, pgHost, pgDbName, pgPwd)
 	defer db.Close()
 
+	dc := dependencyContainer.New(db, os.Getenv("HOST"), os.Getenv("JWT_SECRET"), telegramBot.InstantiateBotForChat(
+		telegramBot.Instantiate(os.Getenv("TELEGRAM_BOT_TOKEN")),
+		os.Getenv("TELEGRAM_TECHNICAL_CHAT_ID"),
+	))
+
+	log.Println("Starting scheduler")
+	s := scheduler.New(db, dc.Services.Notification)
+	s.Run()
+
 	log.Print("Starting server on port " + appPort)
 	err := http.ListenAndServe(
 		":" + appPort,
 		server.Init(
+			dc,
 			db, os.Getenv("JWT_SECRET"),
 			os.Getenv("UPLOAD_PATH"),
 			os.Getenv("HOST"),
 			os.Getenv("GIT_COMMIT"),
-			telegramBot.InstantiateBotForChat(
-				telegramBot.Instantiate(os.Getenv("TELEGRAM_BOT_TOKEN")),
-				os.Getenv("TELEGRAM_TECHNICAL_CHAT_ID"),
-			),
 		),
 	)
 	if err != nil {

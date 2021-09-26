@@ -22,7 +22,7 @@ func (scheduler *Scheduler) Run() {
 	t := tasks{}
 	t.Init(scheduler.db, scheduler.notificationService)
 
-	_, err := s.Every(1).Days().At("11:20").Do(t.topicIsOpened)
+	_, err := s.Every(1).Days().At("06:01").Do(t.topicIsOpened)
 
 	if err != nil {
 		log.Println(err)

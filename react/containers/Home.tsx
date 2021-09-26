@@ -32,18 +32,6 @@ function Home({ topics, requestTopics, isAdmin, moveTopicAtPosition, moveLessonA
         moveLessonAtPosition(id, moveToIndex + 1);
     }
 
-    if (!isAdmin) {
-        return (
-            <div className="container w-600 centered">
-                <h1>Обучение начнётся совсем скоро</h1>
-                <p>
-                    Скоро мы пришлем вам письмо о начале обучения.
-                    <br/>Не пропустите!
-                </p>
-            </div>
-        );
-    }
-
     return topics
         ? (
             <>

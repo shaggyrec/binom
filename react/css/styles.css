@@ -616,7 +616,7 @@ button:active {
 
 .youtube-video {
     border-radius: 8px;
-    min-width: 531px;
+    width: 100%;
     min-height: 300px;
     box-shadow: -2px -2px 5px #509e84, 2px 2px 5px #116147;
 }

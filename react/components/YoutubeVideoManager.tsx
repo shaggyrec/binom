@@ -8,7 +8,7 @@ function YoutubeVideoManager({ videos, onChange }): ReactElement {
     const [newVideo, setNewVideo] = useState('')
     function handleAdd() {
         if (newVideo.length > 0) {
-            onChange([...videos, newVideo]);
+            onChange([...videos, newVideo.replace('https://youtu.be/', '')]);
         }
     }
     function handleDelete(i) {

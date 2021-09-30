@@ -39,7 +39,7 @@ function Lesson(props: Lesson): ReactElement {
             </div>
             {props.youtubeVideos && props.youtubeVideos.map((v) => (
                 <div className="video-container" key={v}>
-                    <div className="container">
+                    <div className="container text-center">
                         <YoutubeVideo video={v} />
                     </div>
                 </div>

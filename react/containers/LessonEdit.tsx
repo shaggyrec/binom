@@ -85,7 +85,7 @@ function LessonEdit({ requestLesson, lesson, loading, match: { params }, updateL
     return (
         <>
             <TopBar>
-                <Link to={`/lesson/${params.alias}`}>
+                <Link to={`/lesson/${lesson.alias || params.alias}`}>
                     <Back size={25}/>
                 </Link>
                 <div className="ml-auto">

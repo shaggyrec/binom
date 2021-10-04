@@ -5,11 +5,10 @@ import Textarea from './Textarea';
 import Button from '../Button';
 import { Attach, Bin } from '../Icons';
 
-function TextAreaWithFileInput({ label = '', text, onTextChange, onFilesChange }): ReactElement {
-    const [files, setFiles] = useState([]);
+function TextAreaWithFileInput({ label = '', text, files, onTextChange, onFilesChange }): ReactElement {
+
     const onDrop = useCallback(acceptedFiles => {
         const newFiles = [...files, ...acceptedFiles];
-        setFiles(newFiles);
         onFilesChange(newFiles);
     }, [])
     const { getRootProps, getInputProps, isDragActive, open } = useDropzone({ onDrop });
@@ -18,8 +17,7 @@ function TextAreaWithFileInput({ label = '', text, onTextChange, onFilesChange }
         e.stopPropagation();
     }
     const handleDeleteFile = i => {
-        setFiles([...files.slice(0, i), ...files.slice(i + 1)]);
-        onFilesChange(files);
+        onFilesChange([...files.slice(0, i), ...files.slice(i + 1)]);
     }
 
     return (

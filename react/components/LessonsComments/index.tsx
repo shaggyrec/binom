@@ -11,6 +11,7 @@ function LessonComments({ comments, onLeaveComment }): ReactElement {
         if (commentText !== '' || files.length > 0) {
             onLeaveComment(commentText, files);
             setCommentText('');
+            setFiles([])
         }
     }
 
@@ -22,6 +23,7 @@ function LessonComments({ comments, onLeaveComment }): ReactElement {
                 onTextChange={setCommentText}
                 text={commentText}
                 onFilesChange={setFiles}
+                files={files}
             />
             <Button block onClick={handleLeaveComment}>Отправить</Button>
         </div>

@@ -1,0 +1,1 @@
+ALTER TABLE points_movement RENAME TO points_movements;

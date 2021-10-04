@@ -26,10 +26,16 @@ func main() {
 	db := functions.DbConnection(pgUser, pgHost, pgDbName, pgPwd)
 	defer db.Close()
 
-	dc := dependencyContainer.New(db, os.Getenv("HOST"), os.Getenv("JWT_SECRET"), telegramBot.InstantiateBotForChat(
-		telegramBot.Instantiate(os.Getenv("TELEGRAM_BOT_TOKEN")),
-		os.Getenv("TELEGRAM_TECHNICAL_CHAT_ID"),
-	))
+	tgBot := &telegramBot.BotForChat{}
+
+	if os.Getenv("MODE") == "PROD" {
+		tgBot = telegramBot.InstantiateBotForChat(
+			telegramBot.Instantiate(os.Getenv("TELEGRAM_BOT_TOKEN")),
+			os.Getenv("TELEGRAM_TECHNICAL_CHAT_ID"),
+		)
+	}
+
+	dc := dependencyContainer.New(db, os.Getenv("HOST"), os.Getenv("JWT_SECRET"), tgBot)
 
 	log.Println("Starting scheduler")
 	s := scheduler.New(db, dc.Services.Notification)

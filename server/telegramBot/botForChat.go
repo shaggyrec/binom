@@ -1,6 +1,8 @@
 package telegramBot
 
-import "strconv"
+import (
+	"strconv"
+)
 
 func InstantiateBotForChat(tgBot *Bot, chatIdFromEnv string) *BotForChat {
 	tgTechChatId, _ := strconv.Atoi(chatIdFromEnv)
@@ -21,5 +23,8 @@ func (b *BotForChat) Init (bot *Bot, chatId int64) {
 }
 
 func (b *BotForChat) Message(msg string) error {
+	if b == nil {
+		return nil
+	}
 	return b.bot.Message(b.chatId, msg)
 }

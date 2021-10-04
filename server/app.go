@@ -34,7 +34,7 @@ func Init(dc *dependencyContainer.DC, db *pg.DB, jwtSecret, uploadPath, host, ve
 	tariffController := controllers.TariffController{}
 	tariffController.Init(dc.Storages.Tariff, dc.Storages.TariffPrice, dc.Storages.UserSubscription, dc.Services.YooMoney)
 	paymentController := controllers.PaymentController{}
-	paymentController.Init(dc.Services.YooMoney, dc.Storages.Transaction, dc.Storages.UserSubscription)
+	paymentController.Init(dc.Services.YooMoney, dc.Storages.Transaction, dc.Storages.UserSubscription, dc.Services.Notification)
 	usersRatingController := controllers.UsersRatingController{}
 	usersRatingController.Init(dc.Services.UserScore)
 

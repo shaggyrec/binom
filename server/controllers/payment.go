@@ -24,10 +24,12 @@ type PaymentController struct{
 	notificationService *service.NotificationService
 }
 
-func (c *PaymentController) Init(yooMoneyService *service.YoomoneyService, transactionStorage *storage.TransactionStorage, userSubscriptionStorage *storage.UserSubscriptionStorage) {
+func (c *PaymentController) Init(yooMoneyService *service.YoomoneyService, transactionStorage *storage.TransactionStorage,
+	userSubscriptionStorage *storage.UserSubscriptionStorage, notificationService *service.NotificationService) {
 	c.yooMoneyService = yooMoneyService
 	c.transactionStorage = transactionStorage
 	c.userSubscriptionStorage = userSubscriptionStorage
+	c.notificationService = notificationService
 }
 
 func (c *PaymentController) YooMoney(w http.ResponseWriter, r *http.Request) {

@@ -26,5 +26,8 @@ func (b *BotForChat) Message(msg string) error {
 	if b == nil {
 		return nil
 	}
+	if b.bot == nil {
+		return nil
+	}
 	return b.bot.Message(b.chatId, msg)
 }

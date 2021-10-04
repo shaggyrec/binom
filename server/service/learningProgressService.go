@@ -17,6 +17,7 @@ type ProgressLevel struct {
 	LessonsNames []string
 	PassedLessons []string
 	LessonId string
+	LessonAlias string
 	Finished pg.NullTime
 	LessonsAliases []string
 	PassedLessonsAliases []string
@@ -60,6 +61,9 @@ GROUP BY tl.topic_id, t.name, ut.lesson_id, ut.finished, ut.updated
 )
 
 	indexOFCurrentLesson := functions.IndexOf(pl.Lessons, pl.LessonId)
+	if indexOFCurrentLesson != -1 {
+		pl.LessonAlias = pl.LessonsAliases[indexOFCurrentLesson]
+	}
 
 	if pl.Finished.String() != "" && !pl.Finished.IsZero() {
 		pl.PassedLessons = pl.Lessons

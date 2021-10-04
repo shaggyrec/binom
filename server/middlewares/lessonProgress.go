@@ -64,8 +64,8 @@ func LessonProgress(learningProgressService *service.LearningProgressService, le
 						return
 					}
 				} else {
-					if functions.IndexOf(l.PassedLessonsAliases, lessonAlias) == -1 {
-						exceptions.Forbidden(w, r, "You must to pass previous lessons")
+					if l.LessonAlias != lessonAlias && functions.IndexOf(l.PassedLessonsAliases, lessonAlias) == -1 {
+						exceptions.Forbidden(w, r, "Необходимо пройти предыдущие уроки")
 						return
 					}
 				}

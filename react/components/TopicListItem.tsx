@@ -109,7 +109,7 @@ function TopicListItem({ topic, isOpen, isPreviousFinished, onClick, isAdmin, ch
                 <div>
                     <div className="card-title">{topic.name}</div>
                     <div className="card-info">
-                        {topic.lessons && <span>{topic.lessons.length} уроков</span>}
+                        {!isBlocked && topic.lessons && <span>{topic.lessons.length} уроков</span>}
                     </div>
                 </div>
                 {renderTopicButtonsBlock(isAdmin, topic, isPreviousFinished)}

@@ -83,7 +83,7 @@ func (c *LessonCommentController) Add(w http.ResponseWriter, r *http.Request)  {
 	}
 	newLessonComment, _ := c.lessonCommentStorage.ById(comment.Id)
 
-	notificationLength := 30
+	notificationLength := 100
 	notificationText := comment.Text.String
 	if len(comment.Text.String) > notificationLength {
 		notificationText = comment.Text.String[:notificationLength] + "..."

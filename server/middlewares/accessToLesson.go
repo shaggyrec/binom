@@ -20,7 +20,7 @@ func AccessToLesson(db *pg.DB, userSubscriptionStorage *storage.UserSubscription
 			isDemo := false
 			_, err := uuid.Parse(chi.URLParam(r, "alias"))
 			where := "l.alias = ?"
-			if err != nil {
+			if err == nil {
 				where = "l.id = ?"
 			}
 

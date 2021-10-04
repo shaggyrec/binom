@@ -6,6 +6,7 @@ import (
 	"binom/server/functions"
 	"binom/server/service"
 	"binom/server/storage"
+	"fmt"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
 	"gopkg.in/guregu/null.v4"
@@ -101,6 +102,8 @@ func (c *LessonCommentController) Add(w http.ResponseWriter, r *http.Request)  {
 
 	// Если писал сам юзер то нотификацию админам
 	if userId == comment.AuthorId {
+		user, _ := c.userStorage.Get(userId)
+		n.Message = fmt.Sprintf("Пользователь %s(%s) пишет %s", user.Name.String, user.Username.String, n.Message)
 		err = c.notificationService.CreateForAdmins(n)
 	} else {
 	// Если отвечал админ то нотификацию юзеру

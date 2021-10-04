@@ -1,4 +1,4 @@
-FROM postgres:latest
+FROM postgres:13
 MAINTAINER Alexander Shogenov
 
 WORKDIR /db

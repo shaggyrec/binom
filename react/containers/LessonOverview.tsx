@@ -55,6 +55,17 @@ function LessonOverview ({ requestLesson, lesson, loading, match: { params, url 
         addComment(lesson.id, (user?.id || me.id), text, files);
     }
 
+    function lessonTitle() {
+        let additionalInfo = '';
+
+        if (params.username && user) {
+            additionalInfo = ` (${params.username})`
+            additionalInfo += user.subscription ? ` подписка «${user.subscription.name}»` : ' демо юзер'
+        }
+
+        return lesson.name + additionalInfo
+    }
+
     return (
         <>
             {isAdmin &&
@@ -64,7 +75,11 @@ function LessonOverview ({ requestLesson, lesson, loading, match: { params, url 
                     </Link>
                 </TopBar>
             }
-            <Lesson {...lesson} user={me} name={lesson.name + (params.username ? ` (${params.username})` : '')}/>
+            <Lesson
+                {...lesson}
+                user={me}
+                name={lessonTitle()}
+            />
             <div className="container">
                 <LessonComments comments={comments} onLeaveComment={handleLeaveComment} />
                 <div>

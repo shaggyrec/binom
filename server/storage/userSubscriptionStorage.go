@@ -59,7 +59,7 @@ func (u *UserSubscriptionStorage) ById(id string) (*dataType.UserSubscription, e
 func (u *UserSubscriptionStorage) ByUserId(userId string, status []int) *[]dataType.UserSubscription {
 	var s []dataType.UserSubscription
 
-	u.db.Model(&s).Where("user_id = ? AND status IN (?) AND expired < NOW()", userId, pg.In(status)).Select()
+	u.db.Model(&s).Where("user_id = ? AND status IN (?) AND expired > NOW()", userId, pg.In(status)).Select()
 
 	return &s
 }

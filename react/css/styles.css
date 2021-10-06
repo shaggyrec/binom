@@ -54,6 +54,7 @@ header {
     border-bottom: 1px solid #ccc;
     padding: 10px 20px 15px;
     display: flex;
+    justify-content: space-between;
     margin: 0 -15px;
 }
 
@@ -276,6 +277,9 @@ button:active {
     display: flex;
     align-items: baseline;
 }
+.inline-flex {
+    display: inline-flex;
+}
 
 @media (min-width: 1024px) {
     .lg\:flex {
@@ -294,6 +298,9 @@ button:active {
 
 .flex-vertical-top {
     align-items: flex-start;
+}
+.flex-vertical-initial {
+    align-items: initial;
 }
 
 .flex-around {
@@ -853,7 +860,9 @@ code {
 .in-progress .card-title {
     color: #ad1100;
 }
-
+.gap-5 {
+    gap: 5px;
+}
 .gap-10 {
     gap: 10px;
 }
@@ -882,6 +891,10 @@ code {
     font-size: 14px;
 }
 
+.text-sm {
+    font-size: 16px;
+}
+
 .line-height-2 {
     line-height: 2;
 }
@@ -891,6 +904,9 @@ code {
 }
 .text-white {
     color: #ffffff;
+}
+.text-gray {
+    color: #ccc;
 }
 .table {
     width: 100%;
@@ -909,6 +925,34 @@ code {
 }
 .table .active {
     background: rgba(0,0,0,.05);
+}
+.instruction-button > .text, .instruction-button * {
+    transition: all .3s;
+}
+.instruction-button:hover .text {
+    color: #069668;
+}
+.instruction-button:hover * {
+    fill: #069668;
+}
+
+.instruction {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top:0;
+    overflow-y: auto;
+    background-color: #EBECF0;
+    z-index: 20;
+}
+
+.max-w-100 {
+    max-width: 100%;
+}
+
+.max-w-500 {
+    max-width: 500px;
 }
 
 @media (min-width:1024px) {

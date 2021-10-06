@@ -1,4 +1,4 @@
-import React, {ReactElement} from 'react';
+import React, { ReactElement } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
@@ -8,6 +8,7 @@ import Button from '../components/Button';
 import { Back } from '../components/Icons';
 import { BackLink } from '../dataTypes/backLink';
 import { backLink } from '../ducks/application';
+import Instruction from '../components/Instruction';
 
 function renderBackLink(backLink: BackLink|null, reset) {
     const handleClick = (e) => {
@@ -25,12 +26,15 @@ function renderBackLink(backLink: BackLink|null, reset) {
 }
 
 
-function Header({ backLink, resetBackLink }): ReactElement {
+function Header({ backLink, resetBackLink, username }): ReactElement {
     return (
         <div className="container">
             <header>
-                {renderBackLink(backLink, resetBackLink)}
-                <Logo />
+                <div className="flex flex-vertical-initial">
+                    {renderBackLink(backLink, resetBackLink)}
+                    <Logo />
+                </div>
+                <Instruction username={username}/>
             </header>
         </div>
     );
@@ -39,6 +43,7 @@ function Header({ backLink, resetBackLink }): ReactElement {
 export default connect(
     (state: RootState) => ({
         backLink: state.application.backLink,
+        username: state.users?.me?.username
     }),
     dispatch => ({
         resetBackLink: () => dispatch(backLink(null)),

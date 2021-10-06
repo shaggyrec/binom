@@ -67,6 +67,9 @@ function renderInstruction(show, username, toggle) {
                     получит назад все потраченные на binom.school деньги.
                 </p>
                 <h4>Удачи! Стране нужны "стобальники"!</h4>
+                <div className="py-10 text-center">
+                    <Button block onClick={toggle}>Спасибо</Button>
+                </div>
             </div>
         </div>
     );

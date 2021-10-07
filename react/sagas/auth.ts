@@ -59,7 +59,6 @@ export function* refreshTokenProcess(): IterableIterator<any> {
         storeTokens(accessToken, refreshToken, accessTokenExpired);
     } catch (e) {
         eraseTokens();
-        yield put(authActions.error(e.message));
         yield put(push('/auth'));
     }
 }

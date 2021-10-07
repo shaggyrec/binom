@@ -13,6 +13,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -219,7 +220,7 @@ func (c *TariffController) Buy(w http.ResponseWriter, r *http.Request) {
 		subscription = &dataType.UserSubscription{
 			TariffId: tariffId,
 			Duration: price.Duration,
-			Name: tariff.Name,
+			Name: strings.TrimSpace(tariff.Name),
 			PaidPrice: price.Price,
 			UserId: userId,
 			Status: null.Int{NullInt64: sql.NullInt64{Int64: dataType.StatusDraft, Valid: true}},

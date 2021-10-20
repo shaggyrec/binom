@@ -62,7 +62,9 @@ function LessonEdit({ requestLesson, lesson, loading, match: { params }, updateL
     }
 
     function handleDeleteFile() {
-        lesson.video && (lesson.video.indexOf(showDeletingModal) !== -1 || lesson.taskFiles.indexOf(showDeletingModal) !== -1) && removeFile(showDeletingModal);
+        if ((lesson.video && lesson.video.indexOf(showDeletingModal) !== -1) || (lesson.taskFiles && lesson.taskFiles.indexOf(showDeletingModal) !== -1)) {
+            removeFile(showDeletingModal)
+        }
         setShowDeletingModal(false);
     }
 

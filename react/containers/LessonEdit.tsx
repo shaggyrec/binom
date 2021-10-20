@@ -16,7 +16,7 @@ const WAITING_VIDEO = 'WAITING_VIDEO';
 const WAITING_TASK = 'WAITING_TASK';
 
 function LessonEdit({ requestLesson, lesson, loading, match: { params }, updateLesson, requestTopics, topics, uploadFile,
-    uploadedFile, resetUploadedFile, removeFile, removedFile, resetURemovedFile, removeLesson }): ReactElement {
+    uploadedFile, resetUploadedFile, removeFile, removedFile, resetRemovedFile, removeLesson }): ReactElement {
     const [showDeletingModal, setShowDeletingModal] = useState(false);
     const [waitFile, setWaitFile] = useState(null);
 
@@ -42,7 +42,7 @@ function LessonEdit({ requestLesson, lesson, loading, match: { params }, updateL
     }, [uploadedFile]);
 
     useEffect(() => {
-        if (removedFile && lesson.video && (lesson.video.indexOf(removedFile) !== -1 || lesson.taskFiles.indexOf(removedFile) !== -1)) {
+        if (removedFile && (lesson.video && lesson.video.indexOf(removedFile) !== -1 || (lesson.taskFiles && lesson.taskFiles.indexOf(removedFile) !== -1))) {
             requestLesson(lesson.alias);
             const indexOfFile = lesson.video.indexOf(removedFile) !== -1  ? lesson.video.indexOf(removedFile) : lesson.taskFiles.indexOf(removedFile);
             if (lesson.video.indexOf(removedFile) !== -1) {
@@ -50,7 +50,7 @@ function LessonEdit({ requestLesson, lesson, loading, match: { params }, updateL
             } else {
                 updateLesson(lesson.id, { taskFiles: [...lesson.taskFiles.slice(0, indexOfFile), ...lesson.taskFiles.slice(indexOfFile + 1)] });
             }
-            resetURemovedFile();
+            resetRemovedFile();
         }
     }, [removedFile])
 
@@ -124,7 +124,7 @@ export default connect(
         updateLesson: (id, updated) => dispatch(lessonsActions.update(id, updated)),
         uploadFile: file => dispatch(filesActions.upload(file)),
         resetUploadedFile: () => dispatch(filesActions.lastUploadedFile(null)),
-        resetURemovedFile: () => dispatch(filesActions.lastRemovedFile(null)),
+        resetRemovedFile: () => dispatch(filesActions.lastRemovedFile(null)),
         removeFile: id => dispatch(filesActions.remove(id)),
         removeLesson: id => dispatch(lessonsActions.remove(id))
     })

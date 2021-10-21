@@ -28,6 +28,7 @@ import Notifications from './Notifications';
 import SubscriptionsManager from './TariffsManager';
 import Feed from './Feed';
 import UsersRating from './UsersRating';
+import Buy from './Buy';
 
 function Root({ history, me, requestMe, setFrom, loading, setLoading, hideModal, message, checkToken }): ReactElement {
     useEffect(() => {
@@ -64,6 +65,7 @@ function Root({ history, me, requestMe, setFrom, loading, setLoading, hideModal,
                     <ProtectedRoute component={SubscriptionsManager} isAuthorized={me?.role === UserRole.admin} path="/tariffs/edit" exact authPath="/auth" />
                     <ProtectedRoute component={Feed} isAuthorized={me} path="/feed" exact authPath="/auth" />
                     <ProtectedRoute component={UsersRating} isAuthorized={me} path="/rating" exact authPath="/auth" />
+                    <ProtectedRoute component={Buy} isAuthorized={me} path="/buy" exact authPath="/auth" />
                     <Route path="*" component={NotFoundPage} />
                 </Switch>
                 <BottomMenu />

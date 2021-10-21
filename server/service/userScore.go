@@ -28,7 +28,7 @@ func (s *UserScoreService) AddScoreForTheLesson(lessonId, userId string, percent
 	user, _ := s.userStorage.Get(userId)
 
 	koef := 1.
-	if dateStart.AddDate(0, 0, lesson.Deadline).Before(time.Now()) {
+	if dateStart.AddDate(0, 0, lesson.Deadline + 1).Before(time.Now()) {
 		koef = .5
 	}
 

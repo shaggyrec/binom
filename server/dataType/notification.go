@@ -11,6 +11,7 @@ const NotificationFeedComment = 3
 const NotificationLessonProgressChanged = 4
 const NotificationSubscriptionActivate =  5
 const NotificationTopicIsOpened = 6
+const NotificationLessonDeadline = 7
 
 var NotificationTypeDescMap = map[int64]string{
 	NotificationInfo: "Оповещение",
@@ -19,6 +20,7 @@ var NotificationTypeDescMap = map[int64]string{
 	NotificationLessonProgressChanged: "Получен зачёт",
 	NotificationSubscriptionActivate: "Подписка активирована",
 	NotificationTopicIsOpened: "Доступна новая тема",
+	NotificationLessonDeadline: "Необходимо завершить урок",
 }
 
 type NotificationMeta struct {

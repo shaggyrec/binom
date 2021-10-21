@@ -42,7 +42,13 @@ func (s *NotificationService) Create(notification *dataType.Notification, userId
 				Message string
 				User dataType.User
 				Subject string
-			}{Message: notification.Message, User: user, Subject: dataType.NotificationTypeDescMap[notification.Type.Int64]},
+				Meta dataType.NotificationMeta
+			}{
+				Message: notification.Message,
+				User: user,
+				Subject: dataType.NotificationTypeDescMap[notification.Type.Int64],
+				Meta: notification.Meta,
+			},
 			mailer.TypeNotification,
 		)
 	}

@@ -12,6 +12,8 @@ const NotificationLessonProgressChanged = 4
 const NotificationSubscriptionActivate =  5
 const NotificationTopicIsOpened = 6
 const NotificationLessonDeadline = 7
+const NotificationSubscriptionIsExpired = 8
+const NotificationSubscriptionIsExpiring = 9
 
 var NotificationTypeDescMap = map[int64]string{
 	NotificationInfo: "Оповещение",
@@ -21,12 +23,15 @@ var NotificationTypeDescMap = map[int64]string{
 	NotificationSubscriptionActivate: "Подписка активирована",
 	NotificationTopicIsOpened: "Доступна новая тема",
 	NotificationLessonDeadline: "Необходимо завершить урок",
+	NotificationSubscriptionIsExpiring: "Подписка на binom.school заканчивается",
+	NotificationSubscriptionIsExpired: "Подписка на binom.school закончилась",
 }
 
 type NotificationMeta struct {
 	Lesson string `json:"lesson"`
 	Post string `json:"post"`
 	Comment string `json:"comment"`
+	Link string `json:"link"`
 }
 
 type Notification struct {

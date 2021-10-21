@@ -21,7 +21,21 @@
         <p>Привет, {{ .User.Name.String }}. Обновление на <a href="https://binom.school">binom.school</a></p>
         <p>{{ .Message }}</p>
         <div style="padding:10px 0;">
-            <a style="background: #069668; color: #fff; padding: 10px 30px; font-size: 18px; text-decoration: none; font-weight: bold; border-radius: 8px" href="https://binom.school/notifications">Перейти в приложение</a>
+            {{if .Meta.Link}}
+            <a
+                style="background: #069668; color: #fff; padding: 10px 30px; font-size: 18px; text-decoration: none; font-weight: bold; border-radius: 8px"
+                href="https://binom.school/{{.Meta.Link}}"
+            >
+                Перейти в приложение
+            </a>
+            {{else}}
+            <a
+                    style="background: #069668; color: #fff; padding: 10px 30px; font-size: 18px; text-decoration: none; font-weight: bold; border-radius: 8px"
+                    href="https://binom.school/notifications"
+            >
+                Перейти в приложение
+            </a>
+            {{end}}
         </div>
     </div>
 </div>

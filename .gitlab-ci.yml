@@ -21,6 +21,8 @@ build-react:
     paths:
       - dist
       - node_modules
+  only:
+    - main
 build:
   stage: build
   script:

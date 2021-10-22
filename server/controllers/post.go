@@ -100,7 +100,7 @@ func (c *PostController) List(w http.ResponseWriter, r *http.Request) {
 		exceptions.ServerError(w, r)
 		return
 	}
-	render.JSON(w, r, posts)
+	functions.RenderJSON(w, r, *posts)
 }
 
 func (c *PostController) Like(w http.ResponseWriter, r *http.Request) {

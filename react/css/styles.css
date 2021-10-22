@@ -675,6 +675,9 @@ code {
 .textarea-with-files {
     position: relative;
 }
+.textarea-with-files label {
+    margin-bottom: 0!important;
+}
 .textarea-with-files-tooltip {
     position: absolute;
     top: 0;

@@ -10,6 +10,7 @@ import notifications, { initialState as notificationsState } from './notificatio
 import learningProgress, { initialState as learningProgressState } from './learningProgress';
 import tariffs, { initialState as tariffsState } from './tariffs';
 import usersRating, { initialState as usersRatingState } from './usersRating';
+import posts, { initialState as postsState } from './posts';
 
 export const initialState = {
     topics: topicsState,
@@ -23,6 +24,7 @@ export const initialState = {
     learningProgress: learningProgressState,
     tariffs: tariffsState,
     usersRating: usersRatingState,
+    posts: postsState,
 };
 
 export default (router: any = null): Reducer => combineReducers({
@@ -38,4 +40,5 @@ export default (router: any = null): Reducer => combineReducers({
     learningProgress,
     tariffs,
     usersRating,
+    posts,
 });

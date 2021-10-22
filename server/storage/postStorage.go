@@ -87,7 +87,7 @@ func (s* PostStorage) ListByUsername(username string, limit int, offset int) (*[
 
 func (s *PostStorage) listDbQuery(posts *[]dataType.Post, limit, offset int) *orm.Query {
 	return s.db.Model(posts).
-		Relation("user").
+		Relation("User").
 		Limit(limit).
 		Offset(offset).
 		OrderExpr("created DESC")

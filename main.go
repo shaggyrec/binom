@@ -38,7 +38,7 @@ func main() {
 	dc := dependencyContainer.New(db, os.Getenv("HOST"), os.Getenv("JWT_SECRET"), tgBot)
 
 	log.Println("Starting scheduler")
-	s := scheduler.New(db, dc.Services.Notification)
+	s := scheduler.New(db, dc.Services.Notification, dc.Storages.UserSubscription)
 	s.Run()
 
 	log.Print("Starting server on port " + appPort)

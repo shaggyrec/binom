@@ -23,6 +23,7 @@ type DC struct {
 		UserSubscription *storage.UserSubscriptionStorage
 		Transaction *storage.TransactionStorage
 		PointsMovement *storage.PointsMovementStorage
+		PostStorage *storage.PostStorage
 	}
 	Services struct{
 		Token *service.TokenService
@@ -63,6 +64,7 @@ func (dc *DC) initStorages() {
 	dc.Storages.UserSubscription = storageFactory.UserSubscription(dc.Db)
 	dc.Storages.Transaction = storageFactory.Transaction(dc.Db)
 	dc.Storages.PointsMovement = storageFactory.PointsMovement(dc.Db)
+	dc.Storages.PostStorage = storageFactory.Post(dc.Db)
 }
 
 func (dc *DC) initServices(host, jwtSecret string, technicalTelegramBot *telegramBot.BotForChat) {

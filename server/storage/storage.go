@@ -94,6 +94,12 @@ func (f *Factory) PointsMovement(db *pg.DB) *PointsMovementStorage {
 	return &storage
 }
 
+func (f *Factory) Post(db *pg.DB) *PostStorage {
+	storage := PostStorage{}
+	storage.Init(db)
+	return &storage
+}
+
 func statusToInt(status interface{}) int64 {
 	if reflect.TypeOf(status).Name() == "int" {
 		return int64(status.(int))

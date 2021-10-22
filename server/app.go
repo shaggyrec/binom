@@ -37,6 +37,8 @@ func Init(dc *dependencyContainer.DC, db *pg.DB, jwtSecret, uploadPath, host, ve
 	paymentController.Init(dc.Services.YooMoney, dc.Storages.Transaction, dc.Storages.UserSubscription, dc.Services.Notification)
 	usersRatingController := controllers.UsersRatingController{}
 	usersRatingController.Init(dc.Services.UserScore)
+	postController := controllers.PostController{}
+	postController.Init(dc.Storages.PostStorage)
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
@@ -148,6 +150,14 @@ func Init(dc *dependencyContainer.DC, db *pg.DB, jwtSecret, uploadPath, host, ve
 			})
 			r.Route("/rating", func(r chi.Router) {
 				r.Get("/{year}", usersRatingController.ByYear)
+			})
+			r.Route("/posts", func(r chi.Router) {
+				r.Get("/", postController.List)
+				r.Get("/user/{user}", postController.List)
+				r.Post("/", postController.Create)
+				r.Put("/{id}", postController.Update)
+				r.Delete("/{id}", postController.Delete)
+				r.Patch("/{id}/like", postController.Like)
 			})
 		})
 	})

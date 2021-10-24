@@ -9,7 +9,7 @@ function PostForm({ text = '', files = [], onSubmit, loading = false }): ReactEl
     const [postFiles, setPostFiles] = useState(files);
 
     function handleSubmit() {
-        if (postText && postFiles.length === 0) {
+        if (!postText && postFiles.length === 0) {
             return;
         }
         onSubmit(postText, postFiles);
@@ -24,7 +24,7 @@ function PostForm({ text = '', files = [], onSubmit, loading = false }): ReactEl
                     label=""
                     text={postText}
                     files={postFiles}
-                    placeholder="Напишите что-нибудь"
+                    placeholder="Напиши что-нибудь"
                     accept="image/*"
                 />
                 <Button block>Опубликовать</Button>

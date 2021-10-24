@@ -5,19 +5,21 @@ import * as applicationActions from '../ducks/application';
 import { apiRequest } from './index';
 import { getApiErrorMessage } from '../functions';
 
-function* uploadProcess({ payload }): IterableIterator<any> {
+export function* uploadProcess({ payload }): IterableIterator<any> {
     const formData = new FormData();
     formData.append('file', payload);
+    formData.append('isPublic', payload.isPublic ? 'true' : 'false')
     try {
         const uploadedFile: { id: string } = yield call(
             apiRequest,
             '/api/file',
             'post',
             formData,
-            {'Content-Type': 'multipart/form-data'}
+            { 'Content-Type': 'multipart/form-data' }
         )
         yield put(filesActions.success(uploadedFile.id));
         yield put(filesActions.file(uploadedFile));
+        return uploadedFile.id;
     } catch (e) {
         yield put(filesActions.error(getApiErrorMessage(e)));
         yield put(applicationActions.error(getApiErrorMessage(e)));

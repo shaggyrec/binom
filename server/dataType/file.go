@@ -9,4 +9,5 @@ type File struct {
 	Extension string `json:"extension"`
 	Type string `json:"type"`
 	Created pg.NullTime `json:"created"`
+	IsPublic bool `json:"-"`
 }

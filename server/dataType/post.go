@@ -1,6 +1,8 @@
 package dataType
 
-import "gopkg.in/guregu/null.v4"
+import (
+	"github.com/go-pg/pg"
+)
 
 type Post struct {
 	Id string `json:"id"`
@@ -9,8 +11,8 @@ type Post struct {
 	Text string `json:"text"`
 	//LikesAmount int `json:"likesAmount"`
 	Likes []string `json:"-"`
-	Created null.Time `json:"created"`
-	Updated null.Time `json:"updated"`
+	Created pg.NullTime `json:"created"`
+	Updated pg.NullTime `json:"updated"`
 	Images []string `json:"images"`
 	//Comments []PostComment `json:"comments"`
 }

@@ -3,6 +3,7 @@ import { call, CallEffect, ForkEffect, put, PutEffect, takeEvery } from '@redux-
 import * as postsActions from '../ducks/posts';
 import { apiRequest } from './index';
 import * as applicationActions from '../ducks/application';
+import { uploadProcess } from '../sagas/files';
 import { getApiErrorMessage } from '../functions';
 
 function* requestListProcess(): IterableIterator<CallEffect|PutEffect> {
@@ -15,8 +16,17 @@ function* requestListProcess(): IterableIterator<CallEffect|PutEffect> {
     }
 }
 
-function* createProcess({ payload }): IterableIterator<CallEffect|PutEffect> {
+function* createProcess({ payload }): IterableIterator<any> {
     try {
+        const images = [];
+        if (payload.images) {
+            for (const file of payload.images) {
+                file.isPublic = true;
+                const id = yield uploadProcess({ payload: file });
+                images.push(id);
+            }
+            payload.images = images;
+        }
         yield call(apiRequest, '/api/posts', 'POST', payload);
     } catch (e) {
         yield put(postsActions.error(getApiErrorMessage(e)));

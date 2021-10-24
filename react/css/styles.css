@@ -737,14 +737,14 @@ code {
     border-top: 1px solid #ccc;
     padding: 20px 0;
 }
-.lesson-comment {
+.post {
     padding: 20px 0 20px 10px;
 }
-.lesson-comment:last-child {
+.post:last-child {
     margin-bottom: 10px;
 }
 
-.lesson-comment-header {
+.post-header {
     display: flex;
     align-items: baseline;
     padding-bottom: 10px;
@@ -752,7 +752,7 @@ code {
     margin-left: -30px;
 }
 
-.lesson-comment-avatar {
+.post-avatar {
     border-radius: 50%;
     width: 50px;
     height: 50px;
@@ -763,29 +763,42 @@ code {
     align-items: center;
     font-weight: 900;
 }
-.lesson-comment-author {
+.post-author {
     padding: 0 15px;
 }
-.lesson-comment-author-name {
+.post-author-name {
     font-size: 13px;
     font-weight: 900;
 }
-.lesson-comment-author-date {
+.post-author-date {
     font-size: 10px;
 }
-.lesson-comment-files {
+.post-files {
     padding-top: 10px;
 }
-.lesson-comment-file {
+.post-file {
     padding: 0;
 }
-.lesson-comment-image, .lesson-comment-file {
+.post-image, .post-file {
     border-radius: 8px;
     display: inline-block;
 }
-.lesson-comment-image {
+.post-image {
     display: block;
     height: 80px;
+}
+.post-images-post-images-carousel {
+    overflow: hidden;
+    width: 100%;
+    white-space: nowrap;
+    overflow-x: auto;
+}
+.post-image-full {
+    width: 80%;
+    display: inline-block;
+}
+.post-images-post-images-carousel.one-image .post-image-full {
+    width: 100%;
 }
 .notification-header {
     font-size: 14px;

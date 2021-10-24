@@ -13,12 +13,12 @@ function renderFiles (files: LessonCommentFile[]) {
     if (!files || files.length === 0) {
         return null;
     }
-    return (<div className="lesson-comment-files">
-        {files?.map(f => (<div key={f.id} className="lesson-comment-file neomorphic">
-            <a href={`${SERVER_REQUESTS_BASE}/file/${f.file.id}`} target="_blank">
+    return (<div className="post-files">
+        {files?.map(f => (<div key={f.id} className="post-file neomorphic">
+            <a href={`${SERVER_REQUESTS_BASE}/file/${f.file.id}`} target="_blank" rel="noreferrer">
                 {f.file.type.indexOf('image') !== -1
-                    ? <img src={`${SERVER_REQUESTS_BASE}/file/${f.file.id}`} className="lesson-comment-image"
-                           alt={f.file.name} title={f.file.name}/>
+                    ? <img src={`${SERVER_REQUESTS_BASE}/file/${f.file.id}`} className="post-image"
+                        alt={f.file.name} title={f.file.name}/>
                     : f.file.name
                 }
             </a>
@@ -29,13 +29,13 @@ function renderFiles (files: LessonCommentFile[]) {
 
 function Comment(props: LessonComment): ReactElement {
     return (
-        <div className="lesson-comment">
+        <div className="post">
             <div className="neomorphic lesson-comment-block text">
-                <div className="lesson-comment-header">
-                    <div className="lesson-comment-avatar neomorphic">{authorsName(props.author)[0]}</div>
-                    <div className="lesson-comment-author">
-                        <div className="lesson-comment-author-name">{authorsName(props.author)}</div>
-                        <div className="lesson-comment-author-date">
+                <div className="post-header">
+                    <div className="post-avatar neomorphic">{authorsName(props.author)[0]}</div>
+                    <div className="post-author">
+                        <div className="post-author-name">{authorsName(props.author)}</div>
+                        <div className="post-author-date">
                             <Moment fromNow titleFormat="D MMM YYYY HH:mm:ss" withTitle locale="ru">
                                 {props.created}
                             </Moment>

@@ -1,15 +1,20 @@
 import { call, CallEffect, ForkEffect, put, PutEffect, takeEvery } from '@redux-saga/core/effects';
 
 import * as postsActions from '../ducks/posts';
+import * as postCommentsActions from '../ducks/postComments';
 import { apiRequest } from './index';
 import * as applicationActions from '../ducks/application';
 import { uploadProcess } from '../sagas/files';
 import { getApiErrorMessage } from '../functions';
+import { Post } from '../dataTypes/post';
 
 function* requestListProcess(): IterableIterator<CallEffect|PutEffect> {
     try {
-        const posts = yield call(apiRequest, '/api/posts');
+        const posts: Post[] = yield call(apiRequest, '/api/posts');
         yield put(postsActions.list(posts));
+        for (const post of posts) {
+            yield put(postCommentsActions.list(post.id, post.comments))
+        }
     } catch (e) {
         yield put(postsActions.error(getApiErrorMessage(e)));
         yield put(applicationActions.error(getApiErrorMessage(e)));

@@ -17,7 +17,7 @@ function* requestListProcess({ payload }): IterableIterator<CallEffect|PutEffect
 
 function* createProcess({ payload }): IterableIterator<any> {
     try {
-        yield call(apiRequest, `/api/posts/${payload.postId}/comments`, 'POST', payload.comment);
+        yield call(apiRequest, `/api/posts/${payload.postId}/comments`, 'POST', { text: payload.text });
     } catch (e) {
         yield put(postCommentsActions.error(getApiErrorMessage(e)));
         yield put(applicationActions.error(getApiErrorMessage(e)));

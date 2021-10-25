@@ -41,6 +41,15 @@ func (q *PostsDbQuery) Username(username string) *PostsDbQuery {
 	return q
 }
 
+func (q *PostsDbQuery) WithComments(limit int) *PostsDbQuery {
+	q.stmp.Relation("Comments", func(query *orm.Query) (*orm.Query, error) {
+		return query.OrderExpr("created DESC").Limit(limit), nil
+	}).Relation("Comments.User", func(query *orm.Query) (*orm.Query, error) {
+		return query.Column("Comments.User.id", "Comments.User.username", "Comments.User.name"), nil
+	})
+	return q
+}
+
 func (q *PostsDbQuery) Get() (*[]dataType.Post, error) {
 	err := q.stmp.Select()
 
@@ -49,6 +58,8 @@ func (q *PostsDbQuery) Get() (*[]dataType.Post, error) {
 
 func (q *PostsDbQuery) listDbQuery() *orm.Query {
 	return q.db.Model(&q.posts).
-		Relation("User").
+		Relation("User", func(query *orm.Query) (*orm.Query, error) {
+		return query.Column("User.id", "User.username", "User.name"), nil
+	}).
 		OrderExpr("created DESC")
 }

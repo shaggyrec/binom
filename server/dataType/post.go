@@ -14,5 +14,5 @@ type Post struct {
 	Created pg.NullTime `json:"created"`
 	Updated pg.NullTime `json:"updated"`
 	Images []string `json:"images"`
-	//Comments []PostComment `json:"comments"`
+	Comments []PostComment `json:"comments"`
 }

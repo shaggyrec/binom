@@ -1,4 +1,5 @@
 import { handleActions, createAction } from 'redux-actions';
+import { RootState } from '../Application';
 
 const REQUEST_LIST = 'postComments/REQUEST_LIST';
 const LIST = 'postComments/LIST';
@@ -34,9 +35,12 @@ export default handleActions({
 export const requestList = createAction(REQUEST_LIST, id => id);
 export const list = createAction(LIST, (id, list) => ({ id, list }));
 export const error = createAction(ERROR, error => error);
-export const create = createAction(CREATE, post => post);
+export const create = createAction(CREATE, (postId, text) => ({ postId, text }));
 export const update = createAction(UPDATE, (id, post) => ({ id, post }));
 export const remove = createAction(DELETE, id => id);
 export const created = createAction(CREATED, () => ({}));
 export const updated = createAction(UPDATED, () => ({}));
 export const removed = createAction(DELETED, () => ({}));
+
+
+export const commentsByPostId = (state: RootState, postId: string) => state.postComments.list[postId]

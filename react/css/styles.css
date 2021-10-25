@@ -233,6 +233,14 @@ button:active {
     width: 100%;
 }
 
+.py-0 {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+.py-5 {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
 .py-20 {
     padding-top: 20px;
     padding-bottom: 20px;
@@ -800,6 +808,13 @@ code {
 .post-images-post-images-carousel.one-image .post-image-full {
     width: 100%;
 }
+.post-comment {
+    padding-bottom: 10px;
+    font-size: 12px;
+}
+.post-comment:last-child {
+    padding-bottom: 20px;
+}
 .notification-header {
     font-size: 14px;
     padding-left: 5%;
@@ -902,7 +917,12 @@ code {
 .wrap {
     white-space: break-spaces;
 }
-
+.text-xxs {
+    font-size: 12px;
+}
+.text-xxs {
+    font-size: 12px;
+}
 .text-xs {
     font-size: 14px;
 }

@@ -19,6 +19,7 @@ function CommentForm({ text = '', onSubmit, loading = false }): ReactElement {
         <div className="relative">
             <Form onSubmit={handleSubmit}>
                 <Textarea
+                    autoFocus
                     height={20}
                     onChange={setPostText}
                     label=""

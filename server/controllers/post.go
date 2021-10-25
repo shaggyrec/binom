@@ -100,7 +100,7 @@ func (c *PostController) List(w http.ResponseWriter, r *http.Request) {
 		postsDbQuery.Username(user)
 	}
 
-	posts, err = postsDbQuery.Get()
+	posts, err = postsDbQuery.WithComments(3).Get()
 
 	if err != nil {
 		log.Print(err)

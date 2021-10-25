@@ -9,7 +9,8 @@ import Post from '../components/feed/Post';
 import Button from '../components/Button';
 import { usePrevious } from '../hooks/usePrevious';
 
-function Feed({ posts, requestPosts, createPost, creating, error, createComment, creatingComment, commentsError, commentsMappedByPost }): ReactElement {
+function Feed({ posts, requestPosts, createPost, creating, error, createComment, creatingComment, commentsError,
+    commentsMappedByPost, requestComments, commentsRequesting }): ReactElement {
 
     const [showCreateForm, setShowCreateForm] = useState(false);
     const prevCreating = usePrevious(creating);
@@ -43,6 +44,8 @@ function Feed({ posts, requestPosts, createPost, creating, error, createComment,
                             creatingComment={creatingComment}
                             error={commentsError}
                             comments={commentsMappedByPost[p.id]}
+                            onRequestComments={() => requestComments(p.id)}
+                            commentsRequesting={commentsRequesting === p.id}
                         />
                     </Paddingable>
                 ))}
@@ -58,11 +61,13 @@ export default connect(
         creatingComment: state.postComments.creating,
         error: state.posts.error,
         commentsError: state.postComments.error,
-        commentsMappedByPost: state.postComments.list
+        commentsMappedByPost: state.postComments.list,
+        commentsRequesting: state.postComments.loading,
     }),
     dispatch => ({
         requestPosts: () => dispatch(postsActions.requestList()),
         createPost: (text, images) => dispatch(postsActions.create({ text, images })),
-        createComment: (id, text) => dispatch(postCommentsActions.create(id, text))
+        createComment: (id, text) => dispatch(postCommentsActions.create(id, text)),
+        requestComments: id => dispatch(postCommentsActions.requestList(id)),
     })
 )(Feed);

@@ -8,7 +8,7 @@ import { getApiErrorMessage } from '../functions';
 function* requestListProcess({ payload }): IterableIterator<CallEffect|PutEffect> {
     try {
         const comments = yield call(apiRequest, `/api/posts/${payload}/comments`);
-        yield put(postCommentsActions.list(comments));
+        yield put(postCommentsActions.list(payload, comments));
     } catch (e) {
         yield put(postCommentsActions.error(getApiErrorMessage(e)));
         yield put(applicationActions.error(getApiErrorMessage(e)));

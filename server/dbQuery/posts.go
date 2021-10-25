@@ -46,7 +46,8 @@ func (q *PostsDbQuery) WithComments(limit int) *PostsDbQuery {
 		return query.OrderExpr("created DESC").Limit(limit), nil
 	}).Relation("Comments.User", func(query *orm.Query) (*orm.Query, error) {
 		return query.Column("Comments.User.id", "Comments.User.username", "Comments.User.name"), nil
-	})
+	}).ColumnExpr("(SELECT count(id) FROM post_comments WHERE post_id = Post.id) as comments_amount")
+
 	return q
 }
 
@@ -58,8 +59,9 @@ func (q *PostsDbQuery) Get() (*[]dataType.Post, error) {
 
 func (q *PostsDbQuery) listDbQuery() *orm.Query {
 	return q.db.Model(&q.posts).
+		ColumnExpr("Post.*").
+		ColumnExpr("jsonb_array_length(Post.likes) as likes_amount").
 		Relation("User", func(query *orm.Query) (*orm.Query, error) {
 		return query.Column("User.id", "User.username", "User.name"), nil
-	}).
-		OrderExpr("created DESC")
+	}).OrderExpr("Post.created DESC")
 }

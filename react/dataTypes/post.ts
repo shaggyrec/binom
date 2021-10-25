@@ -9,5 +9,6 @@ export interface Post {
     created: Date;
     updated: Date;
     images: string[];
-    comments: any[]; // TODO: replace with Comment[]
+    comments: Post[];
+    commentsAmount: number;
 }

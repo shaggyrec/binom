@@ -21,7 +21,7 @@ export const initialState = {
 };
 
 export default handleActions({
-    [REQUEST_LIST]: state => ({ ...state, loading: true }),
+    [REQUEST_LIST]: (state, { payload }) => ({ ...state, loading: payload }),
     [LIST]: (state, { payload: { id, list } }) => ({ ...state, loading: false, list: { ...state.list, [id]: list } }),
     [ERROR]: (state, { payload }) => ({ ...state, loading: false, error: payload }),
     [CREATE]: state => ({ ...state, creating: true }),

@@ -27,6 +27,10 @@ p, h1, h2, h3, h4, h5, h6, .text {
 
 a, .a {
     color: #039151;
+    transition: all .3s;
+}
+.a:hover {
+    opacity: .8;
 }
 .root {
     padding-bottom: 80px;
@@ -334,6 +338,19 @@ button:active {
 .my-0 {
     margin-top: 0;
     margin-bottom: 0;
+}
+.my-0 {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+.my-20 {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.my-10 {
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 .ml-auto {
     margin-left: auto;
@@ -815,6 +832,12 @@ code {
 .post-comment:last-child {
     padding-bottom: 20px;
 }
+.post-hr {
+    height: 1px;
+    background: #ccc;
+    border: 0;
+    margin: 0;
+}
 .notification-header {
     font-size: 14px;
     padding-left: 5%;
@@ -943,6 +966,9 @@ code {
 }
 .text-gray {
     color: #ccc;
+}
+.underline {
+    text-decoration: underline;
 }
 .table {
     width: 100%;

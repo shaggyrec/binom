@@ -3,7 +3,7 @@ import React from 'react';
 
 function ImagesCarousel({ images }) {
     if (!images || images.length === 0) {
-        return null;
+        return <hr className="post-hr"/>;
     }
     return (
         <div className={`post-images-post-images-carousel ${images.length === 1 ? 'one-image' : ''}`}>

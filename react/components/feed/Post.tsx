@@ -6,12 +6,13 @@ import Moment from 'react-moment';
 import ImagesCarousel from './ImagesCarousel';
 import Paddingable from '../Paddingable';
 import Comments from './Comments';
+import Loader from '../Loader';
 
 function authorsName(author: User): string {
     return author.name || author.username || author.email;
 }
 
-function Post({ post, onAddComment, creatingComment, error, comments }: { post: Post, onAddComment: (text: string) => any, creatingComment: boolean, error: any, comments: Post[] }): ReactElement {
+function Post({ post, onAddComment, creatingComment, error, comments, onRequestComments, commentsRequesting }: { post: Post, onAddComment: (text: string) => any, creatingComment: boolean, error: any, comments: Post[], onRequestComments: () => any, commentsRequesting: boolean }): ReactElement {
     return (
         <div className="post">
             <div className="neomorphic text">
@@ -28,9 +29,19 @@ function Post({ post, onAddComment, creatingComment, error, comments }: { post: 
                 </div>
                 <p>{post.text}</p>
                 <ImagesCarousel images={post.images}/>
-                <Paddingable padding={[10,0,0]}>
-                    <Comments onAdd={onAddComment} comments={comments} loading={creatingComment} error={error}/>
-                </Paddingable>
+                <div className="relative">
+                    <Paddingable padding={[10,0,0]}>
+                        <Comments
+                            amount={post.commentsAmount}
+                            onAdd={onAddComment}
+                            comments={comments}
+                            loading={creatingComment}
+                            error={error}
+                            onRequestAll={onRequestComments}
+                        />
+                    </Paddingable>
+                    <Loader show={commentsRequesting || creatingComment}/>
+                </div>
             </div>
         </div>
     );

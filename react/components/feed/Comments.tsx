@@ -5,7 +5,7 @@ import { Post } from '../../dataTypes/post';
 import Button from '../Button';
 import { usePrevious } from '../../hooks/usePrevious';
 
-function Comments({ onAdd, comments, loading, error }: { onAdd: (any: any) => any; comments: Post[], loading: boolean, error: any }): ReactElement {
+function Comments({ onAdd, comments, loading, error, amount, onRequestAll }: { onAdd: (any: any) => any; comments: Post[], loading: boolean, error: any, amount: number, onRequestAll: () => any }): ReactElement {
     const [showCommentsForm, setShowCommentsForm] = useState(false);
     const prevCreatingComment = usePrevious(loading);
 
@@ -16,6 +16,7 @@ function Comments({ onAdd, comments, loading, error }: { onAdd: (any: any) => an
     }, [loading]);
     return (
         <div>
+            {amount > 3 && amount !== comments?.length && <div onClick={onRequestAll} className="a text-xxs underline pointer my-20">Все комментарии ⬇️️</div>}
             <div>
                 {comments?.map(c => (
                     <div key={c.id} className="post-comment">

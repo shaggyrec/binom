@@ -7,5 +7,6 @@ CREATE TABLE IF NOT EXISTS utm (
     utm_campaign VARCHAR(255),
     utm_content VARCHAR(255),
     utm_term VARCHAR(255),
-    url VARCHAR(255)
+    url VARCHAR(255),
+    extra VARCHAR(255)
 )

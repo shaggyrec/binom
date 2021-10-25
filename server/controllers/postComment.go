@@ -33,7 +33,7 @@ func (c *PostCommentController) Create(w http.ResponseWriter, r *http.Request) {
 	p.UserId = r.Context().Value("userId").(string)
 	p.PostId = chi.URLParam(r, "id")
 
-	_, err := c.storage.Create(&p)
+	newComment, err := c.storage.Create(&p)
 
 	if err != nil {
 		log.Print(err)
@@ -41,7 +41,7 @@ func (c *PostCommentController) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	render.JSON(w, r, p)
+	render.JSON(w, r, newComment)
 }
 
 func (c *PostCommentController) ListByPostId(w http.ResponseWriter, r *http.Request) {

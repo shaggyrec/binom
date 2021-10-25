@@ -5,6 +5,7 @@ import (
 	"binom/server/functions"
 	"errors"
 	"github.com/go-pg/pg"
+	"github.com/go-pg/pg/orm"
 	"github.com/mitchellh/mapstructure"
 	"time"
 )
@@ -20,7 +21,9 @@ func (s *PostStorage) Init(db *pg.DB) {
 func (s *PostStorage) Create(post *dataType.Post) (*dataType.Post, error) {
 	_, err := s.db.Model(post).Insert()
 
-	return post, err
+	p, _ := s.ById(post.Id)
+
+	return p, err
 }
 
 func (s *PostStorage) Update(id string, postMap map[string]interface{}) error {
@@ -49,7 +52,12 @@ func (s *PostStorage) Delete(id string) error {
 
 func (s *PostStorage) ById(id string) (*dataType.Post, error) {
 	p := dataType.Post{Id: id}
-	err := s.db.Model(&p).WherePK().Select()
+	err := s.db.Model(&p).
+		WherePK().
+		Relation("User", func(query *orm.Query) (*orm.Query, error) {
+			return query.Column("User.id", "User.username", "User.name"), nil
+		}).
+		Select()
 
 	if err != nil {
 		return nil, err

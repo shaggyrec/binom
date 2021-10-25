@@ -62,6 +62,6 @@ func (q *PostsDbQuery) listDbQuery() *orm.Query {
 		ColumnExpr("Post.*").
 		ColumnExpr("jsonb_array_length(Post.likes) as likes_amount").
 		Relation("User", func(query *orm.Query) (*orm.Query, error) {
-		return query.Column("User.id", "User.username", "User.name"), nil
-	}).OrderExpr("Post.created DESC")
+			return query.Column("User.id", "User.username", "User.name"), nil
+		}).OrderExpr("Post.created DESC")
 }

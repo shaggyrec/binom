@@ -48,7 +48,8 @@ function* createProcess({ payload }): IterableIterator<any> {
             }
             payload.images = images;
         }
-        yield call(apiRequest, '/api/posts', 'POST', payload);
+        const newPost = yield call(apiRequest, '/api/posts', 'POST', payload);
+        yield put(postsActions.newPost(newPost));
     } catch (e) {
         yield put(postsActions.error(getApiErrorMessage(e)));
         yield put(applicationActions.error(getApiErrorMessage(e)));
@@ -76,9 +77,18 @@ function* removeProcess({ payload }): IterableIterator<CallEffect|PutEffect> {
     yield put(postsActions.removed());
 }
 
+function* newPostProcess({ payload }): IterableIterator<any> {
+    const posts: Post[] = yield select(postsActions.currentPostsList);
+    if (posts.find(p => payload.id === p.id)) {
+        return
+    }
+    yield put(postsActions.list([payload, ...posts]));
+}
+
 export function* posts(): IterableIterator<ForkEffect> {
     yield takeEvery(postsActions.requestList, requestListProcess);
     yield takeEvery(postsActions.create, createProcess);
     yield takeEvery(postsActions.update, updateProcess);
     yield takeEvery(postsActions.remove, removeProcess);
+    yield takeEvery(postsActions.newPost, newPostProcess)
 }

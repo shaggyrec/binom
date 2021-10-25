@@ -12,6 +12,7 @@ const UPDATED = 'posts/UPDATED';
 const DELETED = 'posts/DELETED';
 const ERROR = 'posts/ERROR';
 const NOMORE = 'posts/NOMORE';
+const NEW = 'posts/NEW';
 
 export const initialState = {
     list: [],
@@ -45,7 +46,8 @@ export const remove = createAction(DELETE, id => id);
 export const created = createAction(CREATED, () => ({}));
 export const updated = createAction(UPDATED, () => ({}));
 export const removed = createAction(DELETED, () => ({}));
-export const noMore = createAction(NOMORE, () => ({}))
+export const noMore = createAction(NOMORE, () => ({}));
+export const newPost = createAction(NEW, post => post);
 
 
 export const currentPostsList = state => state.posts.list;

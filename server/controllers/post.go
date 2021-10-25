@@ -35,7 +35,7 @@ func (c *PostController) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	p.UserId = r.Context().Value("userId").(string)
-	_, err := c.postStorage.Create(&p)
+	newPost, err := c.postStorage.Create(&p)
 
 	if err != nil {
 		log.Print(err)
@@ -43,7 +43,7 @@ func (c *PostController) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	render.JSON(w, r, p)
+	render.JSON(w, r, newPost)
 }
 
 func (c *PostController) Update(w http.ResponseWriter, r *http.Request) {

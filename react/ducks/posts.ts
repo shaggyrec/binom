@@ -11,6 +11,7 @@ const CREATED = 'posts/CREATED';
 const UPDATED = 'posts/UPDATED';
 const DELETED = 'posts/DELETED';
 const ERROR = 'posts/ERROR';
+const NOMORE = 'posts/NOMORE';
 
 export const initialState = {
     list: [],
@@ -18,7 +19,8 @@ export const initialState = {
     loading: false,
     creating: false,
     updating: null,
-    deleting: null
+    deleting: null,
+    noMore: false,
 };
 
 export default handleActions({
@@ -31,6 +33,7 @@ export default handleActions({
     [CREATED]: state => ({ ...state, creating: false }),
     [UPDATED]: state => ({ ...state, updating: null }),
     [DELETED]: state => ({ ...state, deleting: null }),
+    [NOMORE]: state => ({  ...state, noMore: true }),
 }, initialState);
 
 export const requestList = createAction(REQUEST_LIST, () => ({}));
@@ -42,3 +45,7 @@ export const remove = createAction(DELETE, id => id);
 export const created = createAction(CREATED, () => ({}));
 export const updated = createAction(UPDATED, () => ({}));
 export const removed = createAction(DELETED, () => ({}));
+export const noMore = createAction(NOMORE, () => ({}))
+
+
+export const currentPostsList = state => state.posts.list;

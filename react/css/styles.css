@@ -680,6 +680,10 @@ button:active {
     white-space: pre;
 }
 
+.overflow-y-auto {
+    overflow-y: auto;
+}
+
 .break-spaces {
     white-space: break-spaces;
 }
@@ -1024,6 +1028,16 @@ code {
     .w-33 {
         width: 33.3%;
     }
+}
+
+.animation-circle {
+    animation: circle infinite 2s both;
+}
+
+@keyframes circle {
+    0% {  transform: rotate(0)}
+    50% {  transform: rotate(360deg)}
+    100% {  transform: rotate(0)}
 }
 
 @keyframes slideFromBottom {

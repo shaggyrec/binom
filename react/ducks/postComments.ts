@@ -11,6 +11,7 @@ const UPDATED = 'postComments/UPDATED';
 const DELETED = 'postComments/DELETED';
 const ERROR = 'postComments/ERROR';
 
+
 export const initialState = {
     list: {},
     error: null,
@@ -41,6 +42,5 @@ export const remove = createAction(DELETE, id => id);
 export const created = createAction(CREATED, () => ({}));
 export const updated = createAction(UPDATED, () => ({}));
 export const removed = createAction(DELETED, () => ({}));
-
 
 export const commentsByPostId = (state: RootState, postId: string) => state.postComments.list[postId]

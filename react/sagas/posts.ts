@@ -1,4 +1,13 @@
-import { call, CallEffect, ForkEffect, put, PutEffect, takeEvery } from '@redux-saga/core/effects';
+import {
+    call,
+    CallEffect,
+    ForkEffect,
+    put,
+    PutEffect,
+    select,
+    SelectEffect,
+    takeEvery
+} from '@redux-saga/core/effects';
 
 import * as postsActions from '../ducks/posts';
 import * as postCommentsActions from '../ducks/postComments';
@@ -8,12 +17,19 @@ import { uploadProcess } from '../sagas/files';
 import { getApiErrorMessage } from '../functions';
 import { Post } from '../dataTypes/post';
 
-function* requestListProcess(): IterableIterator<CallEffect|PutEffect> {
+const POSTS_PER_QUERY = 20;
+
+function* requestListProcess(): IterableIterator<CallEffect|PutEffect|SelectEffect> {
     try {
-        const posts: Post[] = yield call(apiRequest, '/api/posts');
-        yield put(postsActions.list(posts));
+        const currentPostsList: any[] = yield select(postsActions.currentPostsList);
+        const posts: Post[] = yield call(apiRequest, '/api/posts?limit=' + POSTS_PER_QUERY + '&offset=' + currentPostsList.length);
+        posts.filter(p => !currentPostsList.find(post => post.id === p.id));
+        yield put(postsActions.list([...currentPostsList, ...posts]));
         for (const post of posts) {
             yield put(postCommentsActions.list(post.id, post.comments))
+        }
+        if (posts.length === 0) {
+            yield put(postsActions.noMore());
         }
     } catch (e) {
         yield put(postsActions.error(getApiErrorMessage(e)));

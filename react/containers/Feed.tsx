@@ -8,9 +8,10 @@ import Paddingable from '../components/Paddingable';
 import Post from '../components/feed/Post';
 import Button from '../components/Button';
 import { usePrevious } from '../hooks/usePrevious';
+import { RefreshIcon } from '../components/Icons';
 
 function Feed({ posts, requestPosts, createPost, creating, error, createComment, creatingComment, commentsError,
-    commentsMappedByPost, requestComments, commentsRequesting }): ReactElement {
+    commentsMappedByPost, requestComments, commentsRequesting, loading, noMorePosts }): ReactElement {
 
     const [showCreateForm, setShowCreateForm] = useState(false);
     const prevCreating = usePrevious(creating);
@@ -50,13 +51,24 @@ function Feed({ posts, requestPosts, createPost, creating, error, createComment,
                     </Paddingable>
                 ))}
             </Paddingable>
+            <div className="text-center">
+                {noMorePosts ? <p>Это всё</p> : (
+                    <Button green onClick={requestPosts}>
+                        <div style={{ paddingTop: 5 }} className={loading ? 'animation-circle' : ''}>
+                            <RefreshIcon size={45} fill="#fff"/>
+                        </div>
+                    </Button>
+                )}
+            </div>
         </div>
     );
 }
 
 export default connect(
     (state: RootState) => ({
+        loading: state.posts.loading,
         posts: state.posts.list,
+        noMorePosts: state.posts.noMore,
         creating: state.posts.creating,
         creatingComment: state.postComments.creating,
         error: state.posts.error,

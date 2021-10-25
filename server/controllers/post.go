@@ -2,11 +2,13 @@ package controllers
 
 import (
 	"binom/server/dataType"
+	"binom/server/dbQuery"
 	"binom/server/exceptions"
 	"binom/server/functions"
 	"binom/server/storage"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
+	"github.com/go-pg/pg"
 	"log"
 	"net/http"
 	"strconv"
@@ -14,10 +16,12 @@ import (
 
 type PostController struct {
 	postStorage *storage.PostStorage
+	db *pg.DB
 }
 
-func (c *PostController) Init(postStorage *storage.PostStorage) {
+func (c *PostController) Init(postStorage *storage.PostStorage, db *pg.DB) {
 	c.postStorage = postStorage
+	c.db = db
 }
 
 func (c *PostController) Create(w http.ResponseWriter, r *http.Request) {
@@ -90,11 +94,14 @@ func (c *PostController) List(w http.ResponseWriter, r *http.Request) {
 	}
 	var posts *[]dataType.Post
 	var err error
+
+	postsDbQuery := dbQuery.Posts(c.db).Limit(limit).Offset(offset)
 	if user != "" {
-		posts, err = c.postStorage.ListByUsername(user, limit, offset)
-	} else {
-		posts, err = c.postStorage.List(limit, offset)
+		postsDbQuery.Username(user)
 	}
+
+	posts, err = postsDbQuery.Get()
+
 	if err != nil {
 		log.Print(err)
 		exceptions.ServerError(w, r)
@@ -137,7 +144,7 @@ func (c *PostController) Like(w http.ResponseWriter, r *http.Request) {
 func (c *PostController) assertAccessToPost(w http.ResponseWriter, r *http.Request) bool {
 	post, err := c.postStorage.ById(chi.URLParam(r, "id"))
 	if err != nil {
-		exceptions.NotFoundError(w, r, "Post not found")
+		exceptions.NotFoundError(w, r, "Posts not found")
 		return false
 	}
 	if post.UserId != r.Context().Value("userId").(string) {

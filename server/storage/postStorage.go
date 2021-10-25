@@ -5,7 +5,6 @@ import (
 	"binom/server/functions"
 	"errors"
 	"github.com/go-pg/pg"
-	"github.com/go-pg/pg/orm"
 	"github.com/mitchellh/mapstructure"
 	"time"
 )
@@ -57,40 +56,6 @@ func (s *PostStorage) ById(id string) (*dataType.Post, error) {
 	}
 
 	return &p, err
-}
-
-func (s *PostStorage) List(limit int, offset int) (*[]dataType.Post, error) {
-	var posts []dataType.Post
-	err := s.listDbQuery(&posts, limit, offset).
-		Select()
-
-	return &posts, err
-}
-
-func (s *PostStorage) ListByUserId(userId string, limit int, offset int) (*[]dataType.Post, error) {
-	var posts []dataType.Post
-	err := s.listDbQuery(&posts, limit, offset).
-		Where("user_id = ?", userId).
-		Select()
-
-	return &posts, err
-}
-
-func (s* PostStorage) ListByUsername(username string, limit int, offset int) (*[]dataType.Post, error) {
-	var posts []dataType.Post
-	err := s.listDbQuery(&posts, limit, offset).
-		Where("user.username = ?", username).
-		Select()
-
-	return &posts, err
-}
-
-func (s *PostStorage) listDbQuery(posts *[]dataType.Post, limit, offset int) *orm.Query {
-	return s.db.Model(posts).
-		Relation("User").
-		Limit(limit).
-		Offset(offset).
-		OrderExpr("created DESC")
 }
 
 func (s *PostStorage) mapDbRow(data map[string]interface{}) *dataType.Post {

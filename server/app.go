@@ -38,7 +38,7 @@ func Init(dc *dependencyContainer.DC, db *pg.DB, jwtSecret, uploadPath, host, ve
 	usersRatingController := controllers.UsersRatingController{}
 	usersRatingController.Init(dc.Services.UserScore)
 	postController := controllers.PostController{}
-	postController.Init(dc.Storages.PostStorage)
+	postController.Init(dc.Storages.PostStorage, db)
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)

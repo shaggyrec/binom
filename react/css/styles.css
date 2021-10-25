@@ -970,6 +970,9 @@ code {
 .max-w-500 {
     max-width: 500px;
 }
+.border-b {
+    border-bottom: 1px solid #ccc;
+}
 
 @media (min-width:1024px) {
     .w-33 {

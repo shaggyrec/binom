@@ -9,7 +9,7 @@ import Post from '../components/feed/Post';
 import Button from '../components/Button';
 import { usePrevious } from '../hooks/usePrevious';
 
-function Feed({ posts, requestPosts, createPost, creating, error }): ReactElement {
+function Feed({ posts, requestPosts, createPost, creating, error, createComment }): ReactElement {
 
     const [showCreateForm, setShowCreateForm] = useState(false);
     const prevCreating = usePrevious(creating);
@@ -37,7 +37,7 @@ function Feed({ posts, requestPosts, createPost, creating, error }): ReactElemen
             <Paddingable padding={[20, 0]}>
                 {posts.map(p => (
                     <Paddingable key={p.id} padding={[10, 0]}>
-                        <Post post={p}/>
+                        <Post post={p} onAddComment={text => createComment(p.id, text)}/>
                     </Paddingable>
                 ))}
             </Paddingable>
@@ -54,5 +54,6 @@ export default connect(
     dispatch => ({
         requestPosts: () => dispatch(postsActions.requestList()),
         createPost: (text, images) => dispatch(postsActions.create({ text,images })),
+        createComment: () => {}
     })
 )(Feed);

@@ -37,6 +37,8 @@ function* sendCodeProcess(): IterableIterator<any> {
         yield put(usersActions.setMe(user));
         yield put(notificationsActions.requestList());
         yield put(push(yield select(authActions.from)));
+        // @ts-ignore
+        fbq && fbq('track', 'CompleteRegistration');
     } catch (e) {
         yield put(authActions.error(e.response?.data?.code === ApiErrors.ErrorInvalidAuthCode ? 'Неверный код' : getApiErrorMessage(e)));
     }

@@ -9,8 +9,8 @@ function BottomNavigation({ username, notificationsAmount }): ReactElement {
                 <footer>
                     <nav className="bottom-menu-nav">
                         <Link className="bottom-menu-nav-link transition3" to="/app"><Learning size={33}/></Link>
-                        {/*<Link className="bottom-menu-nav-link transition3" to="/feed"><Comments /></Link>*/}
                         <Link className="bottom-menu-nav-link transition3" to="/rating"><StarIcon /></Link>
+                        <Link className="bottom-menu-nav-link transition3" to="/feed"><Comments /></Link>
                         <Link className="bottom-menu-nav-link transition3" to="/notifications">
                             <Notification />
                             {notificationsAmount > 0 && <div className="bottom-menu-nav-link-badge">

@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
 )
 
 const maxUploadSize = 20 * 1024 * 1024 // 20 mb
@@ -31,6 +32,8 @@ func (c *FileController) Upload(w http.ResponseWriter, r *http.Request) {
 		exceptions.BadRequestError(w, r, err.Error(), exceptions.CantParseFile)
 		return
 	}
+	isPublic, _ := strconv.ParseBool(r.FormValue("isPublic"))
+
 	userId := r.Context().Value("userId").(string)
 	file, fileHeader, err := r.FormFile("file")
 	if err != nil {
@@ -58,6 +61,7 @@ func (c *FileController) Upload(w http.ResponseWriter, r *http.Request) {
 		Type: detectedFileType,
 		UserId: userId,
 		Extension: ext[0],
+		IsPublic: isPublic,
 	}
 
 	f, err = c.storage.Create(f)

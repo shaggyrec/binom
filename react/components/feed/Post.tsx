@@ -27,7 +27,7 @@ function Post({ post, onAddComment, creatingComment, error, comments, onRequestC
                         </div>
                     </div>
                 </div>
-                <p>{post.text}</p>
+                <p className="wrap">{post.text}</p>
                 <ImagesCarousel images={post.images}/>
                 <div className="relative">
                     <Paddingable padding={[10,0,0]}>

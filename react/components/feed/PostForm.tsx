@@ -19,6 +19,7 @@ function PostForm({ text = '', files = [], onSubmit, loading = false }): ReactEl
         <div className="relative">
             <Form onSubmit={handleSubmit}>
                 <TextAreaWithFileInput
+                    autoFocus
                     onTextChange={setPostText}
                     onFilesChange={setPostFiles}
                     label=""

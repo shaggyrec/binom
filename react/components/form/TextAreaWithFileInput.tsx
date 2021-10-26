@@ -5,7 +5,7 @@ import Textarea from './Textarea';
 import Button from '../Button';
 import { Attach, Bin } from '../Icons';
 
-function TextAreaWithFileInput({ label = '', text, files, onTextChange, onFilesChange, placeholder='', accept = '*' }): ReactElement {
+function TextAreaWithFileInput({ label = '', text, files, onTextChange, onFilesChange, placeholder='', accept = '*', autoFocus = false }): ReactElement {
     const onDrop = useCallback(acceptedFiles => {
         const newFiles = [...files, ...acceptedFiles];
         onFilesChange(newFiles);
@@ -28,7 +28,7 @@ function TextAreaWithFileInput({ label = '', text, files, onTextChange, onFilesC
                 className="textarea-with-files-dropzone"
             >
                 <input {...getInputProps()} accept={accept} />
-                <Textarea height={100} label={label} onChange={onTextChange} value={text} placeholder={placeholder}/>
+                <Textarea autoFocus={autoFocus} height={100} label={label} onChange={onTextChange} value={text} placeholder={placeholder}/>
                 {isDragActive && <div className="textarea-with-files-tooltip text">Drop file here</div>}
                 <div className="textarea-with-files-controls neomorphic">
                     <Button small type="button" onClick={open}><Attach size={12}/></Button>

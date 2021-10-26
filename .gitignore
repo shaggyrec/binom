@@ -6,3 +6,4 @@ dist
 .cache
 .parcel-cache
 upload
+.DS_Store

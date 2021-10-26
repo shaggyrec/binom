@@ -106,6 +106,12 @@ func (f *Factory) PostComment(db *pg.DB) *PostCommentStorage {
 	return &storage
 }
 
+func (f *Factory) Utm(db *pg.DB) *UtmStorage {
+	storage := UtmStorage{}
+	storage.Init(db)
+	return &storage
+}
+
 func statusToInt(status interface{}) int64 {
 	if reflect.TypeOf(status).Name() == "int" {
 		return int64(status.(int))

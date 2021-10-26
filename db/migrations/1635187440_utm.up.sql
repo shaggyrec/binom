@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS utm (
+CREATE TABLE IF NOT EXISTS utms (
     id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id uuid REFERENCES users(id),
     created TIMESTAMP NOT NULL DEFAULT NOW(),

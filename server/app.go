@@ -52,6 +52,7 @@ func Init(dc *dependencyContainer.DC, db *pg.DB, jwtSecret, uploadPath, host, ve
 		AllowCredentials: false,
 	}))
 	r.Use(middlewares.ParseAuthHeader)
+	r.Use(middlewares.Utm(dc.Storages.UtmStorage))
 
 	r.Get("/monitoring", func(w http.ResponseWriter, r *http.Request) {
 		_, err := db.Exec("SELECT 1")
@@ -64,7 +65,7 @@ func Init(dc *dependencyContainer.DC, db *pg.DB, jwtSecret, uploadPath, host, ve
 	r.Get("/privacy", pageController.Privacy)
 	r.Group(func(r chi.Router) {
 		r.Use(middlewares.ParseAuthTokenFromQueryString)
-		r.Use(middlewares.JwtAuth(jwtSecret))
+		r.Use(middlewares.JwtAuth(jwtSecret, dc.Storages.UtmStorage))
 		r.Get("/file/{id}", fileController.Serve)
 	})
 	r.Route("/api" , func(r chi.Router) {
@@ -77,7 +78,7 @@ func Init(dc *dependencyContainer.DC, db *pg.DB, jwtSecret, uploadPath, host, ve
 			r.Post("/yoomoney", paymentController.YooMoney)
 		})
 		r.Group(func(r chi.Router) {
-			r.Use(middlewares.JwtAuth(jwtSecret))
+			r.Use(middlewares.JwtAuth(jwtSecret, dc.Storages.UtmStorage))
 			r.Get("/me", userController.Me)
 			r.Route("/user", func(r chi.Router) {
 				r.Group(func(r chi.Router) {

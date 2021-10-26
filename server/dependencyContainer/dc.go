@@ -25,6 +25,7 @@ type DC struct {
 		PointsMovement *storage.PointsMovementStorage
 		PostStorage *storage.PostStorage
 		PostCommentStorage *storage.PostCommentStorage
+		UtmStorage *storage.UtmStorage
 	}
 	Services struct{
 		Token *service.TokenService
@@ -67,6 +68,7 @@ func (dc *DC) initStorages() {
 	dc.Storages.PointsMovement = storageFactory.PointsMovement(dc.Db)
 	dc.Storages.PostStorage = storageFactory.Post(dc.Db)
 	dc.Storages.PostCommentStorage = storageFactory.PostComment(dc.Db)
+	dc.Storages.UtmStorage = storageFactory.Utm(dc.Db)
 }
 
 func (dc *DC) initServices(host, jwtSecret string, technicalTelegramBot *telegramBot.BotForChat) {

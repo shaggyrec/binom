@@ -8,7 +8,7 @@ import { AxiosResponse } from 'axios';
 import { eraseTokens, getTokenExpired, getTokens, storeTokens } from '../tokens';
 import { push } from 'connected-react-router';
 import { ApiErrors } from '../ApiErrors';
-import { requestMe } from '../ducks/users';
+import { completeRegistration } from './facebookEvents'
 
 
 function* sendEmailProcess(): IterableIterator<any> {
@@ -37,8 +37,9 @@ function* sendCodeProcess(): IterableIterator<any> {
         yield put(usersActions.setMe(user));
         yield put(notificationsActions.requestList());
         yield put(push(yield select(authActions.from)));
-        // @ts-ignore
-        fbq && fbq('track', 'CompleteRegistration');
+        if ((+new Date()) - (+new Date(user.created)) < 1000 * 60 * 60 * 3) {
+            completeRegistration();
+        }
     } catch (e) {
         yield put(authActions.error(e.response?.data?.code === ApiErrors.ErrorInvalidAuthCode ? 'Неверный код' : getApiErrorMessage(e)));
     }

@@ -18,13 +18,17 @@ type AuthController struct {
 	authService     *service.AuthService
 	tokenService    *service.TokenService
 	userStorage 	*storage.UserStorage
+	mailer          *mailer.Mailer
 }
 
-func (c *AuthController) Init(authCodeService *service.AuthCodeService, authService *service.AuthService, tokenService *service.TokenService, userStorage *storage.UserStorage) {
+func (c *AuthController) Init(authCodeService *service.AuthCodeService, authService *service.AuthService,
+	tokenService *service.TokenService, userStorage *storage.UserStorage, mailer *mailer.Mailer) {
+
 	c.authCodeService = authCodeService
 	c.authService = authService
 	c.tokenService = tokenService
 	c.userStorage = userStorage
+	c.mailer = mailer
 }
 
 func (c *AuthController) Email(w http.ResponseWriter, r *http.Request) {
@@ -40,7 +44,7 @@ func (c *AuthController) Email(w http.ResponseWriter, r *http.Request) {
 
 	authCode := c.authCodeService.Generate(b.Email)
 
-	err := mailer.Mail(
+	err := c.mailer.Mail(
 		[]string{ b.Email },
 		"Код для входа на сайт",
 		struct {

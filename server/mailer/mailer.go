@@ -1,7 +1,9 @@
 package mailer
 
 import (
+	"binom/server/dataType"
 	"binom/server/functions"
+	"binom/server/storage"
 	"bytes"
 	"html/template"
 	"log"
@@ -27,11 +29,19 @@ var smptMailConfig = struct {
 	"ei&UVTpro9T4",
 }
 
-func Mail(to []string, subject string, body interface{}, emailType EmailType) error {
-	return send(to, subject, body, emailType, 2)
+type Mailer struct {
+	sentEmailStorage *storage.SentEmailStorage
 }
 
-func send(to []string, subject string, body interface{}, emailType EmailType, tries int) error {
+func (m *Mailer) Init(sentEmailStorage *storage.SentEmailStorage)  {
+	m.sentEmailStorage = sentEmailStorage
+}
+
+func (m *Mailer) Mail(to []string, subject string, body interface{}, emailType EmailType) error {
+	return m.send(to, subject, body, emailType, 2)
+}
+
+func (m *Mailer) send(to []string, subject string, body interface{}, emailType EmailType, tries int) error {
 	var messageBody bytes.Buffer
 	tpl := messageTemplate(emailType)
 	err := tpl.Execute(&messageBody, body)
@@ -53,7 +63,16 @@ func send(to []string, subject string, body interface{}, emailType EmailType, tr
 
 	if err != nil && tries > 0 {
 		log.Println(tries)
-		return send(to, subject, body, emailType, tries - 1)
+		return m.send(to, subject, body, emailType, tries - 1)
+	}
+
+	if err == nil {
+		m.sentEmailStorage.Create(&dataType.SentEmail{
+			Sender:    *from,
+			Recipient: to,
+			Subject:   subject,
+			Body:      messageBody.String(),
+		})
 	}
 
 	return err

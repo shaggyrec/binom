@@ -14,12 +14,14 @@ type NotificationService struct {
 	notificationStorage *storage.NotificationStorage
 	userStorage *storage.UserStorage
 	technicalTelegramBot *telegramBot.BotForChat
+	mailer *mailer.Mailer
 }
 
-func (s *NotificationService) Init(notificationStorage *storage.NotificationStorage, userStorage *storage.UserStorage, technicalTelegramBot *telegramBot.BotForChat) {
+func (s *NotificationService) Init(notificationStorage *storage.NotificationStorage, userStorage *storage.UserStorage, technicalTelegramBot *telegramBot.BotForChat, mailer *mailer.Mailer) {
 	s.notificationStorage = notificationStorage
 	s.userStorage = userStorage
 	s.technicalTelegramBot = technicalTelegramBot
+	s.mailer = mailer
 }
 
 func (s *NotificationService) Create(notification *dataType.Notification, userIds []string) error {
@@ -35,7 +37,7 @@ func (s *NotificationService) Create(notification *dataType.Notification, userId
 		}
 	}
 	for _, user := range s.userStorage.GetUsersByIds(userIds) {
-		err = mailer.Mail(
+		err = s.mailer.Mail(
 			[]string{user.Email.String},
 			"Binom.school: " + dataType.NotificationTypeDescMap[notification.Type.Int64],
 			struct {

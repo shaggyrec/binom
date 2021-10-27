@@ -14,7 +14,7 @@ import (
 func Init(dc *dependencyContainer.DC, db *pg.DB, jwtSecret, uploadPath, host, version string) *chi.Mux {
 	// controllers
 	authController := controllers.AuthController{}
-	authController.Init(dc.Services.AuthCode, dc.Services.Auth, dc.Services.Token, dc.Storages.User)
+	authController.Init(dc.Services.AuthCode, dc.Services.Auth, dc.Services.Token, dc.Storages.User, dc.Mailer)
 	pageController := controllers.PageController{}
 	pageController.Init(dc.Storages.Topic, dc.Storages.Lesson, dc.Storages.Tariff, host, version)
 	userController := controllers.UserController{}

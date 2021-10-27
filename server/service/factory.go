@@ -1,6 +1,7 @@
 package service
 
 import (
+	"binom/server/mailer"
 	"binom/server/storage"
 	"binom/server/telegramBot"
 	"github.com/go-pg/pg"
@@ -33,9 +34,9 @@ func (f *Factory) MoveAtPosition(db *pg.DB) *MoveAtPositionService {
 	return &service
 }
 
-func (f *Factory) Notification(notificationStorage *storage.NotificationStorage, userStorage *storage.UserStorage, technicalTelegramBot *telegramBot.BotForChat) *NotificationService {
+func (f *Factory) Notification(notificationStorage *storage.NotificationStorage, userStorage *storage.UserStorage, technicalTelegramBot *telegramBot.BotForChat, mailer *mailer.Mailer) *NotificationService {
 	s := NotificationService{}
-	s.Init(notificationStorage, userStorage, technicalTelegramBot)
+	s.Init(notificationStorage, userStorage, technicalTelegramBot, mailer)
 	return &s
 }
 

@@ -293,10 +293,19 @@ button:active {
     display: inline-flex;
 }
 
+.flex-grow-1 {
+    flex-grow: 1;
+}
+.pt-20 {
+    padding-top: 20px;
+}
 @media (min-width: 1024px) {
     .lg\:flex {
         display: flex;
         align-items: baseline;
+    }
+    .lg\:pt-0 {
+        padding-top: 0;
     }
 }
 

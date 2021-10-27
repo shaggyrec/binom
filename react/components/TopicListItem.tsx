@@ -30,6 +30,26 @@ function topicStatusClass(topicStatus: { created: Date, finished: Date }): strin
     return topicStatus.finished ? 'finished' : 'in-progress'
 }
 
+function openDateBlock(topicOpenDate): ReactElement {
+    if (!topicOpenDate) {
+        return null;
+    }
+    const openDate = getOpenDate(topicOpenDate);
+    if (+new Date() > +openDate) {
+        return null;
+    }
+    return (
+        <Paddingable padding={[5,10,0]}>
+            <div className="text text-red">
+                <small>
+                    откроется&nbsp;
+                    <Moment locale="ru" format="DD MMMM">{openDate}</Moment>
+                </small>
+            </div>
+        </Paddingable>
+    );
+}
+
 function renderTopicButtonsBlock(isAdmin, topic, isPreviousFinished) {
     if (isAdmin) {
         return (
@@ -51,27 +71,11 @@ function renderTopicButtonsBlock(isAdmin, topic, isPreviousFinished) {
         );
     }
 
-    if (topic.openDate) {
-        const openDate = getOpenDate(topic.openDate);
-        if (+new Date() < +openDate) {
-            return (
-                <Paddingable padding={[5,0,0]}>
-                    <div className="text text-red">
-                        <small>
-                            откроется&nbsp;
-                            <Moment locale="ru" format="DD MMMM">{openDate}</Moment>
-                        </small>
-                    </div>
-                </Paddingable>
-            );
-        }
-    }
-
     if (isPreviousFinished && (!topic.status || !topic.status.finished) && topic.lessons?.length > 0) {
         return (
-            <div style={{ flexGrow: 1, textAlign: 'right' }}>
+            <div className="pt-20 lg:pt-0 text-center">
                 <Link to={`/lesson/${topic?.status ? topic.lessons.find(l => l.id === topic.status.lessonId).alias : topic.lessons[0].alias}`}>
-                    <Button green>{topic.status ? 'Продолжить' : 'Начать'}</Button>
+                    <Button block green>{topic.status ? 'Продолжить' : 'Начать'}</Button>
                 </Link>
             </div>
         );
@@ -102,15 +106,20 @@ function TopicListItem({ topic, isOpen, isPreviousFinished, onClick, isAdmin, ch
     const isBlocked = !isAdmin && checkOpenDate(topic.openDate);
     return (
         <div className={`card hover transition3 ${isOpen ? ' pointer' : ''} ${topicStatusClass(topic.status)}`}>
-            <div className="flex flex-vertical-top outline-background gap-10" onClick={onClick}>
-                <div>
-                    {renderIcon(topic.status, !isPreviousFinished)}
-                </div>
-                <div>
-                    <div className="card-title">{topic.name}</div>
-                    <div className="card-info">
-                        {!isBlocked && topic.lessons && <span>{topic.lessons.length} уроков</span>}
+            <div className="lg:flex flex-vertical-top flex-between outline-background gap-10" onClick={onClick}>
+                <div className="lg:flex flex-vertical-top">
+                    <div className="flex flex-vertical-top">
+                        <div>
+                            {renderIcon(topic.status, !isPreviousFinished)}
+                        </div>
+                        <div>
+                            <div className="card-title">{topic.name}</div>
+                            <div className="card-info">
+                                {!isBlocked && topic.lessons && <span>{topic.lessons.length} уроков</span>}
+                            </div>
+                        </div>
                     </div>
+                    {topic.openDate && openDateBlock(topic.openDate)}
                 </div>
                 {renderTopicButtonsBlock(isAdmin, topic, isPreviousFinished)}
             </div>

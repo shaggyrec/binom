@@ -1,7 +1,7 @@
 import React from 'react';
 import { ReactElement } from 'react';
 
-function Textarea({ value, onChange, label, height = undefined, placeholder = '', autoFocus }): ReactElement {
+function Textarea({ value, onChange, label, height = undefined, placeholder = '', autoFocus = false }): ReactElement {
     function handleChange({ target: { value } }) {
         onChange(value);
     }

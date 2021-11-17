@@ -67,6 +67,7 @@ func (c *PageController) renderTemplate(name string, w http.ResponseWriter, r *h
 		c.viewsPath + "/" + name + ".html",
 		c.viewsPath + "/parts/footer.html",
 		c.viewsPath + "/parts/counters.html",
+		c.viewsPath + "/parts/jivosite.html",
 	)).Execute(w, data)
 	if err != nil {
 		fmt.Println(err)

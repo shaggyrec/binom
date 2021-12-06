@@ -35,7 +35,7 @@ services:
     command: ["./scripts/wait-for-it.sh", "pg:5432", "--", "gow", "run", "."]
     ports:
       - ${APP_PORT}:${APP_PORT}
-    restart: always
+    restart: on-failure
     depends_on:
       - pg
     env_file:

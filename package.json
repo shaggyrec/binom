@@ -5,7 +5,10 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "parcel react/index.html",
-    "build": "parcel build react/index.tsx && cp -R react/static/* dist/"
+    "start:widgets": "parcel react/widgets/index.html",
+    "build": "npm run build:react && npm run build:widgets",
+    "build:react": "parcel build react/index.tsx && cp -R react/static/* dist/",
+    "build:widgets": "parcel build react/widgets/index.tsx -o widgets.js"
   },
   "author": "Alexander Shogenov <i@shagg.ru>",
   "license": "UNLICENSED",

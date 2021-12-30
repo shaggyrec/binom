@@ -7,9 +7,7 @@ import { createBrowserHistory } from 'history';
 import rootReducer from './ducks';
 import rootSaga from './sagas';
 import configureStore from './store';
-import Header from './containers/Header';
 import Root from './containers/Root';
-import BottomMenu from './containers/Footer';
 
 
 export const history = createBrowserHistory();

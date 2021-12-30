@@ -3,6 +3,8 @@ import React, { ReactElement, useEffect } from 'react';
 import { Route, Switch } from 'react-router';
 import { connect } from 'react-redux';
 
+import '../css/elements.css';
+
 import { RootState } from '../Application';
 import Home from './Home';
 import Auth from './Auth';

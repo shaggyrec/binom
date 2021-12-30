@@ -52,8 +52,12 @@ func (c *PageController) MiniLanding (w http.ResponseWriter, r *http.Request)  {
 	c.renderTemplate("mini-landing", w, r, nil)
 }
 
-func (c *PageController) Privacy(w http.ResponseWriter, r *http.Request)  {
+func (c *PageController) Privacy(w http.ResponseWriter, r *http.Request) {
 	c.renderTemplate("privacy", w, r, nil)
+}
+
+func (c* PageController) Subscribe(w http.ResponseWriter, r *http.Request) {
+	c.renderTemplate("subscribe", w, r, nil)
 }
 
 func (c *PageController) renderTemplate(name string, w http.ResponseWriter, r *http.Request, data map[string]interface{}) {

@@ -52,6 +52,7 @@ func (s *NotificationService) Create(notification *dataType.Notification, userId
 				Meta: notification.Meta,
 			},
 			mailer.TypeNotification,
+			nil,
 		)
 	}
 	return err

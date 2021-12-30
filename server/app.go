@@ -72,6 +72,7 @@ func Init(dc *dependencyContainer.DC, db *pg.DB, jwtSecret, uploadPath, host, ve
 		r.Route("/auth", func(r chi.Router) {
 			r.Post("/email", authController.Email)
 			r.Post("/code", authController.CheckCodeAndAuth)
+			r.Post("/subscribe", authController.Subscribe)
 			r.Post("/refresh", authController.RefreshToken)
 		})
 		r.Route("/payment", func(r chi.Router) {
@@ -169,6 +170,7 @@ func Init(dc *dependencyContainer.DC, db *pg.DB, jwtSecret, uploadPath, host, ve
 		})
 	})
 	r.Get("/m", pageController.MiniLanding)
+	r.Get("/s", pageController.Subscribe)
 	r.Get("/*", pageController.App)
 	return r
 }

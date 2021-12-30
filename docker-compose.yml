@@ -4,7 +4,7 @@ services:
   pg:
     build: db
     command: postgres
-    restart: always
+    restart: on-failure
     ports:
       - "5432:5432"
     volumes:

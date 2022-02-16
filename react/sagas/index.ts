@@ -17,6 +17,7 @@ import * as applicationActions from '../ducks/application';
 import { usersRating } from './usersRating';
 import { posts } from './posts';
 import { postComments } from './postComments';
+import { courses } from './courses';
 
 const MAX_REQUEST_TRIES = 10;
 let tries = 0;
@@ -66,5 +67,6 @@ export default function* rootSaga(): any {
         usersRating(),
         posts(),
         postComments(),
+        courses(),
     ]);
 }

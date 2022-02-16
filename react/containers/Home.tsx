@@ -12,9 +12,11 @@ import { Link } from 'react-router-dom';
 import Button from '../components/Button';
 import { Redirect } from 'react-router';
 import DemoUserMessage from '../components/DemoUserMessage';
+import * as coursesActions  from '../ducks/courses';
 
-function Home({ topics, requestTopics, isAdmin, moveTopicAtPosition, moveLessonAtPosition, loading, currentLesson, me, isDemo }): ReactElement {
+function Home({ topics, requestTopics, isAdmin, moveTopicAtPosition, moveLessonAtPosition, loading, currentLesson, me, isDemo, requestCourse }): ReactElement {
     useEffect(() => {
+        requestCourse(process.env.DEFAULT_COURSE_ID);
         if (!topics || topics.length === 0) {
             requestTopics();
         }
@@ -87,6 +89,7 @@ export default connect(
     dispatch => ({
         requestTopics: () => dispatch(topicsActions.requestList()),
         moveTopicAtPosition: (id, pos) => dispatch(topicsActions.moveAtPosition(id, pos)),
-        moveLessonAtPosition: (id, pos) => dispatch(lessonsActions.moveAtPosition(id, pos))
+        moveLessonAtPosition: (id, pos) => dispatch(lessonsActions.moveAtPosition(id, pos)),
+        requestCourse: id => dispatch(coursesActions.requestCourse(id)),
     })
 )(Home);

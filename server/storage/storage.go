@@ -118,6 +118,12 @@ func (f *Factory) SentEmail(db *pg.DB) *SentEmailStorage {
 	return &storage
 }
 
+func (f *Factory) Course(db *pg.DB) *CourseStorage {
+	storage := CourseStorage{}
+	storage.Init(db)
+	return &storage
+}
+
 func statusToInt(status interface{}) int64 {
 	if reflect.TypeOf(status).Name() == "int" {
 		return int64(status.(int))

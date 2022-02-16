@@ -41,6 +41,8 @@ func Init(dc *dependencyContainer.DC, db *pg.DB, jwtSecret, uploadPath, host, ve
 	postController.Init(dc.Storages.PostStorage, db)
 	postCommentController := controllers.PostCommentController{}
 	postCommentController.Init(dc.Storages.PostCommentStorage)
+	courseController := controllers.CourseController{}
+	courseController.Init(dc.Storages.CourseStorage)
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
@@ -68,7 +70,7 @@ func Init(dc *dependencyContainer.DC, db *pg.DB, jwtSecret, uploadPath, host, ve
 		r.Use(middlewares.JwtAuth(jwtSecret, dc.Storages.UtmStorage))
 		r.Get("/file/{id}", fileController.Serve)
 	})
-	r.Route("/api" , func(r chi.Router) {
+	r.Route("/api", func(r chi.Router) {
 		r.Route("/auth", func(r chi.Router) {
 			r.Post("/email", authController.Email)
 			r.Post("/code", authController.CheckCodeAndAuth)
@@ -87,6 +89,9 @@ func Init(dc *dependencyContainer.DC, db *pg.DB, jwtSecret, uploadPath, host, ve
 					r.Put("/{userId}", userController.Update)
 				})
 				r.Get("/{username}", userController.ByUsername)
+			})
+			r.Route("/courses", func(r chi.Router) {
+				r.Get("/{id}", courseController.ById)
 			})
 			r.Route("/topic", func(r chi.Router) {
 				r.Get("/list", topicController.List)

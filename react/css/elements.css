@@ -239,3 +239,39 @@ a, .a {
     height: 80px;
     animation: loaderAnimation 1.5s infinite;
 }
+
+.social {
+    width: 32px;
+    height: 32px
+}
+
+.fill-green {
+    fill: #069668;
+}
+
+.flex {
+    display: flex;
+}
+
+.gap-10 {
+    gap: 10px;
+}
+
+.overlay {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    top: 0;
+    z-index: 20;
+    background: rgba(255,255,255,.7);
+    padding: 0 20px;
+    display: flex;
+}
+
+.overlay-content {
+    width: 100%;
+    position: relative;
+    max-width: 1500px;
+    margin: 0 auto;
+}

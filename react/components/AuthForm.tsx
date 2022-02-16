@@ -79,7 +79,7 @@ function AuthForm({
             </Form>
             {codeId &&
             <Paddingable padding={[40, 0]}>
-                <a href={backLink}><Back size={15} fill="#039151"/> Ввести email заново</a>
+                <a href={backLink}><div style={{ display: 'inline-block' }}><Back size={15} fill="#039151"/></div> Ввести email заново</a>
             </Paddingable>
             }
             <Loader show={loading} />

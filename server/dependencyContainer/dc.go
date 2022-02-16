@@ -9,35 +9,36 @@ import (
 )
 
 type DC struct {
-	Db *pg.DB
-	Storages struct{
-		AuthCode *storage.AuthCodeStorage
-		Token *storage.TokenStorage
-		User *storage.UserStorage
-		Topic *storage.TopicStorage
-		Lesson *storage.LessonStorage
-		File *storage.FileStorage
-		LessonComment *storage.LessonCommentStorage
-		Notification *storage.NotificationStorage
-		Tariff *storage.TariffStorage
-		TariffPrice *storage.TariffPriceStorage
-		UserSubscription *storage.UserSubscriptionStorage
-		Transaction *storage.TransactionStorage
-		PointsMovement *storage.PointsMovementStorage
-		PostStorage *storage.PostStorage
-		PostCommentStorage *storage.PostCommentStorage
-		UtmStorage *storage.UtmStorage
-		SentEmail *storage.SentEmailStorage
+	Db       *pg.DB
+	Storages struct {
+		AuthCode             *storage.AuthCodeStorage
+		Token                *storage.TokenStorage
+		User                 *storage.UserStorage
+		Topic                *storage.TopicStorage
+		Lesson               *storage.LessonStorage
+		File                 *storage.FileStorage
+		LessonComment        *storage.LessonCommentStorage
+		Notification         *storage.NotificationStorage
+		Tariff               *storage.TariffStorage
+		TariffPrice          *storage.TariffPriceStorage
+		UserSubscription     *storage.UserSubscriptionStorage
+		Transaction          *storage.TransactionStorage
+		PointsMovement       *storage.PointsMovementStorage
+		PostStorage          *storage.PostStorage
+		PostCommentStorage   *storage.PostCommentStorage
+		UtmStorage           *storage.UtmStorage
+		SentEmail            *storage.SentEmailStorage
+		QuestionnaireStorage *storage.QuestionnaireStorage
 	}
-	Services struct{
-		Token *service.TokenService
-		AuthCode *service.AuthCodeService
-		Auth *service.AuthService
+	Services struct {
+		Token          *service.TokenService
+		AuthCode       *service.AuthCodeService
+		Auth           *service.AuthService
 		MoveAtPosition *service.MoveAtPositionService
-		Notification *service.NotificationService
+		Notification   *service.NotificationService
 		LessonProgress *service.LearningProgressService
-		YooMoney *service.YoomoneyService
-		UserScore *service.UserScoreService
+		YooMoney       *service.YoomoneyService
+		UserScore      *service.UserScoreService
 	}
 
 	Mailer *mailer.Mailer
@@ -75,6 +76,7 @@ func (dc *DC) initStorages() {
 	dc.Storages.PostCommentStorage = storageFactory.PostComment(dc.Db)
 	dc.Storages.UtmStorage = storageFactory.Utm(dc.Db)
 	dc.Storages.SentEmail = storageFactory.SentEmail(dc.Db)
+	dc.Storages.QuestionnaireStorage = storageFactory.Questionnaire(dc.Db)
 }
 
 func (dc *DC) initServices(host, jwtSecret string, technicalTelegramBot *telegramBot.BotForChat) {
@@ -93,4 +95,3 @@ func (dc *DC) initDependencies() {
 	dc.Mailer = &mailer.Mailer{}
 	dc.Mailer.Init(dc.Storages.SentEmail)
 }
-

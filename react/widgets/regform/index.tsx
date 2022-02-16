@@ -84,7 +84,9 @@ function RegForm({
             <div>
                 <p>{successMessage}</p>
                 <h4>Подписывайся на нас в соцсетях:</h4>
-                <SocialNetworks />
+                <div className="py-4">
+                    <SocialNetworks />
+                </div>
             </div>
         );
     }

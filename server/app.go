@@ -16,7 +16,7 @@ func Init(dc *dependencyContainer.DC, db *pg.DB, jwtSecret, uploadPath, host, ve
 	authController := controllers.AuthController{}
 	authController.Init(dc.Services.AuthCode, dc.Services.Auth, dc.Services.Token, dc.Storages.User, dc.Mailer)
 	pageController := controllers.PageController{}
-	pageController.Init(dc.Storages.Topic, dc.Storages.Lesson, dc.Storages.Tariff, host, version)
+	pageController.Init(dc.Storages.Topic, dc.Storages.Lesson, dc.Storages.Tariff, host, version, dc.Storages.QuestionnaireStorage)
 	userController := controllers.UserController{}
 	userController.Init(dc.Storages.User)
 	topicController := controllers.TopicController{}
@@ -43,6 +43,8 @@ func Init(dc *dependencyContainer.DC, db *pg.DB, jwtSecret, uploadPath, host, ve
 	postCommentController.Init(dc.Storages.PostCommentStorage)
 	courseController := controllers.CourseController{}
 	courseController.Init(dc.Storages.CourseStorage)
+	questionnaireController := controllers.QuestionnaireController{}
+	questionnaireController.Init(dc.Storages.QuestionnaireStorage)
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
@@ -171,6 +173,9 @@ func Init(dc *dependencyContainer.DC, db *pg.DB, jwtSecret, uploadPath, host, ve
 					r.Post("/", postCommentController.Create)
 					r.Get("/", postCommentController.ListByPostId)
 				})
+			})
+			r.Route("/questionnaire", func(r chi.Router) {
+				r.Post("/", questionnaireController.Submit)
 			})
 		})
 	})

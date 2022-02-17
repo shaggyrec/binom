@@ -4,8 +4,17 @@ import { AxiosResponse } from 'axios';
 import { serverRequest } from '../../functions';
 import { storeTokens } from '../../tokens';
 import '../../css/elements.css';
+import Questionnaire from '../../components/Questionnaire';
+import SocialNetworks from '../../components/SocialNetworks';
+import Loader from '../../components/Loader';
 
-function RegForm({ title = 'Вход', successMessage = 'Ты зарегистрирован', backLink = '/auth', buttonTitle = undefined }) {
+function RegForm({
+    title = 'Вход',
+    successMessage = 'Ты зарегистрирован(а)',
+    backLink = '/auth',
+    buttonTitle = undefined,
+    questionnaire = undefined,
+}) {
 
     const [email, setEmail] = useState('');
     const [code, setCode] = useState('');
@@ -13,6 +22,7 @@ function RegForm({ title = 'Вход', successMessage = 'Ты зарегистр
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [finished, setFinished] = useState(false);
+    const [questionnaireInProcess, setQuestionnaireInProcess] = useState(false);
 
     useEffect(() => {
         if (code.length === 6) {
@@ -41,7 +51,7 @@ function RegForm({ title = 'Вход', successMessage = 'Ты зарегистр
             setLoading(true);
             const { data: { tokens: { accessToken, refreshToken, accessTokenExpired } } }: AxiosResponse = await serverRequest('/api/auth/subscribe', 'post', { id: codeId, code });
             storeTokens(accessToken, refreshToken, accessTokenExpired);
-            setFinished(true);
+            questionnaire && questionnaire.length > 0 ? setQuestionnaireInProcess(true) : setFinished(true);
             await serverRequest('/api/me', 'get');
         } catch (e) {
             setError(e.message);
@@ -49,8 +59,36 @@ function RegForm({ title = 'Вход', successMessage = 'Ты зарегистр
         setLoading(false);
     }
 
+    async function sendQuestionnaire(answers) {
+        setLoading(true);
+        await serverRequest('/api/questionnaire', 'post', answers);
+        setQuestionnaireInProcess(false);
+        setFinished(true);
+        setLoading(false);
+    }
+
+    if (questionnaireInProcess) {
+        return (
+            <>
+                <Questionnaire
+                    questions={questionnaire}
+                    onSubmit={sendQuestionnaire}
+                />
+                <Loader show={loading}/>
+            </>
+        );
+    }
+
     if (finished) {
-        return <div>{successMessage}</div>
+        return (
+            <div>
+                <p>{successMessage}</p>
+                <h4>Подписывайся на нас в соцсетях:</h4>
+                <div className="py-4">
+                    <SocialNetworks />
+                </div>
+            </div>
+        );
     }
 
     return (

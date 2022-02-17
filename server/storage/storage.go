@@ -123,6 +123,11 @@ func (f *Factory) Course(db *pg.DB) *CourseStorage {
 	storage.Init(db)
 	return &storage
 }
+func (f *Factory) Questionnaire(db *pg.DB) *QuestionnaireStorage {
+	storage := QuestionnaireStorage{}
+	storage.Init(db)
+	return &storage
+}
 
 func statusToInt(status interface{}) int64 {
 	if reflect.TypeOf(status).Name() == "int" {

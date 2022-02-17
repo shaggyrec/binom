@@ -98,7 +98,7 @@
             </div>
         </div>
     </div>
-    <div class="py-8 max-w-screen-xl mx-auto px-5">
+    <div class="py-8 max-w-screen-xl mx-auto px-5 xl:px-48">
         Приближается весна – время года, когда солнца становится больше, но выпускники озабочены совсем другим – осталось три месяца до ЕГЭ.<br/><br/>
         Кто-то с начала учебного года готовится к экзамену, а кто-то только начинает подготовку.
         Но для каждого из них это очень важный период.<br/><br/>
@@ -135,8 +135,13 @@
 <script>
     window.RegForm({
         title: 'Зарегистрируйся и получи шпаргалку по ЕГЭ',
-        backLink: '/subscribe',
-        buttonTitle: 'Регистрация'
+        backLink: '/s',
+        buttonTitle: 'Регистрация',
+        questionnaire: [
+            {{range .Questions}}
+                { id: {{.Id}}, question: {{.Question}} },
+            {{end}}
+        ]
     }, '#registration-form');
 </script>
 {{template "counters.html" .}}

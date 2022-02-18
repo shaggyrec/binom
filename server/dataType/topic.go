@@ -16,6 +16,8 @@ type Topic struct {
 	Status   *UserTopic  `pg:"rel:has-one" json:"status"`
 	OpenDate null.String `json:"openDate"`
 	CourseId string      `json:"courseId"`
+	Course   Course      `json:"course"`
+	Price    int         `json:"price" sql:",notnull"`
 }
 
 type UserTopic struct {

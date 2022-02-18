@@ -39,10 +39,10 @@ func (s *TopicStorage) Update(id string, topicMap map[string]interface{}) error 
 
 func (s *TopicStorage) List(limit int, offset int, withLessons bool, userId string) (*[]dataType.Topic, error) {
 	var topics []dataType.Topic
-	stmt := s.db.Model(&topics)
+	stmt := s.db.Model(&topics).Relation("Course")
 	if withLessons {
 		stmt.Relation("Lessons", func(q *orm.Query) (*orm.Query, error) {
-			return q.Column("lesson.id", "lesson.name" , "lesson.topic_id", "lesson.alias").OrderExpr("lesson.pos ASC, lesson.created ASC"), nil
+			return q.Column("lesson.id", "lesson.name", "lesson.topic_id", "lesson.alias").OrderExpr("lesson.pos ASC, lesson.created ASC"), nil
 		})
 	}
 

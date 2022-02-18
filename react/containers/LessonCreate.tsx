@@ -18,7 +18,7 @@ function LessonCreate({ submitForm, loading, topics, requestTopics }) {
             <div className="w-600 centered">
                 <h1>Новый урок</h1>
                 <CreateForm
-                    categories={topics.map(c => ({ value: c.id, title: c.name }))}
+                    categories={topics.map(c => ({ value: c.id, title: `${c.name} (${c.course.name})` }))}
                     onSubmit={submitForm}
                 />
             </div>

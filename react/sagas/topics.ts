@@ -14,8 +14,10 @@ function* afterwards() {
 
 function* requestListProcess(): IterableIterator<any> {
     try {
-        const topics = yield call(apiRequest,'/api/topic/list?withLessons=true');
-        yield put(topicsActions.topics(topics));
+        // TODO Separate for different courses and for admin editing
+        const course: { topics: any[] } = yield call(apiRequest, '/api/courses/' + process.env.DEFAULT_COURSE_ID)
+        // const topics = yield call(apiRequest,'/api/topic/list?withLessons=true');
+        yield put(topicsActions.topics(course.topics));
     } catch (e) {
         yield put(topicsActions.error(e.message))
     }
@@ -29,9 +31,9 @@ function* requestProcess({ payload: alias }): IterableIterator<any> {
     }
 }
 
-function* createProcess({ payload: { name, alias } }): IterableIterator<any> {
+function* createProcess({ payload: { name, alias, course } }): IterableIterator<any> {
     try {
-        const topic: Topic = yield call(apiRequest, '/api/topic', 'post', { name, alias });
+        const topic: Topic = yield call(apiRequest, '/api/topic', 'post', { name, alias, courseId: course });
         yield put(topicsActions.topic(topic));
         yield put(push('/topic/' + topic.alias));
     } catch (e) {

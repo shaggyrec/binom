@@ -19,6 +19,17 @@ function* requestCourseProcess({ payload }): IterableIterator<any> {
     }
 }
 
+function* requestProcess(): IterableIterator<any> {
+    try {
+        yield put(coursesActions.list(yield call(apiRequest, '/api/courses')));
+    } catch (e) {
+        const m = getApiErrorMessage(e)
+        yield put(applicationActions.error(m));
+        yield put(coursesActions.error(m));
+    }
+}
+
 export function* courses(): IterableIterator<ForkEffect> {
     yield takeEvery(coursesActions.requestCourse, requestCourseProcess);
+    yield takeEvery(coursesActions.request, requestProcess);
 }

@@ -26,11 +26,11 @@ func Init(dc *dependencyContainer.DC, db *pg.DB, jwtSecret, uploadPath, host, ve
 	fileController := controllers.FileController{}
 	fileController.Init(uploadPath, dc.Storages.File)
 	lessonCommentController := controllers.LessonCommentController{}
-	lessonCommentController.Init(dc.Storages.LessonComment, dc.Services.Notification, dc.Storages.User)
+	lessonCommentController.Init(dc.Storages.LessonComment, dc.Services.Notification, dc.Storages.User, dc.Storages.ProgressStorage)
 	notificationController := controllers.NotificationController{}
 	notificationController.Init(dc.Services.Notification)
 	learningProgressController := controllers.LearningProgressController{}
-	learningProgressController.Init(dc.Services.LessonProgress, dc.Services.Notification, dc.Services.UserScore)
+	learningProgressController.Init(dc.Services.LearningProgress, dc.Services.Notification, dc.Services.UserScore, dc.Storages.Lesson, dc.Storages.ProgressStorage, dc.Storages.Topic)
 	tariffController := controllers.TariffController{}
 	tariffController.Init(dc.Storages.Tariff, dc.Storages.TariffPrice, dc.Storages.UserSubscription, dc.Services.YooMoney)
 	paymentController := controllers.PaymentController{}
@@ -93,6 +93,7 @@ func Init(dc *dependencyContainer.DC, db *pg.DB, jwtSecret, uploadPath, host, ve
 				r.Get("/{username}", userController.ByUsername)
 			})
 			r.Route("/courses", func(r chi.Router) {
+				r.Get("/", courseController.List)
 				r.Get("/{id}", courseController.ById)
 			})
 			r.Route("/topic", func(r chi.Router) {
@@ -110,7 +111,7 @@ func Init(dc *dependencyContainer.DC, db *pg.DB, jwtSecret, uploadPath, host, ve
 			r.Route("/lesson", func(r chi.Router) {
 				r.Group(func(r chi.Router) {
 					r.Use(middlewares.AccessToLesson(db, dc.Storages.UserSubscription))
-					r.Use(middlewares.LessonProgress(dc.Services.LessonProgress, dc.Storages.Lesson, dc.Storages.Topic))
+					r.Use(middlewares.LessonProgress(dc.Services.LearningProgress, dc.Storages.Lesson, dc.Storages.Topic))
 					r.Get("/{alias}", lessonController.GetOneLesson)
 				})
 				r.Group(func(r chi.Router) {

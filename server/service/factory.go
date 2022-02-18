@@ -7,7 +7,7 @@ import (
 	"github.com/go-pg/pg"
 )
 
-type Factory struct {}
+type Factory struct{}
 
 func (f *Factory) AuthCodeService(authCodeStorage *storage.AuthCodeStorage) *AuthCodeService {
 	authCodeService := AuthCodeService{}
@@ -54,5 +54,11 @@ func (f *Factory) Yoomoney(host string) *YoomoneyService {
 func (f *Factory) UserScore(lessonStorage *storage.LessonStorage, userStorage *storage.UserStorage, pointsMovementStorage *storage.PointsMovementStorage, db *pg.DB) *UserScoreService {
 	s := UserScoreService{}
 	s.Init(lessonStorage, userStorage, pointsMovementStorage, db)
+	return &s
+}
+
+func (f *Factory) LearningProgress(db *pg.DB, progressStorage *storage.ProgressStorage) *ProgressService {
+	s := ProgressService{}
+	s.Init(db, progressStorage)
 	return &s
 }

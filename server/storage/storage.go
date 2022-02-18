@@ -129,6 +129,12 @@ func (f *Factory) Questionnaire(db *pg.DB) *QuestionnaireStorage {
 	return &storage
 }
 
+func (f *Factory) ProgressStorage(db *pg.DB) *ProgressStorage {
+	storage := ProgressStorage{}
+	storage.Init(db)
+	return &storage
+}
+
 func statusToInt(status interface{}) int64 {
 	if reflect.TypeOf(status).Name() == "int" {
 		return int64(status.(int))

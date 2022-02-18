@@ -12,6 +12,6 @@ type Course struct {
 	Text    null.String `json:"text"`
 	Pos     null.Int    `json:"pos"`
 	Alias   null.String `json:"alias"`
-	Topics  *[]Topic    `pg:"rel:has-many" json:"topics"`
+	Topics  []Topic     `pg:"rel:has-many" json:"topics"`
 	Active  bool        `json:"active"`
 }

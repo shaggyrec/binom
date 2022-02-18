@@ -54,7 +54,7 @@ func (s *LessonStorage) GetById(id string) (*dataType.Lesson, error) {
 
 func (s *LessonStorage) GetByAlias(alias string) (*dataType.Lesson, error) {
 	var l = &dataType.Lesson{}
-	err := s.db.Model(l).Where("alias = ?", alias).Select()
+	err := s.db.Model(l).Relation("Topic").Where("lesson.alias = ?", alias).Select()
 
 	return l, err
 }
@@ -82,7 +82,7 @@ func (s *LessonStorage) mapDbRow(data map[string]interface{}) *dataType.Lesson {
 		lesson.Name.Valid = true
 	}
 
-	if val, ok := data["text"]; ok && val != nil  {
+	if val, ok := data["text"]; ok && val != nil {
 		lesson.Text.String = val.(string)
 		lesson.Text.Valid = true
 	}

@@ -6,17 +6,18 @@ import (
 )
 
 type Lesson struct {
-	Id string `json:"id"`
-	TopicId string `json:"topicId"`
-	Name null.String `json:"name"`
-	Created pg.NullTime `json:"created"`
-	Text null.String `json:"text"`
-	Pos null.Int `json:"pos"`
-	Task null.String `json:"task"`
-	Alias null.String `json:"alias"`
-	YoutubeVideos []string `json:"youtubeVideos"`
-	Video []string `json:"video"`
-	TaskFiles []string `json:"taskFiles"`
-	TaskValue null.Int `json:"taskValue"`
-	Deadline int `json:"deadline"`
+	Id            string      `json:"id"`
+	TopicId       string      `json:"topicId"`
+	Topic         *Topic      `json:"topic"`
+	Name          null.String `json:"name"`
+	Created       pg.NullTime `json:"created"`
+	Text          null.String `json:"text"`
+	Pos           null.Int    `json:"pos"`
+	Task          null.String `json:"task"`
+	Alias         null.String `json:"alias"`
+	YoutubeVideos []string    `json:"youtubeVideos"`
+	Video         []string    `json:"video"`
+	TaskFiles     []string    `json:"taskFiles"`
+	TaskValue     null.Int    `json:"taskValue"`
+	Deadline      int         `json:"deadline"`
 }

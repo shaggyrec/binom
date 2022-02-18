@@ -14,9 +14,8 @@ import { Redirect } from 'react-router';
 import DemoUserMessage from '../components/DemoUserMessage';
 import * as coursesActions  from '../ducks/courses';
 
-function Home({ topics, requestTopics, isAdmin, moveTopicAtPosition, moveLessonAtPosition, loading, currentLesson, me, isDemo, requestCourse }): ReactElement {
+function Home({ topics, isAdmin, moveTopicAtPosition, moveLessonAtPosition, loading, currentLesson, me, isDemo, requestTopics }): ReactElement {
     useEffect(() => {
-        requestCourse(process.env.DEFAULT_COURSE_ID);
         if (!topics || topics.length === 0) {
             requestTopics();
         }
@@ -34,10 +33,8 @@ function Home({ topics, requestTopics, isAdmin, moveTopicAtPosition, moveLessonA
         moveLessonAtPosition(id, moveToIndex + 1);
     }
 
-    return topics
-        ? (
-            <>
-                {isAdmin &&
+    return (<>
+        {isAdmin &&
                     <TopBar>
                         <div className="flex">
                             <Paddingable padding={[0, 10, 0, 0]}>
@@ -57,23 +54,22 @@ function Home({ topics, requestTopics, isAdmin, moveTopicAtPosition, moveLessonA
                             </Paddingable>
                         </div>
                     </TopBar>
-                }
-                <div className="container">
-                    <DemoUserMessage user={me}/>
-                    <Paddingable padding={[10, 0, 20]}>
-                        <TopicsList
-                            topics={topics}
-                            isAdmin={isAdmin}
-                            onMoveTopic={handleMoveTopic}
-                            onMoveLesson={handleMoveLesson}
-                            isDemo={isDemo}
-                        />
-                    </Paddingable>
-                </div>
-                <Loader show={loading} />
-            </>
-        )
-        : <Loader />;
+        }
+        <div className="container">
+            <DemoUserMessage user={me}/>
+            <Paddingable padding={[10, 0, 20]}>
+                {topics && <TopicsList
+                    topics={topics}
+                    isAdmin={isAdmin}
+                    onMoveTopic={handleMoveTopic}
+                    onMoveLesson={handleMoveLesson}
+                    isDemo={isDemo}
+                />}
+            </Paddingable>
+        </div>
+        <Loader show={loading} />
+    </>
+    );
 }
 
 export default connect(

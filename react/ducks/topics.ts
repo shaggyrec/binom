@@ -35,7 +35,7 @@ export const requestList = createAction(REQUEST_LIST, () => {});
 export const topics = createAction(TOPICS, topics => topics);
 export const topic = createAction(TOPIC, topic => topic);
 export const error = createAction(ERROR, error => error);
-export const create = createAction(CREATE, (name: string, alias: string) => ({ name, alias }));
+export const create = createAction(CREATE, (name: string, alias: string, course: string) => ({ name, alias, course }));
 export const request = createAction(REQUEST, alias => alias);
 export const update = createAction(UPDATE, (id, topic) => ({ id, topic }));
 export const remove = createAction(DELETE, id => id);

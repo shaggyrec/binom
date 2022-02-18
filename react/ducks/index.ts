@@ -12,6 +12,7 @@ import tariffs, { initialState as tariffsState } from './tariffs';
 import usersRating, { initialState as usersRatingState } from './usersRating';
 import posts, { initialState as postsState } from './posts';
 import postComments, { initialState as postCommentsState } from './postComments';
+import courses, { initialState as coursesState } from './courses';
 
 export const initialState = {
     topics: topicsState,
@@ -27,6 +28,7 @@ export const initialState = {
     usersRating: usersRatingState,
     posts: postsState,
     postComments: postCommentsState,
+    courses: coursesState,
 };
 
 export default (router: any = null): Reducer => combineReducers({
@@ -44,4 +46,5 @@ export default (router: any = null): Reducer => combineReducers({
     usersRating,
     posts,
     postComments,
+    courses,
 });

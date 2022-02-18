@@ -6,6 +6,7 @@ import (
 	"binom/server/storage"
 	"fmt"
 	"github.com/go-chi/chi"
+	"log"
 	"net/http"
 )
 
@@ -27,4 +28,16 @@ func (c *CourseController) ById(w http.ResponseWriter, r *http.Request) {
 	}
 
 	functions.RenderJSON(w, r, course)
+}
+
+func (c *CourseController) List(w http.ResponseWriter, r *http.Request) {
+	courses, err := c.storage.List()
+
+	if err != nil {
+		log.Println(err)
+		exceptions.ServerError(w, r)
+		return
+	}
+
+	functions.RenderJSON(w, r, courses)
 }

@@ -16,14 +16,16 @@ import (
 
 type LessonCommentController struct {
 	lessonCommentStorage *storage.LessonCommentStorage
-	notificationService *service.NotificationService
-	userStorage *storage.UserStorage
+	notificationService  *service.NotificationService
+	userStorage          *storage.UserStorage
+	progressStorage      *storage.ProgressStorage
 }
 
-func (c *LessonCommentController) Init(lessonCommentStorage *storage.LessonCommentStorage, notificationService *service.NotificationService, userStorage *storage.UserStorage) {
+func (c *LessonCommentController) Init(lessonCommentStorage *storage.LessonCommentStorage, notificationService *service.NotificationService, userStorage *storage.UserStorage, progressStorage *storage.ProgressStorage) {
 	c.lessonCommentStorage = lessonCommentStorage
 	c.notificationService = notificationService
 	c.userStorage = userStorage
+	c.progressStorage = progressStorage
 }
 
 func (c *LessonCommentController) List(w http.ResponseWriter, r *http.Request) {
@@ -38,11 +40,11 @@ func (c *LessonCommentController) List(w http.ResponseWriter, r *http.Request) {
 	functions.RenderJSON(w, r, *comments)
 }
 
-func (c *LessonCommentController) Add(w http.ResponseWriter, r *http.Request)  {
+func (c *LessonCommentController) Add(w http.ResponseWriter, r *http.Request) {
 	lessonId := chi.URLParam(r, "lesson")
 	userId := chi.URLParam(r, "userId")
 	var comment dataType.LessonComment
-	if err := functions.ParseRequest(w, r, &comment);  err != nil {
+	if err := functions.ParseRequest(w, r, &comment); err != nil {
 		return
 	}
 
@@ -72,7 +74,7 @@ func (c *LessonCommentController) Add(w http.ResponseWriter, r *http.Request)  {
 	if comment.Files != nil && len(comment.Files) > 0 {
 		for _, file := range comment.Files {
 			_, err := c.lessonCommentStorage.AddFile(&dataType.LessonCommentFile{
-				FileId: file.FileId,
+				FileId:          file.FileId,
 				LessonCommentId: comment.Id,
 			})
 			if err != nil {
@@ -91,22 +93,26 @@ func (c *LessonCommentController) Add(w http.ResponseWriter, r *http.Request)  {
 	}
 	if len(comment.Files) > 0 {
 		notificationText += " + файлы"
+		// Если юзер отправил файл ставим урок завершенным
+		if userId == comment.AuthorId {
+			_, err = c.progressStorage.MakeFinished(lessonId, userId)
+		}
 	}
 
 	n := &dataType.Notification{
-		Type: null.IntFrom(dataType.NotificationLessonComment),
-		Message: notificationText,
-		Meta: dataType.NotificationMeta{ Lesson: lessonId, Comment: newLessonComment.Id },
+		Type:     null.IntFrom(dataType.NotificationLessonComment),
+		Message:  notificationText,
+		Meta:     dataType.NotificationMeta{Lesson: lessonId, Comment: newLessonComment.Id},
 		AuthorId: comment.AuthorId,
 	}
 
-	// Если писал сам юзер то нотификацию админам
+	// Если писал сам юзер, то нотификацию админам
 	if userId == comment.AuthorId {
 		user, _ := c.userStorage.Get(userId)
 		n.Message = fmt.Sprintf("Пользователь %s(%s) пишет %s", user.Name.String, user.Username.String, n.Message)
 		err = c.notificationService.CreateForAdmins(n)
 	} else {
-	// Если отвечал админ то нотификацию юзеру
+		// Если отвечал админ то нотификацию юзеру
 		err = c.notificationService.Create(n, []string{userId})
 	}
 
@@ -117,10 +123,10 @@ func (c *LessonCommentController) Add(w http.ResponseWriter, r *http.Request)  {
 	render.JSON(w, r, newLessonComment)
 }
 
-func (c *LessonCommentController) Delete(w http.ResponseWriter, r *http.Request)  {
+func (c *LessonCommentController) Delete(w http.ResponseWriter, r *http.Request) {
 	// commentId := chi.URLParam(r, "id")
 }
 
-func (c *LessonCommentController) Update(w http.ResponseWriter, r *http.Request)  {
+func (c *LessonCommentController) Update(w http.ResponseWriter, r *http.Request) {
 	// commentId := chi.URLParam(r, "id")
 }

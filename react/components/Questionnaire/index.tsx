@@ -10,10 +10,7 @@ function Questionnaire({ questions, onSubmit }) {
     }
 
     function handleSubmit() {
-        const a = Object.values(answers)
-        if (a.length > 0) {
-            onSubmit(a);
-        }
+        onSubmit(Object.values(answers));
     }
 
     return (

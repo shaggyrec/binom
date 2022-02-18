@@ -61,7 +61,12 @@ function RegForm({
 
     async function sendQuestionnaire(answers) {
         setLoading(true);
-        await serverRequest('/api/questionnaire', 'post', answers);
+        if (answers && answers.length > 0) {
+            const a = answers.filter(answer => answer.answer);
+            if (a.length > 0) {
+                await serverRequest('/api/questionnaire', 'post', a);
+            }
+        }
         setQuestionnaireInProcess(false);
         setFinished(true);
         setLoading(false);

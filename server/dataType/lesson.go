@@ -20,4 +20,5 @@ type Lesson struct {
 	TaskFiles     []string    `json:"taskFiles"`
 	TaskValue     null.Int    `json:"taskValue"`
 	Deadline      int         `json:"deadline"`
+	Progress      *Progress   `json:"progress"`
 }

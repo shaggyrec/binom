@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"binom/server/dataType"
 	"binom/server/exceptions"
 	"binom/server/functions"
 	"binom/server/storage"
@@ -19,7 +20,16 @@ func (c *CourseController) Init(storage *storage.CourseStorage) {
 }
 
 func (c *CourseController) ById(w http.ResponseWriter, r *http.Request) {
-	course, err := c.storage.GetById(chi.URLParam(r, "id"))
+	userId := r.Context().Value("userId").(string)
+	userRole := r.Context().Value("userRole").(int)
+
+	userIdForListRequest := ""
+
+	if userRole != dataType.UserRoleAdmin {
+		userIdForListRequest = userId
+	}
+
+	course, err := c.storage.GetById(chi.URLParam(r, "id"), userIdForListRequest)
 
 	if err != nil {
 		fmt.Println(err)

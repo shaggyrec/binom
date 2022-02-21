@@ -6,21 +6,15 @@ import Paddingable from './Paddingable';
 import { Checked, Edit, Locked, Processing } from './Icons';
 import moment from 'moment';
 import Moment from 'react-moment';
+import { TopicStatus } from '../dataTypes/topic';
 
-function renderIcon(topicStatus: { created: Date, finished: Date, lessonId: string }, isPreviousFinished) {
-    if (!topicStatus) {
-        return isPreviousFinished
-            ? <div className="card-icon"><Locked size={25} /></div>
-            : <div className="card-icon card-icon-paragraph">§</div>;
-    }
-    return (
-        <div className="card-icon">
-            {topicStatus.finished
-                ? <Checked fill="#039151"/>
-                : <Processing fill="#AE1100"/>
-            }
-        </div>
-    );
+function renderIcon(topicStatus: TopicStatus): ReactElement {
+    return {
+        [TopicStatus.started]: <div className="card-icon"><Processing fill="#AE1100"/></div>,
+        [TopicStatus.finished]: <div className="card-icon"><Checked fill="#039151"/></div>,
+        [TopicStatus.unavailable]: <div className="card-icon"><Locked size={25} /></div>,
+        [TopicStatus.available]:  <div className="card-icon card-icon-paragraph">§</div>,
+    }[topicStatus]
 }
 
 function topicStatusClass(topicStatus: { created: Date, finished: Date }): string {
@@ -50,7 +44,7 @@ function openDateBlock(topicOpenDate): ReactElement {
     );
 }
 
-function renderTopicButtonsBlock(isAdmin, topic, isPreviousFinished) {
+function renderTopicButtonsBlock(isAdmin, topic) {
     if (isAdmin) {
         return (
             <div style={{ flexGrow: 1, textAlign: 'right' }}>
@@ -63,7 +57,7 @@ function renderTopicButtonsBlock(isAdmin, topic, isPreviousFinished) {
         );
     }
 
-    if (topic.status?.finished) {
+    if (topic.status === TopicStatus.finished) {
         return (
             <Paddingable padding={[5,0,0]}>
                 <span className="badge">Зачёт</span>
@@ -71,11 +65,22 @@ function renderTopicButtonsBlock(isAdmin, topic, isPreviousFinished) {
         );
     }
 
-    if (isPreviousFinished && (!topic.status || !topic.status.finished) && topic.lessons?.length > 0) {
+    if (topic.status === TopicStatus.unavailable) {
         return (
             <div className="pt-20 lg:pt-0 text-center">
-                <Link to={`/lesson/${topic?.status ? topic.lessons.find(l => l.id === topic.status.lessonId).alias : topic.lessons[0].alias}`}>
-                    <Button block green>{topic.status ? 'Продолжить' : 'Начать'}</Button>
+                <Link to={`/buy?topic=${topic.id}`}>
+                    <Button block green>Купить</Button>
+                </Link>
+            </div>
+        );
+    }
+
+    if ((!topic.status || topic.status !== TopicStatus.finished) && topic.lessons?.length > 0) {
+        const currentLesson =  topic.lessons.find(l => l.progress && l.progress.created && !l.progress.finished);
+        return (
+            <div className="pt-20 lg:pt-0 text-center">
+                <Link to={`/lesson/${currentLesson.alias}`}>
+                    <Button block green>{topic.status === TopicStatus.started ? 'Продолжить' : 'Начать'}</Button>
                 </Link>
             </div>
         );
@@ -102,7 +107,7 @@ function checkOpenDate(openDate: string): boolean {
     return openDate ? +new Date() < +getOpenDate(openDate) : false;
 }
 
-function TopicListItem({ topic, isOpen, isPreviousFinished, onClick, isAdmin, children }): ReactElement {
+function TopicListItem({ topic, isOpen, onClick, isAdmin, children }): ReactElement {
     const isBlocked = !isAdmin && checkOpenDate(topic.openDate);
     return (
         <div className={`card hover transition3 ${isOpen ? ' pointer' : ''} ${topicStatusClass(topic.status)}`}>
@@ -110,7 +115,7 @@ function TopicListItem({ topic, isOpen, isPreviousFinished, onClick, isAdmin, ch
                 <div className="lg:flex flex-vertical-top">
                     <div className="flex flex-vertical-top">
                         <div>
-                            {renderIcon(topic.status, !isPreviousFinished)}
+                            {renderIcon(topic.status)}
                         </div>
                         <div>
                             <div className="card-title">{topic.name}</div>
@@ -121,7 +126,7 @@ function TopicListItem({ topic, isOpen, isPreviousFinished, onClick, isAdmin, ch
                     </div>
                     {topic.openDate && openDateBlock(topic.openDate)}
                 </div>
-                {renderTopicButtonsBlock(isAdmin, topic, isPreviousFinished)}
+                {renderTopicButtonsBlock(isAdmin, topic)}
             </div>
             {isBlocked ? null : children}
         </div>

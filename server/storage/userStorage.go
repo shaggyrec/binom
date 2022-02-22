@@ -41,10 +41,10 @@ func (u *UserStorage) Delete() {
 }
 
 func (u *UserStorage) Get(id string) (*dataType.User, error) {
-	user := &dataType.User{ Id: id }
+	user := &dataType.User{Id: id}
 	err := u.db.Model(user).
-		Relation("Subscription", func(q *orm.Query) (*orm.Query, error) {
-				return q.JoinOn("status = ? AND expired > NOW()", dataType.StatusLive).Order("expired DESC"), nil
+		Relation("Subscriptions", func(q *orm.Query) (*orm.Query, error) {
+			return q.Where("status = ?", dataType.StatusLive).Order("created DESC"), nil
 		}).
 		WherePK().
 		Select()
@@ -55,8 +55,8 @@ func (u *UserStorage) Get(id string) (*dataType.User, error) {
 func (u *UserStorage) GetByEmail(email string) (*dataType.User, error) {
 	user := &dataType.User{}
 	err := u.db.Model(user).
-		Relation("Subscription", func(q *orm.Query) (*orm.Query, error) {
-			return q.JoinOn("status = ? AND expired > NOW()", dataType.StatusLive).Order("expired DESC"), nil
+		Relation("Subscriptions", func(q *orm.Query) (*orm.Query, error) {
+			return q.Where("status = ?", dataType.StatusLive).Order("created DESC"), nil
 		}).
 		Where("email = ?", email).
 		Select()
@@ -66,11 +66,11 @@ func (u *UserStorage) GetByEmail(email string) (*dataType.User, error) {
 	return user, nil
 }
 
-func (u *UserStorage) GetByUsername(username string) (*dataType.User, error)  {
+func (u *UserStorage) GetByUsername(username string) (*dataType.User, error) {
 	user := &dataType.User{}
 	err := u.db.Model(user).
-		Relation("Subscription", func(q *orm.Query) (*orm.Query, error) {
-			return q.JoinOn("status = ? AND expired > NOW()", dataType.StatusLive).Order("expired DESC"), nil
+		Relation("Subscriptions", func(q *orm.Query) (*orm.Query, error) {
+			return q.Where("status = ?", dataType.StatusLive).Order("created DESC"), nil
 		}).
 		Where("username = ?", username).Select()
 	if err != nil {

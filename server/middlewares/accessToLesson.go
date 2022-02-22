@@ -38,8 +38,15 @@ func AccessToLesson(db *pg.DB, userSubscriptionStorage *storage.UserSubscription
 				topicsClause := ""
 
 				if len(paidTopics) > 0 {
+					for i, t := range paidTopics {
+						paidTopics[i] = "'" + t + "'"
+					}
 					topicsClause = fmt.Sprintf(" OR id IN (%s)", strings.Join(paidTopics, ","))
 				}
+
+				fmt.Println(fmt.Sprintf(`SELECT 1 FROM topics t
+									LEFT JOIN lessons l ON t.id = l.topic_id
+								WHERE %s AND t.id IN (SELECT id FROM topics WHERE price = 0 %s)`, where, topicsClause))
 
 				res, err := db.ExecOne(
 					fmt.Sprintf(`SELECT 1 FROM topics t

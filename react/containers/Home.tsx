@@ -16,9 +16,7 @@ import * as coursesActions  from '../ducks/courses';
 
 function Home({ topics, isAdmin, moveTopicAtPosition, moveLessonAtPosition, loading, currentLesson, me, isDemo, requestTopics }): ReactElement {
     useEffect(() => {
-        if (!topics || topics.length === 0) {
-            requestTopics();
-        }
+        requestTopics();
     }, []);
 
     if (currentLesson) {

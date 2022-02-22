@@ -26,6 +26,7 @@ function renderLessonItem(lesson, type) {
 }
 
 function LessonsList ({ items, onMove, isAdmin, isAllowed }) {
+    let prevIsFinished = true;
     return (
         <ListContainer
             onMove={(i, at) => onMove(items[i].id, at)}
@@ -34,13 +35,16 @@ function LessonsList ({ items, onMove, isAdmin, isAllowed }) {
             {items.map((item, i) => {
                 let itemType;
                 if (isAllowed) {
-                    itemType = 'allowed';
+                    if (prevIsFinished) {
+                        itemType = 'allowed';
+                    }
                     if (item.progress && item.progress.created && !item.progress.finished) {
                         itemType = 'active';
                     }
-                    if (item.progress && item.progress.finished) {
+                    if (item.progress && item.progress.score) {
                         itemType = 'passed';
                     }
+                    prevIsFinished = item.progress && !!item.progress.finished
                 }
                 return (
                     <div key={`sub-list${item.id}${i}`} className="sub-list-item">

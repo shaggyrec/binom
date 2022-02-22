@@ -8,7 +8,7 @@ function RatingTable({ rating, username }: { rating: UsersRating[], username: st
                 <tr>
                     <th>&nbsp;</th>
                     <th>&nbsp;</th>
-                    <th align="right">Тем пройдено</th>
+                    <th align="right">Уроков пройдено</th>
                     <th align="right">Рейтинг</th>
                 </tr>
             </thead>
@@ -17,7 +17,7 @@ function RatingTable({ rating, username }: { rating: UsersRating[], username: st
                     <tr key={r.username} className={username === r.username ? 'active' : ''}>
                         <td>{r.name}</td>
                         <td>@{r.username}</td>
-                        <td align="right">{r.topicsPassed}</td>
+                        <td align="right">{r.lessonsPassed}</td>
                         <td align="right"><b className="pr-5">{r.score}</b></td>
                     </tr>
                 ))}

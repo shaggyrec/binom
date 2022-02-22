@@ -6,13 +6,13 @@ import { UserRole } from '../dataTypes/user';
 
 function DemoUserMessage({ user }): ReactElement {
     return (
-        user.role === UserRole.admin || user.subscription
+        user.role === UserRole.admin || (user.subscriptions && user.subscriptions.length > 0)
             ? null
             : (
                 <Paddingable padding={[10, 0]}>
                     <Paddingable padding={[20, 10]} className="badge badge-red">
-                            Демо-версия. Доступны только две темы и недоступны домашние задания, обратная связь, рейтинг.&nbsp;
-                        <Link to={`/@${user.username}#buy`} className="text-white">Оформите подписку, чтобы получить полный доступ.</Link>
+                            Демо-версия. Доступны только бесплатные темы.&nbsp;
+                        <Link to="/buy" className="text-white">Оформите подписку, чтобы получить полный доступ.</Link>
                     </Paddingable>
                 </Paddingable>
             )

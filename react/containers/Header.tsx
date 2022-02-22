@@ -34,7 +34,10 @@ function Header({ backLink, resetBackLink, username }): ReactElement {
                     {renderBackLink(backLink, resetBackLink)}
                     <Logo />
                 </div>
-                <Instruction username={username}/>
+                <div className="flex gap-10">
+                    <Instruction username={username}/>
+                    <Link to="/buy"><Button small green className="px-20">Купить блоки</Button></Link>
+                </div>
             </header>
         </div>
     );

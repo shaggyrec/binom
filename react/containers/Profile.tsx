@@ -7,7 +7,7 @@ import Paddingable from '../components/Paddingable';
 import { RootState } from '../Application';
 import * as applicationActions from '../ducks/application';
 import * as usersActions from '../ducks/users';
-import * as tariffsActions from '../ducks/tariffs';
+import * as subscriptionsActions from '../ducks/subscriptions';
 import Loader from '../components/Loader';
 import TariffsList from '../components/TariffsList';
 import ReactMoment from 'react-moment';
@@ -16,8 +16,8 @@ import { useLocation } from 'react-router';
 import { StarIcon } from '../components/Icons';
 import SpecialTariff from '../components/SpecialTariff';
 
-function Profile ({ logout, me, resetBackLink, user, match: { params: { username } }, requestUser, requestTariffs,
-    tariffs, onBuyTariff, loading, requestSpecialTariff, specialTariff, buySpecialTariff }): ReactElement {
+function Profile ({ logout, me, resetBackLink, user, match: { params: { username } }, requestUser, requestSubscriptions,
+    subscriptions,  loading }): ReactElement {
     const [buy, scrollToBuy] = useScroll<HTMLDivElement>();
     const l = useLocation();
 
@@ -33,9 +33,8 @@ function Profile ({ logout, me, resetBackLink, user, match: { params: { username
     }, []);
 
     useEffect(() => {
-        if (user && me && user.username === me.username && !me.subscription) {
-            tariffs.length === 0 && requestTariffs();
-            specialTariff === null && requestSpecialTariff();
+        if (user && me && user.username === me.username) {
+            subscriptions.length === 0 && requestSubscriptions();
         }
     }, [user])
 
@@ -58,10 +57,7 @@ function Profile ({ logout, me, resetBackLink, user, match: { params: { username
                     </Paddingable>
                     {user.username === me.username && !me.subscription && (
                         <div ref={buy}>
-                            <Paddingable padding={[0,10,0,0]}>
-                                <SpecialTariff tariff={specialTariff} onBuy={buySpecialTariff}/>
-                            </Paddingable>
-                            <TariffsList tariffs={tariffs} onBuy={onBuyTariff}/>
+                            Подписки
                         </div>
                     )}
                     <Loader show={loading}/>
@@ -77,17 +73,13 @@ export default connect(
         me: state.users.me,
         // @ts-ignore
         user: props.match.params?.username === state.users.me?.username ? state.users.me : state.users.current,
-        tariffs: state.tariffs.list,
-        loading: state.tariffs.loading,
-        specialTariff: state.tariffs.special,
+        subscriptions: state.subscriptions.list,
+        loading: state.subscriptions.loading,
     }),
     dispatch => ({
         logout: () => dispatch(authAction.logout()),
         resetBackLink: () => dispatch(applicationActions.backLink(null)),
         requestUser: username => dispatch(usersActions.requestUser(username)),
-        requestTariffs: () => dispatch(tariffsActions.requestList()),
-        onBuyTariff: (tariffId, priceId) => dispatch(tariffsActions.subscribe(tariffId, priceId)),
-        requestSpecialTariff: () => dispatch(tariffsActions.requestSpecial()),
-        buySpecialTariff: () => dispatch(tariffsActions.buySpecial()),
+        requestSubscriptions: () => dispatch(subscriptionsActions.requestList()),
     })
 )(Profile)

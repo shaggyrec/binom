@@ -95,6 +95,13 @@ func (s *TopicStorage) Count() int {
 	return amount
 }
 
+func (s *TopicStorage) ListByIds(ids []string) (*[]dataType.Topic, error) {
+	var topics []dataType.Topic
+	err := s.db.Model(&topics).WhereIn("id IN (?)", ids).Select()
+
+	return &topics, err
+}
+
 func (s *TopicStorage) mapDbRow(data map[string]interface{}) *dataType.Topic {
 	var topic dataType.Topic
 	mapstructure.Decode(data, &topic)

@@ -57,36 +57,35 @@ function renderTopicButtonsBlock(isAdmin, topic) {
         );
     }
 
-    if (topic.status === TopicStatus.finished) {
-        return (
-            <Paddingable padding={[5,0,0]}>
-                <span className="badge">Зачёт</span>
-            </Paddingable>
-        );
+    switch (topic.status) {
+        case TopicStatus.finished:
+            return (
+                <Paddingable padding={[5, 0, 0]}>
+                    <span className="badge">Зачёт</span>
+                </Paddingable>
+            );
+        case TopicStatus.unavailable:
+            return (
+                <div className="pt-20 lg:pt-0 text-center">
+                    <Link to={`/buy?topic=${topic.id}`}>
+                        <Button block green>Купить</Button>
+                    </Link>
+                </div>
+            );
+        default:
+            if (topic.lessons?.length > 0) {
+                const currentLesson = topic.lessons.find(l => l.progress && l.progress.created && !l.progress.finished) || topic.lessons[0];
+                return (
+                    <div className="pt-20 lg:pt-0 text-center">
+                        <Link to={`/lesson/${currentLesson.alias}`}>
+                            <Button block
+                                green>{topic.status === TopicStatus.started ? 'Продолжить' : 'Начать'}</Button>
+                        </Link>
+                    </div>
+                );
+            }
+            return null;
     }
-
-    if (topic.status === TopicStatus.unavailable) {
-        return (
-            <div className="pt-20 lg:pt-0 text-center">
-                <Link to={`/buy?topic=${topic.id}`}>
-                    <Button block green>Купить</Button>
-                </Link>
-            </div>
-        );
-    }
-
-    if ((!topic.status || topic.status !== TopicStatus.finished) && topic.lessons?.length > 0) {
-        const currentLesson =  topic.lessons.find(l => l.progress && l.progress.created && !l.progress.finished);
-        return (
-            <div className="pt-20 lg:pt-0 text-center">
-                <Link to={`/lesson/${currentLesson.alias}`}>
-                    <Button block green>{topic.status === TopicStatus.started ? 'Продолжить' : 'Начать'}</Button>
-                </Link>
-            </div>
-        );
-    }
-
-    return null;
 }
 
 function getOpenDate(openDate): Date {

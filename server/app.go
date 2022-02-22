@@ -31,8 +31,6 @@ func Init(dc *dependencyContainer.DC, db *pg.DB, jwtSecret, uploadPath, host, ve
 	notificationController.Init(dc.Services.Notification)
 	learningProgressController := controllers.LearningProgressController{}
 	learningProgressController.Init(dc.Services.LearningProgress, dc.Services.Notification, dc.Services.UserScore, dc.Storages.Lesson, dc.Storages.ProgressStorage, dc.Storages.Topic)
-	tariffController := controllers.TariffController{}
-	tariffController.Init(dc.Storages.Tariff, dc.Storages.TariffPrice, dc.Storages.UserSubscription, dc.Services.YooMoney)
 	paymentController := controllers.PaymentController{}
 	paymentController.Init(dc.Services.YooMoney, dc.Storages.Transaction, dc.Storages.UserSubscription, dc.Services.Notification)
 	usersRatingController := controllers.UsersRatingController{}
@@ -45,6 +43,8 @@ func Init(dc *dependencyContainer.DC, db *pg.DB, jwtSecret, uploadPath, host, ve
 	courseController.Init(dc.Storages.CourseStorage)
 	questionnaireController := controllers.QuestionnaireController{}
 	questionnaireController.Init(dc.Storages.QuestionnaireStorage)
+	subscriptionController := controllers.SubscriptionController{}
+	subscriptionController.Init(dc.Storages.UserSubscription, dc.Storages.Topic, dc.Services.YooMoney)
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
@@ -143,22 +143,9 @@ func Init(dc *dependencyContainer.DC, db *pg.DB, jwtSecret, uploadPath, host, ve
 					r.Get("/{userId}/{lessonAlias}", learningProgressController.UsersProgressByLesson)
 				})
 			})
-			r.Route("/tariff", func(r chi.Router) {
-				r.Get("/", tariffController.List)
-				r.Get("/special", tariffController.SpecialTariff)
-				r.Get("/{tariffId}/price/{priceId}/buy", tariffController.Buy)
-				r.Get("/special/buy", tariffController.BuySpecialTariff)
-				r.Group(func(r chi.Router) {
-					r.Use(middlewares.OnlyForAdmin)
-					r.Post("/", tariffController.Create)
-					r.Put("/{id}", tariffController.Update)
-					r.Delete("/{id}", tariffController.Delete)
-					r.Route("/{tariffId}/price", func(r chi.Router) {
-						r.Post("/", tariffController.CreatePrice)
-						r.Put("/{id}", tariffController.UpdatePrice)
-						r.Delete("/{id}", tariffController.DeletePrice)
-					})
-				})
+			r.Route("/subscription", func(r chi.Router) {
+				r.Post("/", subscriptionController.Buy)
+				r.Get("/", subscriptionController.ListOfActive)
 			})
 			r.Route("/rating", func(r chi.Router) {
 				r.Get("/{year}", usersRatingController.ByYear)

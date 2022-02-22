@@ -48,7 +48,7 @@ function Home({ topics, isAdmin, moveTopicAtPosition, moveLessonAtPosition, load
                                 </Link>
                             </Paddingable>
                             <Paddingable padding={[0, 10, 0, 0]}>
-                                <Link to="/tariffs/edit">
+                                <Link to="/subscriptions/edit">
                                     <Button small>Управление тарифами</Button>
                                 </Link>
                             </Paddingable>

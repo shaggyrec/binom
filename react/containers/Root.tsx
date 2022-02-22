@@ -64,7 +64,7 @@ function Root({ history, me, requestMe, setFrom, loading, setLoading, hideModal,
                     <ProtectedRoute component={TopicOverview} isAuthorized={me?.role === UserRole.admin} path="/topic/:alias" exact authPath="/auth" />
                     <ProtectedRoute component={LessonOverview} isAuthorized={me?.role === UserRole.admin} path="/@:username/lesson/:alias" exact authPath="/auth" />
                     <ProtectedRoute component={Notifications} isAuthorized={!!me} path="/notifications" exact authPath="/auth" />
-                    <ProtectedRoute component={SubscriptionsManager} isAuthorized={me?.role === UserRole.admin} path="/tariffs/edit" exact authPath="/auth" />
+                    <ProtectedRoute component={SubscriptionsManager} isAuthorized={me?.role === UserRole.admin} path="/subscriptions/edit" exact authPath="/auth" />
                     <ProtectedRoute component={Feed} isAuthorized={me} path="/feed" exact authPath="/auth" />
                     <ProtectedRoute component={UsersRating} isAuthorized={me} path="/rating" exact authPath="/auth" />
                     <ProtectedRoute component={Buy} isAuthorized={me} path="/buy" exact authPath="/auth" />

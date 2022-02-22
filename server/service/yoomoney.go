@@ -5,7 +5,6 @@ import (
 	"binom/server/requests"
 	"crypto/sha1"
 	"encoding/hex"
-	"fmt"
 	"strconv"
 	"strings"
 )
@@ -41,18 +40,18 @@ func (s *YoomoneyService) IsDataValid(data requests.YooMoneyRequest) bool {
 }
 
 func (s *YoomoneyService) GetPaymentParams(subscription *dataType.UserSubscription) map[string]string {
-	comment := fmt.Sprintf("Binom. Оплата подписки на %d мес", subscription.Duration)
+	comment := "Binom. " + subscription.Name
 
 	return map[string]string{
-		"label": subscription.Id,
-		"sum": strconv.Itoa(subscription.PaidPrice),
-		"formcomment": comment,
-		"short-dest": comment,
+		"label":         subscription.Id,
+		"sum":           strconv.Itoa(subscription.PaidPrice),
+		"formcomment":   comment,
+		"short-dest":    comment,
 		"quickpay-form": "shop",
-		"targets": comment,
-		"paymentType": "AC",
-		"receiver": YoomoneyReceiver,
-		"successURL": "https://" + s.host + "/app",
+		"targets":       comment,
+		"paymentType":   "AC",
+		"receiver":      YoomoneyReceiver,
+		"successURL":    "https://" + s.host + "/app",
 	}
 
 }

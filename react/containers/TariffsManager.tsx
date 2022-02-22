@@ -1,7 +1,7 @@
 import React, { ReactElement, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import * as tariffsActions from '../ducks/tariffs';
+import * as tariffsActions from '../ducks/subscriptions';
 import { RootState } from '../Application';
 import TariffEditCard from '../components/TariffEditCard';
 import { Back } from '../components/Icons';

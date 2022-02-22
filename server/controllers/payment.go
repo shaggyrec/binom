@@ -14,14 +14,13 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
-	"time"
 )
 
-type PaymentController struct{
-	yooMoneyService *service.YoomoneyService
-	transactionStorage *storage.TransactionStorage
+type PaymentController struct {
+	yooMoneyService         *service.YoomoneyService
+	transactionStorage      *storage.TransactionStorage
 	userSubscriptionStorage *storage.UserSubscriptionStorage
-	notificationService *service.NotificationService
+	notificationService     *service.NotificationService
 }
 
 func (c *PaymentController) Init(yooMoneyService *service.YoomoneyService, transactionStorage *storage.TransactionStorage,
@@ -59,8 +58,8 @@ func (c *PaymentController) YooMoney(w http.ResponseWriter, r *http.Request) {
 	}
 
 	transaction := dataType.Transaction{
-		Amount: amount,
-		Service: dataType.PaymentServiceYoomoney,
+		Amount:      amount,
+		Service:     dataType.PaymentServiceYoomoney,
 		PaymentData: functions.InterfaceToMap(paymentData),
 	}
 
@@ -75,33 +74,23 @@ func (c *PaymentController) YooMoney(w http.ResponseWriter, r *http.Request) {
 		subscription, err := c.userSubscriptionStorage.ById(paymentData.Label)
 		if err != nil {
 			log.Println(err)
-			exceptions.NotFoundError(w, r, subscription.Id + " not found")
+			exceptions.NotFoundError(w, r, subscription.Id+" not found")
 			return
 		}
 
 		if subscription.Status.Int64 == dataType.StatusLive {
 			log.Println(subscription.Id + " already paid")
-			exceptions.BadRequestError(w, r, subscription.Id + " already paid", exceptions.ErrorBadParam)
+			exceptions.BadRequestError(w, r, subscription.Id+" already paid", exceptions.ErrorBadParam)
 			return
 		}
 
 		if int(withdrawAmount) < subscription.PaidPrice {
 			log.Println(subscription.Id + " amounts not matched")
-			exceptions.BadRequestError(w, r, subscription.Id + " amounts not matched", exceptions.ErrorBadParam)
+			exceptions.BadRequestError(w, r, subscription.Id+" amounts not matched", exceptions.ErrorBadParam)
 			return
 		}
-		activeSubscriptions := c.userSubscriptionStorage.ByUserId(subscription.UserId, []int{dataType.StatusLive})
-		dateStart := time.Now()
-		if len(*activeSubscriptions) != 0 {
-			for _, activeSubscription := range *activeSubscriptions {
-				if activeSubscription.Expired.After(dateStart) {
-					dateStart = activeSubscription.Expired
-				}
-			}
-		}
-		subscription.Status.Int64 = dataType.StatusLive
-		subscription.Status.Valid = true
-		subscription.Expired = dateStart.AddDate(0, subscription.Duration, 0)
+
+		subscription.Status = null.IntFrom(dataType.StatusLive)
 		subscription.TransactionId = transaction.Id
 
 		_, err = c.userSubscriptionStorage.Update(subscription)
@@ -113,9 +102,8 @@ func (c *PaymentController) YooMoney(w http.ResponseWriter, r *http.Request) {
 		}
 		notification := dataType.Notification{
 			Message: fmt.Sprintf(
-				"Активирована подписка %s до %s",
+				"Активирована подписка %s",
 				subscription.Name,
-				subscription.Expired.Format("02.01.2006"),
 			),
 			Type: null.IntFrom(dataType.NotificationSubscriptionActivate),
 		}
@@ -126,9 +114,8 @@ func (c *PaymentController) YooMoney(w http.ResponseWriter, r *http.Request) {
 		}
 		c.notificationService.CreateForAdmins(&dataType.Notification{
 			Message: fmt.Sprintf(
-				"Оплачена подписка %s до %s. Пользователь",
+				"Оплачена подписка %s",
 				subscription.Name,
-				subscription.Expired.Format("02.01.2006"),
 			),
 			Type: null.IntFrom(dataType.NotificationSubscriptionActivate),
 		})
@@ -137,8 +124,7 @@ func (c *PaymentController) YooMoney(w http.ResponseWriter, r *http.Request) {
 	render.JSON(w, r, "ok")
 }
 
-
-func(c *PaymentController) parseData(form url.Values) requests.YooMoneyRequest {
+func (c *PaymentController) parseData(form url.Values) requests.YooMoneyRequest {
 	r := requests.YooMoneyRequest{
 		NotificationType: form["notification_type"][0],
 		OperationId:      form["operation_id"][0],

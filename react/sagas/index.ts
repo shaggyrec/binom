@@ -12,11 +12,12 @@ import { files } from './files';
 import { lessonComments } from './lessonComments';
 import { notifications } from './notifications';
 import { learningProgress } from './learningProgress';
-import { tariffs } from './tariffs';
+import { subscriptions } from './subscriptions';
 import * as applicationActions from '../ducks/application';
 import { usersRating } from './usersRating';
 import { posts } from './posts';
 import { postComments } from './postComments';
+import { courses } from './courses';
 
 const MAX_REQUEST_TRIES = 10;
 let tries = 0;
@@ -62,9 +63,10 @@ export default function* rootSaga(): any {
         lessonComments(),
         notifications(),
         learningProgress(),
-        tariffs(),
+        subscriptions(),
         usersRating(),
         posts(),
         postComments(),
+        courses(),
     ]);
 }

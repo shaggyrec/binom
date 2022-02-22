@@ -113,7 +113,7 @@ function LessonEdit({ requestLesson, lesson, loading, match: { params }, updateL
 export default connect(
     (state: RootState) => ({
         lesson: state.lessons.current,
-        topics: state.topics.list.map(c => ({ value: c.id, title: c.name })),
+        topics: state.topics.list.map(c => ({ value: c.id, title: `${c.name} (${c.course.name})` })),
         loading: state.lessons.loading || state.files.loading,
         uploadedFile: state.files.lastUploadedFile,
         removedFile: state.files.lastRemovedFile,

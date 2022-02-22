@@ -6,6 +6,7 @@ import (
 	"binom/server/functions"
 	"binom/server/service"
 	"binom/server/storage"
+	"fmt"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
 	"github.com/go-pg/pg"
@@ -16,7 +17,7 @@ import (
 )
 
 type TopicController struct {
-	topicStorage *storage.TopicStorage
+	topicStorage          *storage.TopicStorage
 	moveAtPositionService *service.MoveAtPositionService
 }
 
@@ -27,7 +28,7 @@ func (c *TopicController) Init(topicStorage *storage.TopicStorage, moveAtPositio
 
 func (c *TopicController) Create(w http.ResponseWriter, r *http.Request) {
 	var t dataType.Topic
-	if err := functions.ParseRequest(w, r, &t);  err != nil {
+	if err := functions.ParseRequest(w, r, &t); err != nil {
 		return
 	}
 
@@ -53,7 +54,7 @@ func (c *TopicController) Create(w http.ResponseWriter, r *http.Request) {
 
 func (c *TopicController) Update(w http.ResponseWriter, r *http.Request) {
 	var topicToUpdate map[string]interface{}
-	if err := functions.ParseRequest(w, r, &topicToUpdate);  err != nil {
+	if err := functions.ParseRequest(w, r, &topicToUpdate); err != nil {
 		return
 	}
 
@@ -63,7 +64,7 @@ func (c *TopicController) Update(w http.ResponseWriter, r *http.Request) {
 		log.Print(err)
 		pgErr, ok := err.(pg.Error)
 		if ok && pgErr.IntegrityViolation() {
-			exceptions.BadRequestError(w, r, "Topic with alias \"" + topicToUpdate["alias"].(string) + "\" already exists", exceptions.AlreadyExists)
+			exceptions.BadRequestError(w, r, "Topic with alias \""+topicToUpdate["alias"].(string)+"\" already exists", exceptions.AlreadyExists)
 		} else {
 			exceptions.BadRequestError(w, r, err.Error(), exceptions.NothingAffected)
 		}
@@ -73,7 +74,7 @@ func (c *TopicController) Update(w http.ResponseWriter, r *http.Request) {
 	render.JSON(w, r, "ok")
 }
 
-func (c * TopicController) Delete(w http.ResponseWriter, r *http.Request) {
+func (c *TopicController) Delete(w http.ResponseWriter, r *http.Request) {
 	err := c.topicStorage.Delete(chi.URLParam(r, "id"))
 	if err != nil {
 		exceptions.BadRequestError(w, r, err.Error(), exceptions.NothingAffected)
@@ -119,7 +120,7 @@ func (c *TopicController) List(w http.ResponseWriter, r *http.Request) {
 	functions.RenderJSON(w, r, *topics)
 }
 
-func (c *TopicController) ByAlias(w http.ResponseWriter, r *http.Request)  {
+func (c *TopicController) ByAlias(w http.ResponseWriter, r *http.Request) {
 	alias := chi.URLParam(r, "alias")
 
 	t, err := c.topicStorage.GetByAlias(alias)
@@ -131,7 +132,7 @@ func (c *TopicController) ByAlias(w http.ResponseWriter, r *http.Request)  {
 	render.JSON(w, r, t)
 }
 
-func (c *TopicController) MoveAtPosition(w http.ResponseWriter, r *http.Request)  {
+func (c *TopicController) MoveAtPosition(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
 	posFromRequest := chi.URLParam(r, "pos")
 
@@ -142,7 +143,15 @@ func (c *TopicController) MoveAtPosition(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	err = c.moveAtPositionService.Move("topics", id, pos, "", "")
+	topic, err := c.topicStorage.GetById(id)
+
+	if err != nil {
+		fmt.Println(err)
+		exceptions.NotFoundError(w, r, "Topic not found")
+		return
+	}
+
+	err = c.moveAtPositionService.Move("topics", id, pos, "course_id", topic.CourseId)
 
 	if err != nil {
 		log.Print(err)

@@ -55,6 +55,7 @@ services:
       GIT_COMMIT: ${GIT_COMMIT}
       TELEGRAM_TECHNICAL_CHAT_ID: -413893774
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+      DEFAULT_COURSE_ID: 00000000-0000-0000-0000-000000000001
     volumes:
       - /etc/upload:/goapp/upload
     logging:

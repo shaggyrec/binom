@@ -26,13 +26,11 @@ func Init(dc *dependencyContainer.DC, db *pg.DB, jwtSecret, uploadPath, host, ve
 	fileController := controllers.FileController{}
 	fileController.Init(uploadPath, dc.Storages.File)
 	lessonCommentController := controllers.LessonCommentController{}
-	lessonCommentController.Init(dc.Storages.LessonComment, dc.Services.Notification, dc.Storages.User)
+	lessonCommentController.Init(dc.Storages.LessonComment, dc.Services.Notification, dc.Storages.User, dc.Storages.ProgressStorage)
 	notificationController := controllers.NotificationController{}
 	notificationController.Init(dc.Services.Notification)
 	learningProgressController := controllers.LearningProgressController{}
-	learningProgressController.Init(dc.Services.LessonProgress, dc.Services.Notification, dc.Services.UserScore)
-	tariffController := controllers.TariffController{}
-	tariffController.Init(dc.Storages.Tariff, dc.Storages.TariffPrice, dc.Storages.UserSubscription, dc.Services.YooMoney)
+	learningProgressController.Init(dc.Services.LearningProgress, dc.Services.Notification, dc.Services.UserScore, dc.Storages.Lesson, dc.Storages.ProgressStorage, dc.Storages.Topic)
 	paymentController := controllers.PaymentController{}
 	paymentController.Init(dc.Services.YooMoney, dc.Storages.Transaction, dc.Storages.UserSubscription, dc.Services.Notification)
 	usersRatingController := controllers.UsersRatingController{}
@@ -41,8 +39,12 @@ func Init(dc *dependencyContainer.DC, db *pg.DB, jwtSecret, uploadPath, host, ve
 	postController.Init(dc.Storages.PostStorage, db)
 	postCommentController := controllers.PostCommentController{}
 	postCommentController.Init(dc.Storages.PostCommentStorage)
+	courseController := controllers.CourseController{}
+	courseController.Init(dc.Storages.CourseStorage)
 	questionnaireController := controllers.QuestionnaireController{}
 	questionnaireController.Init(dc.Storages.QuestionnaireStorage)
+	subscriptionController := controllers.SubscriptionController{}
+	subscriptionController.Init(dc.Storages.UserSubscription, dc.Storages.Topic, dc.Services.YooMoney)
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
@@ -90,6 +92,10 @@ func Init(dc *dependencyContainer.DC, db *pg.DB, jwtSecret, uploadPath, host, ve
 				})
 				r.Get("/{username}", userController.ByUsername)
 			})
+			r.Route("/courses", func(r chi.Router) {
+				r.Get("/", courseController.List)
+				r.Get("/{id}", courseController.ById)
+			})
 			r.Route("/topic", func(r chi.Router) {
 				r.Get("/list", topicController.List)
 				r.Get("/{alias}", topicController.ByAlias)
@@ -105,7 +111,7 @@ func Init(dc *dependencyContainer.DC, db *pg.DB, jwtSecret, uploadPath, host, ve
 			r.Route("/lesson", func(r chi.Router) {
 				r.Group(func(r chi.Router) {
 					r.Use(middlewares.AccessToLesson(db, dc.Storages.UserSubscription))
-					r.Use(middlewares.LessonProgress(dc.Services.LessonProgress, dc.Storages.Lesson, dc.Storages.Topic))
+					r.Use(middlewares.LessonProgress(dc.Services.LearningProgress, dc.Storages.Lesson, dc.Storages.Topic))
 					r.Get("/{alias}", lessonController.GetOneLesson)
 				})
 				r.Group(func(r chi.Router) {
@@ -137,22 +143,9 @@ func Init(dc *dependencyContainer.DC, db *pg.DB, jwtSecret, uploadPath, host, ve
 					r.Get("/{userId}/{lessonAlias}", learningProgressController.UsersProgressByLesson)
 				})
 			})
-			r.Route("/tariff", func(r chi.Router) {
-				r.Get("/", tariffController.List)
-				r.Get("/special", tariffController.SpecialTariff)
-				r.Get("/{tariffId}/price/{priceId}/buy", tariffController.Buy)
-				r.Get("/special/buy", tariffController.BuySpecialTariff)
-				r.Group(func(r chi.Router) {
-					r.Use(middlewares.OnlyForAdmin)
-					r.Post("/", tariffController.Create)
-					r.Put("/{id}", tariffController.Update)
-					r.Delete("/{id}", tariffController.Delete)
-					r.Route("/{tariffId}/price", func(r chi.Router) {
-						r.Post("/", tariffController.CreatePrice)
-						r.Put("/{id}", tariffController.UpdatePrice)
-						r.Delete("/{id}", tariffController.DeletePrice)
-					})
-				})
+			r.Route("/subscription", func(r chi.Router) {
+				r.Post("/", subscriptionController.Buy)
+				r.Get("/", subscriptionController.ListOfActive)
 			})
 			r.Route("/rating", func(r chi.Router) {
 				r.Get("/{year}", usersRatingController.ByYear)

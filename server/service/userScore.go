@@ -10,13 +10,13 @@ import (
 )
 
 type UserScoreService struct {
-	userStorage *storage.UserStorage
-	lessonStorage *storage.LessonStorage
+	userStorage           *storage.UserStorage
+	lessonStorage         *storage.LessonStorage
 	pointsMovementStorage *storage.PointsMovementStorage
-	db *pg.DB
+	db                    *pg.DB
 }
 
-func (s *UserScoreService) Init(lessonStorage *storage.LessonStorage, userStorage *storage.UserStorage, pointsMovementStorage *storage.PointsMovementStorage, db *pg.DB)  {
+func (s *UserScoreService) Init(lessonStorage *storage.LessonStorage, userStorage *storage.UserStorage, pointsMovementStorage *storage.PointsMovementStorage, db *pg.DB) {
 	s.lessonStorage = lessonStorage
 	s.userStorage = userStorage
 	s.pointsMovementStorage = pointsMovementStorage
@@ -28,7 +28,7 @@ func (s *UserScoreService) AddScoreForTheLesson(lessonId, userId string, percent
 	user, _ := s.userStorage.Get(userId)
 
 	koef := 1.
-	if dateStart.AddDate(0, 0, lesson.Deadline + 1).Before(time.Now()) {
+	if dateStart.AddDate(0, 0, lesson.Deadline+1).Before(time.Now()) {
 		koef = .5
 	}
 
@@ -52,14 +52,14 @@ func (s *UserScoreService) UsersRatingByYear(year int) []dataType.UserRating {
 	s.db.Query(
 		&r,
 		`SELECT
-			u.username, u.name, u.score, COUNT(ut.*) as topics_passed
+			u.username, u.name, u.score, COUNT(p.score) as lessons_passed
 		FROM users u
-			LEFT JOIN user_topics ut ON ut.user_id = u.id
-		WHERE ut.updated BETWEEN make_date(?, 7, 1) AND make_date(?, 6, 1)
+			LEFT JOIN progresses p ON p.user_id = u.id
+		WHERE p.created BETWEEN make_date(?, 7, 1) AND make_date(?, 6, 1)
 		GROUP BY u.username, u.name, u.score
 		ORDER BY u.score DESC`,
 		year,
-		year + 1,
+		year+1,
 	)
 
 	return r

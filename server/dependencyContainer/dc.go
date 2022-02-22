@@ -28,17 +28,20 @@ type DC struct {
 		PostCommentStorage   *storage.PostCommentStorage
 		UtmStorage           *storage.UtmStorage
 		SentEmail            *storage.SentEmailStorage
+		CourseStorage        *storage.CourseStorage
 		QuestionnaireStorage *storage.QuestionnaireStorage
+		ProgressStorage      *storage.ProgressStorage
 	}
 	Services struct {
-		Token          *service.TokenService
-		AuthCode       *service.AuthCodeService
-		Auth           *service.AuthService
-		MoveAtPosition *service.MoveAtPositionService
-		Notification   *service.NotificationService
-		LessonProgress *service.LearningProgressService
-		YooMoney       *service.YoomoneyService
-		UserScore      *service.UserScoreService
+		Token            *service.TokenService
+		AuthCode         *service.AuthCodeService
+		Auth             *service.AuthService
+		MoveAtPosition   *service.MoveAtPositionService
+		Notification     *service.NotificationService
+		LessonProgress   *service.LearningProgressService
+		LearningProgress *service.ProgressService
+		YooMoney         *service.YoomoneyService
+		UserScore        *service.UserScoreService
 	}
 
 	Mailer *mailer.Mailer
@@ -76,7 +79,9 @@ func (dc *DC) initStorages() {
 	dc.Storages.PostCommentStorage = storageFactory.PostComment(dc.Db)
 	dc.Storages.UtmStorage = storageFactory.Utm(dc.Db)
 	dc.Storages.SentEmail = storageFactory.SentEmail(dc.Db)
+	dc.Storages.CourseStorage = storageFactory.Course(dc.Db)
 	dc.Storages.QuestionnaireStorage = storageFactory.Questionnaire(dc.Db)
+	dc.Storages.ProgressStorage = storageFactory.ProgressStorage(dc.Db)
 }
 
 func (dc *DC) initServices(host, jwtSecret string, technicalTelegramBot *telegramBot.BotForChat) {
@@ -89,6 +94,7 @@ func (dc *DC) initServices(host, jwtSecret string, technicalTelegramBot *telegra
 	dc.Services.LessonProgress = serviceFactory.LessonProgress(dc.Db)
 	dc.Services.YooMoney = serviceFactory.Yoomoney(host)
 	dc.Services.UserScore = serviceFactory.UserScore(dc.Storages.Lesson, dc.Storages.User, dc.Storages.PointsMovement, dc.Db)
+	dc.Services.LearningProgress = serviceFactory.LearningProgress(dc.Db, dc.Storages.ProgressStorage)
 }
 
 func (dc *DC) initDependencies() {

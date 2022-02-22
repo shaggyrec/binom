@@ -118,8 +118,19 @@ func (f *Factory) SentEmail(db *pg.DB) *SentEmailStorage {
 	return &storage
 }
 
+func (f *Factory) Course(db *pg.DB) *CourseStorage {
+	storage := CourseStorage{}
+	storage.Init(db)
+	return &storage
+}
 func (f *Factory) Questionnaire(db *pg.DB) *QuestionnaireStorage {
 	storage := QuestionnaireStorage{}
+	storage.Init(db)
+	return &storage
+}
+
+func (f *Factory) ProgressStorage(db *pg.DB) *ProgressStorage {
+	storage := ProgressStorage{}
 	storage.Init(db)
 	return &storage
 }

@@ -12,4 +12,10 @@ export interface Lesson {
     alias: string;
     taskValue: number;
     user?: User;
+    progress: LessonStatus
+}
+
+export interface LessonStatus {
+    created: Date;
+    finished: Date;
 }

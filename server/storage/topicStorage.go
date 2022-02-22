@@ -39,10 +39,10 @@ func (s *TopicStorage) Update(id string, topicMap map[string]interface{}) error 
 
 func (s *TopicStorage) List(limit int, offset int, withLessons bool, userId string) (*[]dataType.Topic, error) {
 	var topics []dataType.Topic
-	stmt := s.db.Model(&topics)
+	stmt := s.db.Model(&topics).Relation("Course")
 	if withLessons {
 		stmt.Relation("Lessons", func(q *orm.Query) (*orm.Query, error) {
-			return q.Column("lesson.id", "lesson.name" , "lesson.topic_id", "lesson.alias").OrderExpr("lesson.pos ASC, lesson.created ASC"), nil
+			return q.Column("lesson.id", "lesson.name", "lesson.topic_id", "lesson.alias").OrderExpr("lesson.pos ASC, lesson.created ASC"), nil
 		})
 	}
 
@@ -93,6 +93,13 @@ func (s *TopicStorage) Count() int {
 		return 0
 	}
 	return amount
+}
+
+func (s *TopicStorage) ListByIds(ids []string) (*[]dataType.Topic, error) {
+	var topics []dataType.Topic
+	err := s.db.Model(&topics).WhereIn("id IN (?)", ids).Select()
+
+	return &topics, err
 }
 
 func (s *TopicStorage) mapDbRow(data map[string]interface{}) *dataType.Topic {

@@ -29,9 +29,9 @@ func (u *UserController) Me(w http.ResponseWriter, r *http.Request) {
 	functions.RenderJSON(w, r, user)
 }
 
-func (u *UserController) ByUsername(w http.ResponseWriter, r *http.Request)  {
+func (u *UserController) ByUsername(w http.ResponseWriter, r *http.Request) {
 	username := chi.URLParam(r, "username")
-	userRole :=r.Context().Value("userRole")
+	userRole := r.Context().Value("userRole")
 	userId := r.Context().Value("userId").(string)
 
 	user, err := u.storage.GetByUsername(username)
@@ -43,15 +43,15 @@ func (u *UserController) ByUsername(w http.ResponseWriter, r *http.Request)  {
 
 	if userId != user.Id && userRole != dataType.UserRoleAdmin {
 		user.Email = null.String{}
-		user.Subscription = nil
+		user.Subscriptions = nil
 		user.Points = 0
 	}
 
 	functions.RenderJSON(w, r, user)
 }
 
-func (u *UserController) Update(w http.ResponseWriter, r * http.Request)  {
-	var dataToUpdate  map[string]interface{}
+func (u *UserController) Update(w http.ResponseWriter, r *http.Request) {
+	var dataToUpdate map[string]interface{}
 	userId := chi.URLParam(r, "userId")
 	currentUserId := r.Context().Value("userId").(string)
 	userRole := r.Context().Value("userRole").(int)
@@ -70,7 +70,7 @@ func (u *UserController) Update(w http.ResponseWriter, r * http.Request)  {
 		log.Print(err)
 		pgErr, ok := err.(pg.Error)
 		if ok && pgErr.IntegrityViolation() && strings.Index(err.Error(), "username") > -1 {
-			exceptions.BadRequestError(w, r, "Username \"" + dataToUpdate["username"].(string) + "\" занят другим пользователем. Придумай другой.", exceptions.AlreadyExists)
+			exceptions.BadRequestError(w, r, "Username \""+dataToUpdate["username"].(string)+"\" занят другим пользователем. Придумай другой.", exceptions.AlreadyExists)
 		} else {
 			exceptions.BadRequestError(w, r, err.Error(), exceptions.NothingAffected)
 		}
@@ -79,5 +79,3 @@ func (u *UserController) Update(w http.ResponseWriter, r * http.Request)  {
 
 	render.JSON(w, r, "ok")
 }
-
-

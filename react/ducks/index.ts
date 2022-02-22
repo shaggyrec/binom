@@ -8,10 +8,11 @@ import files, { initialState as filesState } from './files';
 import lessonComments, { initialState as lessonCommentsState } from './lessonComments';
 import notifications, { initialState as notificationsState } from './notifications';
 import learningProgress, { initialState as learningProgressState } from './learningProgress';
-import tariffs, { initialState as tariffsState } from './tariffs';
+import subscriptions, { initialState as subscriptionsState } from './subscriptions';
 import usersRating, { initialState as usersRatingState } from './usersRating';
 import posts, { initialState as postsState } from './posts';
 import postComments, { initialState as postCommentsState } from './postComments';
+import courses, { initialState as coursesState } from './courses';
 
 export const initialState = {
     topics: topicsState,
@@ -23,10 +24,11 @@ export const initialState = {
     lessonComments: lessonCommentsState,
     notifications: notificationsState,
     learningProgress: learningProgressState,
-    tariffs: tariffsState,
+    subscriptions: subscriptionsState,
     usersRating: usersRatingState,
     posts: postsState,
     postComments: postCommentsState,
+    courses: coursesState,
 };
 
 export default (router: any = null): Reducer => combineReducers({
@@ -40,8 +42,9 @@ export default (router: any = null): Reducer => combineReducers({
     lessonComments,
     notifications,
     learningProgress,
-    tariffs,
+    subscriptions,
     usersRating,
     posts,
     postComments,
+    courses,
 });

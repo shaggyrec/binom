@@ -9,14 +9,14 @@ const UserRoleAdmin = 2
 const UserRoleUser = 1
 
 type User struct {
-	Id string `json:"id"`
-	Email null.String `json:"email"`
-	Name null.String `json:"name"`
-	Created pg.NullTime `json:"created"`
-	Username null.String `json:"username"`
-	Phone null.String `json:"-"`
-	Role null.Int `json:"role"`
-	Subscription *UserSubscription `pg:"rel:has-many" json:"subscription"`
-	Score int `json:"score"`
-	Points int `json:"points"`
+	Id            string             `json:"id"`
+	Email         null.String        `json:"email"`
+	Name          null.String        `json:"name"`
+	Created       pg.NullTime        `json:"created"`
+	Username      null.String        `json:"username"`
+	Phone         null.String        `json:"-"`
+	Role          null.Int           `json:"role"`
+	Subscriptions []UserSubscription `pg:"rel:has-many" json:"subscriptions"`
+	Score         int                `json:"score"`
+	Points        int                `json:"points"`
 }

@@ -810,6 +810,9 @@ code {
     .w-33 {
         width: 33.3%;
     }
+    .w-50 {
+        width: 50%;
+    }
 }
 
 .animation-circle {

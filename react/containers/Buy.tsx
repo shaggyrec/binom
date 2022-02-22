@@ -1,26 +1,29 @@
-import Paddingable from '../components/Paddingable';
-import SpecialTariff from '../components/SpecialTariff';
-import TariffsList from '../components/TariffsList';
 import React, { ReactElement, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { RootState } from '../Application';
-import * as applicationActions from '../ducks/application';
-import * as tariffsActions from '../ducks/tariffs';
+import * as subscriptionsActions from '../ducks/subscriptions';
+import * as topicsActions from '../ducks/topics';
 import Loader from '../components/Loader';
+import TopicsPurchase from '../components/TopicsPurchase';
+import useQueryString from '../hooks/useQueryString';
+import { TopicStatus } from '../dataTypes/topic';
 
-function Buy({ tariffs, requestTariffs, requestSpecialTariff, onBuyTariff, buySpecialTariff, specialTariff, loading, me }): ReactElement {
+function Buy({ topics, requestTopics, loading, onBuyTopics }): ReactElement {
+    const queryStringParams = useQueryString();
+
     useEffect(() => {
-        if (me) {
-            tariffs.length === 0 && requestTariffs();
-            specialTariff === null && requestSpecialTariff();
+        if (!topics || topics.length === 0) {
+            requestTopics();
         }
-    }, [me])
+    }, []);
+
     return (
         <div className="container">
-            <Paddingable padding={[0,10,0,0]}>
-                <SpecialTariff tariff={specialTariff} onBuy={buySpecialTariff}/>
-            </Paddingable>
-            <TariffsList tariffs={tariffs} onBuy={onBuyTariff}/>
+            <TopicsPurchase
+                topics={topics}
+                chosen={queryStringParams.has('topic') ? [queryStringParams.get('topic')] : []}
+                onBuy={onBuyTopics}
+            />
             <Loader show={loading} />
         </div>
     );
@@ -29,15 +32,11 @@ function Buy({ tariffs, requestTariffs, requestSpecialTariff, onBuyTariff, buySp
 export default connect(
     (state: RootState) => ({
         me: state.users.me,
-        tariffs: state.tariffs.list,
-        loading: state.tariffs.loading,
-        specialTariff: state.tariffs.special,
+        loading: state.topics.loading,
+        topics: state.topics.list.filter(t => t.status === TopicStatus.unavailable),
     }),
     dispatch => ({
-        resetBackLink: () => dispatch(applicationActions.backLink(null)),
-        requestTariffs: () => dispatch(tariffsActions.requestList()),
-        onBuyTariff: (tariffId, priceId) => dispatch(tariffsActions.subscribe(tariffId, priceId)),
-        requestSpecialTariff: () => dispatch(tariffsActions.requestSpecial()),
-        buySpecialTariff: () => dispatch(tariffsActions.buySpecial()),
+        onBuyTopics: topics => dispatch(subscriptionsActions.buy(topics)),
+        requestTopics: () => dispatch(topicsActions.requestList()),
     })
 )(Buy)

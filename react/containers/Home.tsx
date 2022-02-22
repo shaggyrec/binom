@@ -12,12 +12,11 @@ import { Link } from 'react-router-dom';
 import Button from '../components/Button';
 import { Redirect } from 'react-router';
 import DemoUserMessage from '../components/DemoUserMessage';
+import * as coursesActions  from '../ducks/courses';
 
-function Home({ topics, requestTopics, isAdmin, moveTopicAtPosition, moveLessonAtPosition, loading, currentLesson, me, isDemo }): ReactElement {
+function Home({ topics, isAdmin, moveTopicAtPosition, moveLessonAtPosition, loading, currentLesson, me, isDemo, requestTopics }): ReactElement {
     useEffect(() => {
-        if (!topics || topics.length === 0) {
-            requestTopics();
-        }
+        requestTopics();
     }, []);
 
     if (currentLesson) {
@@ -32,10 +31,8 @@ function Home({ topics, requestTopics, isAdmin, moveTopicAtPosition, moveLessonA
         moveLessonAtPosition(id, moveToIndex + 1);
     }
 
-    return topics
-        ? (
-            <>
-                {isAdmin &&
+    return (<>
+        {isAdmin &&
                     <TopBar>
                         <div className="flex">
                             <Paddingable padding={[0, 10, 0, 0]}>
@@ -49,29 +46,28 @@ function Home({ topics, requestTopics, isAdmin, moveTopicAtPosition, moveLessonA
                                 </Link>
                             </Paddingable>
                             <Paddingable padding={[0, 10, 0, 0]}>
-                                <Link to="/tariffs/edit">
+                                <Link to="/subscriptions/edit">
                                     <Button small>Управление тарифами</Button>
                                 </Link>
                             </Paddingable>
                         </div>
                     </TopBar>
-                }
-                <div className="container">
-                    <DemoUserMessage user={me}/>
-                    <Paddingable padding={[10, 0, 20]}>
-                        <TopicsList
-                            topics={topics}
-                            isAdmin={isAdmin}
-                            onMoveTopic={handleMoveTopic}
-                            onMoveLesson={handleMoveLesson}
-                            isDemo={isDemo}
-                        />
-                    </Paddingable>
-                </div>
-                <Loader show={loading} />
-            </>
-        )
-        : <Loader />;
+        }
+        <div className="container">
+            <DemoUserMessage user={me}/>
+            <Paddingable padding={[10, 0, 20]}>
+                {topics && <TopicsList
+                    topics={topics}
+                    isAdmin={isAdmin}
+                    onMoveTopic={handleMoveTopic}
+                    onMoveLesson={handleMoveLesson}
+                    isDemo={isDemo}
+                />}
+            </Paddingable>
+        </div>
+        <Loader show={loading} />
+    </>
+    );
 }
 
 export default connect(
@@ -87,6 +83,7 @@ export default connect(
     dispatch => ({
         requestTopics: () => dispatch(topicsActions.requestList()),
         moveTopicAtPosition: (id, pos) => dispatch(topicsActions.moveAtPosition(id, pos)),
-        moveLessonAtPosition: (id, pos) => dispatch(lessonsActions.moveAtPosition(id, pos))
+        moveLessonAtPosition: (id, pos) => dispatch(lessonsActions.moveAtPosition(id, pos)),
+        requestCourse: id => dispatch(coursesActions.requestCourse(id)),
     })
 )(Home);

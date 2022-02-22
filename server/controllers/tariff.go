@@ -6,22 +6,18 @@ import (
 	"binom/server/functions"
 	"binom/server/service"
 	"binom/server/storage"
-	"database/sql"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
-	"gopkg.in/guregu/null.v4"
 	"log"
 	"net/http"
 	"strconv"
-	"strings"
-	"time"
 )
 
 type TariffController struct {
-	storage *storage.TariffStorage
-	tariffPriceStorage *storage.TariffPriceStorage
+	storage                 *storage.TariffStorage
+	tariffPriceStorage      *storage.TariffPriceStorage
 	userSubscriptionStorage *storage.UserSubscriptionStorage
-	yooMoneyService *service.YoomoneyService
+	yooMoneyService         *service.YoomoneyService
 }
 
 func (c *TariffController) Init(storage *storage.TariffStorage, tariffPriceStorage *storage.TariffPriceStorage, userSubscriptionStorage *storage.UserSubscriptionStorage, yooMoneyService *service.YoomoneyService) {
@@ -48,23 +44,23 @@ func (c *TariffController) List(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *TariffController) SpecialTariff(w http.ResponseWriter, r *http.Request) {
-	userId := r.Context().Value("userId").(string)
-	lastSubscription := c.userSubscriptionStorage.LastByUserId(userId)
-
-	if lastSubscription != nil {
-		lastSubscription.Expired = lastSubscription.Expired.AddDate(0, 0, 7)
-		if lastSubscription.Expired.After(time.Now()) {
-			functions.RenderJSON(w, r, lastSubscription)
-			return
-		}
-	}
+	//userId := r.Context().Value("userId").(string)
+	//lastSubscription := c.userSubscriptionStorage.LastByUserId(userId)
+	//
+	//if lastSubscription != nil {
+	//	lastSubscription.Expired = lastSubscription.Expired.AddDate(0, 0, 7)
+	//	if lastSubscription.Expired.After(time.Now()) {
+	//		functions.RenderJSON(w, r, lastSubscription)
+	//		return
+	//	}
+	//}
 
 	exceptions.NotFoundError(w, r, "Special price not found")
 }
 
-func (c *TariffController) Create(w http.ResponseWriter, r *http.Request)  {
+func (c *TariffController) Create(w http.ResponseWriter, r *http.Request) {
 	var tariff dataType.Tariff
-	if err := functions.ParseRequest(w, r, &tariff);  err != nil {
+	if err := functions.ParseRequest(w, r, &tariff); err != nil {
 		return
 	}
 
@@ -84,9 +80,9 @@ func (c *TariffController) Create(w http.ResponseWriter, r *http.Request)  {
 	render.JSON(w, r, tariff)
 }
 
-func (c *TariffController) Update(w http.ResponseWriter, r *http.Request)  {
+func (c *TariffController) Update(w http.ResponseWriter, r *http.Request) {
 	var tariff map[string]interface{}
-	if err := functions.ParseRequest(w, r, &tariff);  err != nil {
+	if err := functions.ParseRequest(w, r, &tariff); err != nil {
 		return
 	}
 
@@ -109,7 +105,7 @@ func (c *TariffController) Update(w http.ResponseWriter, r *http.Request)  {
 	render.JSON(w, r, "ok")
 }
 
-func (c *TariffController) Delete(w http.ResponseWriter, r *http.Request)  {
+func (c *TariffController) Delete(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
 		log.Print(err)
@@ -129,7 +125,7 @@ func (c *TariffController) Delete(w http.ResponseWriter, r *http.Request)  {
 
 func (c *TariffController) CreatePrice(w http.ResponseWriter, r *http.Request) {
 	var price dataType.TariffPrice
-	if err := functions.ParseRequest(w, r, &price);  err != nil {
+	if err := functions.ParseRequest(w, r, &price); err != nil {
 		return
 	}
 
@@ -155,7 +151,7 @@ func (c *TariffController) CreatePrice(w http.ResponseWriter, r *http.Request) {
 
 func (c *TariffController) UpdatePrice(w http.ResponseWriter, r *http.Request) {
 	var price map[string]interface{}
-	if err := functions.ParseRequest(w, r, &price);  err != nil {
+	if err := functions.ParseRequest(w, r, &price); err != nil {
 		return
 	}
 
@@ -184,86 +180,86 @@ func (c *TariffController) DeletePrice(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *TariffController) Buy(w http.ResponseWriter, r *http.Request) {
-	tariffId, err := strconv.Atoi(chi.URLParam(r, "tariffId"))
-	if err != nil {
-		log.Print(err)
-		exceptions.ServerError(w, r)
-		return
-	}
-	priceId := chi.URLParam(r, "priceId")
-	userId := r.Context().Value("userId").(string)
-
-	tariff, err := c.storage.ById(tariffId)
-
-	if err != nil {
-		log.Print(err)
-		exceptions.BadRequestError(w, r, "Tariff not found", exceptions.ErrorBadParam)
-		return
-	}
-	var price *dataType.TariffPrice
-	for _, p := range tariff.Prices {
-		if p.Id == priceId {
-			price = &p
-			break
-		}
-	}
-
-	if price == nil {
-		log.Print(err)
-		exceptions.BadRequestError(w, r, "Price not found", exceptions.ErrorBadParam)
-		return
-	}
-
-	subscription, _ := c.userSubscriptionStorage.ByTariffPrice(tariffId, price.Price, userId, []int{dataType.StatusDraft})
-
-	if subscription == nil {
-		subscription = &dataType.UserSubscription{
-			TariffId: tariffId,
-			Duration: price.Duration,
-			Name: strings.TrimSpace(tariff.Name),
-			PaidPrice: price.Price,
-			UserId: userId,
-			Status: null.Int{NullInt64: sql.NullInt64{Int64: dataType.StatusDraft, Valid: true}},
-		}
-		subscription, err = c.userSubscriptionStorage.Create(subscription)
-		if err != nil {
-			log.Print(err)
-			exceptions.ServerError(w, r)
-			return
-		}
-	}
-
-	functions.RenderJSON(w, r, c.yooMoneyService.GetPaymentParams(subscription))
+	//tariffId, err := strconv.Atoi(chi.URLParam(r, "tariffId"))
+	//if err != nil {
+	//	log.Print(err)
+	//	exceptions.ServerError(w, r)
+	//	return
+	//}
+	//priceId := chi.URLParam(r, "priceId")
+	//userId := r.Context().Value("userId").(string)
+	//
+	//tariff, err := c.storage.ById(tariffId)
+	//
+	//if err != nil {
+	//	log.Print(err)
+	//	exceptions.BadRequestError(w, r, "Tariff not found", exceptions.ErrorBadParam)
+	//	return
+	//}
+	//var price *dataType.TariffPrice
+	//for _, p := range tariff.Prices {
+	//	if p.Id == priceId {
+	//		price = &p
+	//		break
+	//	}
+	//}
+	//
+	//if price == nil {
+	//	log.Print(err)
+	//	exceptions.BadRequestError(w, r, "Price not found", exceptions.ErrorBadParam)
+	//	return
+	//}
+	//
+	//subscription, _ := c.userSubscriptionStorage.ByTariffPrice(tariffId, price.Price, userId, []int{dataType.StatusDraft})
+	//
+	//if subscription == nil {
+	//	subscription = &dataType.UserSubscription{
+	//		TariffId: tariffId,
+	//		Duration: price.Duration,
+	//		Name: strings.TrimSpace(tariff.Name),
+	//		PaidPrice: price.Price,
+	//		UserId: userId,
+	//		Status: null.Int{NullInt64: sql.NullInt64{Int64: dataType.StatusDraft, Valid: true}},
+	//	}
+	//	subscription, err = c.userSubscriptionStorage.Create(subscription)
+	//	if err != nil {
+	//		log.Print(err)
+	//		exceptions.ServerError(w, r)
+	//		return
+	//	}
+	//}
+	//
+	//functions.RenderJSON(w, r, c.yooMoneyService.GetPaymentParams(subscription))
 }
 
 func (c *TariffController) BuySpecialTariff(w http.ResponseWriter, r *http.Request) {
-	userId := r.Context().Value("userId").(string)
-	lastSubscription := c.userSubscriptionStorage.LastByUserId(userId)
+	//userId := r.Context().Value("userId").(string)
+	//lastSubscription := c.userSubscriptionStorage.LastByUserId(userId)
+	//
+	//if lastSubscription == nil || lastSubscription.Expired.AddDate(0, 0, 7).Before(time.Now()) {
+	//	exceptions.NotFoundError(w, r, "Special price not found")
+	//	return
+	//}
+	//
+	//subscription, _ := c.userSubscriptionStorage.ByTariffPrice(lastSubscription.TariffId, lastSubscription.PaidPrice, userId, []int{dataType.StatusDraft})
+	//var err error
+	//
+	//if subscription == nil {
+	//	subscription = &dataType.UserSubscription{
+	//		TariffId:  lastSubscription.TariffId,
+	//		Duration:  lastSubscription.Duration,
+	//		Name:      lastSubscription.Name,
+	//		PaidPrice: lastSubscription.PaidPrice,
+	//		UserId:    userId,
+	//		Status:    null.IntFrom(dataType.StatusDraft),
+	//	}
+	//	subscription, err = c.userSubscriptionStorage.Create(subscription)
+	//	if err != nil {
+	//		log.Print(err)
+	//		exceptions.ServerError(w, r)
+	//		return
+	//	}
+	//}
 
-	if lastSubscription == nil || lastSubscription.Expired.AddDate(0, 0, 7).Before(time.Now()) {
-		exceptions.NotFoundError(w, r, "Special price not found")
-		return
-	}
-
-	subscription, _ := c.userSubscriptionStorage.ByTariffPrice(lastSubscription.TariffId, lastSubscription.PaidPrice, userId, []int{dataType.StatusDraft})
-	var err error
-
-	if subscription == nil {
-		subscription = &dataType.UserSubscription{
-			TariffId:  lastSubscription.TariffId,
-			Duration:  lastSubscription.Duration,
-			Name:      lastSubscription.Name,
-			PaidPrice: lastSubscription.PaidPrice,
-			UserId:    userId,
-			Status:    null.IntFrom(dataType.StatusDraft),
-		}
-		subscription, err = c.userSubscriptionStorage.Create(subscription)
-		if err != nil {
-			log.Print(err)
-			exceptions.ServerError(w, r)
-			return
-		}
-	}
-
-	functions.RenderJSON(w, r, c.yooMoneyService.GetPaymentParams(subscription))
+	// functions.RenderJSON(w, r, c.yooMoneyService.GetPaymentParams(subscription))
 }

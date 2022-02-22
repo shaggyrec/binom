@@ -14,7 +14,7 @@ function generateLink(notification: NotificationType, isAdmin: boolean) {
         return notification.meta?.link;
     }
 
-    const linkStart = isAdmin ? `/@${notification.author.username}` : '';
+    const linkStart = isAdmin && notification.author ? `/@${notification.author.username}` : '';
     let linkEnd = '';
 
     switch (notification.type) {

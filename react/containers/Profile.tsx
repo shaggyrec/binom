@@ -7,17 +7,17 @@ import Paddingable from '../components/Paddingable';
 import { RootState } from '../Application';
 import * as applicationActions from '../ducks/application';
 import * as usersActions from '../ducks/users';
-import * as tariffsActions from '../ducks/tariffs';
+import * as subscriptionsActions from '../ducks/subscriptions';
+import * as topicsActions from '../ducks/topics';
 import Loader from '../components/Loader';
-import TariffsList from '../components/TariffsList';
 import ReactMoment from 'react-moment';
 import { useScroll } from '../hooks/useScroll';
 import { useLocation } from 'react-router';
 import { StarIcon } from '../components/Icons';
-import SpecialTariff from '../components/SpecialTariff';
+import UserSubscriptions from '../components/UserSubscriptions';
+import { topic } from '../ducks/topics';
 
-function Profile ({ logout, me, resetBackLink, user, match: { params: { username } }, requestUser, requestTariffs,
-    tariffs, onBuyTariff, loading, requestSpecialTariff, specialTariff, buySpecialTariff }): ReactElement {
+function Profile ({ logout, me, resetBackLink, user, match: { params: { username } }, requestUser,  loading, topics, requestTopics }): ReactElement {
     const [buy, scrollToBuy] = useScroll<HTMLDivElement>();
     const l = useLocation();
 
@@ -29,13 +29,11 @@ function Profile ({ logout, me, resetBackLink, user, match: { params: { username
         if (!user) {
             requestUser(username);
         }
-
     }, []);
 
     useEffect(() => {
-        if (user && me && user.username === me.username && !me.subscription) {
-            tariffs.length === 0 && requestTariffs();
-            specialTariff === null && requestSpecialTariff();
+        if (user && me && user.username === me.username && topic.length === 0) {
+            requestTopics();
         }
     }, [user])
 
@@ -56,12 +54,9 @@ function Profile ({ logout, me, resetBackLink, user, match: { params: { username
                             {user.username === me.username && <Button small onClick={logout} className="px-20"><small>Выйти</small></Button>}
                         </div>
                     </Paddingable>
-                    {user.username === me.username && !me.subscription && (
+                    {user.username === me.username && me.subscriptions && (
                         <div ref={buy}>
-                            <Paddingable padding={[0,10,0,0]}>
-                                <SpecialTariff tariff={specialTariff} onBuy={buySpecialTariff}/>
-                            </Paddingable>
-                            <TariffsList tariffs={tariffs} onBuy={onBuyTariff}/>
+                            <UserSubscriptions subscriptions={user.subscriptions} topics={topics}/>
                         </div>
                     )}
                     <Loader show={loading}/>
@@ -77,17 +72,15 @@ export default connect(
         me: state.users.me,
         // @ts-ignore
         user: props.match.params?.username === state.users.me?.username ? state.users.me : state.users.current,
-        tariffs: state.tariffs.list,
-        loading: state.tariffs.loading,
-        specialTariff: state.tariffs.special,
+        subscriptions: state.subscriptions.list,
+        loading: state.subscriptions.loading,
+        topics: state.topics.list
     }),
     dispatch => ({
         logout: () => dispatch(authAction.logout()),
         resetBackLink: () => dispatch(applicationActions.backLink(null)),
         requestUser: username => dispatch(usersActions.requestUser(username)),
-        requestTariffs: () => dispatch(tariffsActions.requestList()),
-        onBuyTariff: (tariffId, priceId) => dispatch(tariffsActions.subscribe(tariffId, priceId)),
-        requestSpecialTariff: () => dispatch(tariffsActions.requestSpecial()),
-        buySpecialTariff: () => dispatch(tariffsActions.buySpecial()),
+        requestSubscriptions: () => dispatch(subscriptionsActions.requestList()),
+        requestTopics: () => dispatch(topicsActions.requestList()),
     })
 )(Profile)

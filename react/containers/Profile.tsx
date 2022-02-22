@@ -8,16 +8,16 @@ import { RootState } from '../Application';
 import * as applicationActions from '../ducks/application';
 import * as usersActions from '../ducks/users';
 import * as subscriptionsActions from '../ducks/subscriptions';
+import * as topicsActions from '../ducks/topics';
 import Loader from '../components/Loader';
-import TariffsList from '../components/TariffsList';
 import ReactMoment from 'react-moment';
 import { useScroll } from '../hooks/useScroll';
 import { useLocation } from 'react-router';
 import { StarIcon } from '../components/Icons';
-import SpecialTariff from '../components/SpecialTariff';
+import UserSubscriptions from '../components/UserSubscriptions';
+import { topic } from '../ducks/topics';
 
-function Profile ({ logout, me, resetBackLink, user, match: { params: { username } }, requestUser, requestSubscriptions,
-    subscriptions,  loading }): ReactElement {
+function Profile ({ logout, me, resetBackLink, user, match: { params: { username } }, requestUser,  loading, topics, requestTopics }): ReactElement {
     const [buy, scrollToBuy] = useScroll<HTMLDivElement>();
     const l = useLocation();
 
@@ -29,12 +29,11 @@ function Profile ({ logout, me, resetBackLink, user, match: { params: { username
         if (!user) {
             requestUser(username);
         }
-
     }, []);
 
     useEffect(() => {
-        if (user && me && user.username === me.username) {
-            subscriptions.length === 0 && requestSubscriptions();
+        if (user && me && user.username === me.username && topic.length === 0) {
+            requestTopics();
         }
     }, [user])
 
@@ -55,9 +54,9 @@ function Profile ({ logout, me, resetBackLink, user, match: { params: { username
                             {user.username === me.username && <Button small onClick={logout} className="px-20"><small>Выйти</small></Button>}
                         </div>
                     </Paddingable>
-                    {user.username === me.username && !me.subscription && (
+                    {user.username === me.username && me.subscriptions && (
                         <div ref={buy}>
-                            Подписки
+                            <UserSubscriptions subscriptions={user.subscriptions} topics={topics}/>
                         </div>
                     )}
                     <Loader show={loading}/>
@@ -75,11 +74,13 @@ export default connect(
         user: props.match.params?.username === state.users.me?.username ? state.users.me : state.users.current,
         subscriptions: state.subscriptions.list,
         loading: state.subscriptions.loading,
+        topics: state.topics.list
     }),
     dispatch => ({
         logout: () => dispatch(authAction.logout()),
         resetBackLink: () => dispatch(applicationActions.backLink(null)),
         requestUser: username => dispatch(usersActions.requestUser(username)),
         requestSubscriptions: () => dispatch(subscriptionsActions.requestList()),
+        requestTopics: () => dispatch(topicsActions.requestList()),
     })
 )(Profile)

@@ -13,6 +13,8 @@ stages:
 build-react:
   stage: build-react
   image: node
+  variables:
+    DEFAULT_COURSE_ID: 00000000-0000-0000-0000-000000000001
   script:
     - npm i
     - npm run build

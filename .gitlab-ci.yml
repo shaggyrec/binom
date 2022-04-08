@@ -52,7 +52,7 @@ deploy:
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" "$CI_REGISTRY" --password-stdin
     - env POSTGRES_PASSWORD="$POSTGRES_PASSWORD" JWT_SECRET="$JWT_SECRET" APP_PORT="$APP_PORT" GIT_COMMIT="$CI_COMMIT_SHA" TELEGRAM_BOT_TOKEN="$TELEGRAM_BOT_TOKEN" docker stack deploy -c stack.yml binom --with-registry-auth --prune
     - docker system prune -f
-    - rm -rf $DOCKER_CERT_PATH
+#    - rm -rf $DOCKER_CERT_PATH
   environment:
     name: master
     url:  http://194.87.236.132
